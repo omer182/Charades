@@ -40,16 +40,50 @@
   gap: 20px;
 }
 
-.team-list-card {
+.team-list {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  margin: 0;
+  font-size: 20px;
+  padding: 0;
+}
+
+.team-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 5px;
+}
+
+.team-item span.team-name {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.team-item .score-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.team-item .team-score {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.team-list-card {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 
   .team-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
+    padding: 5px;
   }
 }
 
@@ -89,6 +123,7 @@
 
 .title, .section-title {
   font-size: 24px;
+  margin: 5px;
   font-weight: bold;
   color: #333;
 }

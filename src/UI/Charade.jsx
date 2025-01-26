@@ -5,6 +5,7 @@ import qr from '../assets/qr.svg'
 const importAll = (r) => r.keys().map(r);
 
 const images = importAll(require.context('../../pictures/result', false, /\.(jpg|jpeg|png|gif)$/));
+const colors = ["#FF5733", "#33FF57", "#3357FF", "#FF33A8", "#33FFF5"]; // Add more colors if needed
 
 const Card = ({ className, children }) => {
   return <div className={`card ${className}`}>{children}</div>;
@@ -68,7 +69,8 @@ const CharadesGame = () => {
 
   const addTeam = () => {
     if (newTeamName.trim() !== "") {
-      setTeams([...teams, { name: newTeamName, score: 0 }]);
+      const color = colors[teams.length % colors.length]; // Cycle through colors
+      setTeams([...teams, { name: newTeamName, score: 0, color }]);
       setNewTeamName("");
     }
   };
@@ -172,7 +174,11 @@ const CharadesGame = () => {
                   <h2 className="section-title">Teams</h2>
                   <ul className="team-list">
                     {teams.map((team, index) => (
-                      <li key={index} className="team-item">
+                      <li
+                          key={index}
+                          className="team-item"
+                          style={{ borderLeft: `5px solid ${team.color}` }}
+                      >
                         <span className="team-name">{team.name}</span>
                         <div className="score-controls">
                           <Button onClick={() => updateScore(index, -1)}>-</Button>

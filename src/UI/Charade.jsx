@@ -134,6 +134,7 @@ const CharadesGame = () => {
       setCurrentTeamIndex(0);
     }
     setIsTimerActive(true); // Start the timer for the next team
+    skipImage(); // Skip to the next image
   };
 
   const handleCustomTimerChange = (time) => {

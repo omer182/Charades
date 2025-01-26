@@ -36,7 +36,7 @@ const Timer = ({ initialTime, onTimeUp, onTimerChange, isActive }) => {
 
   const handleCustomTimerChange = (e) => {
     const value = e.target.value;
-    if (!isNaN(value) && value >= 0) {
+    if (!isNaN(value) && value > 0) {
       setTime(Number(value));
       if (onTimerChange) onTimerChange(Number(value)); // Notify the parent of the time change
     }

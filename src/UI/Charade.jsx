@@ -51,6 +51,7 @@ const CharadesGame = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isTimerActive, setIsTimerActive] = useState(false);
   const [customTimer, setCustomTimer] = useState(60); // Default 60 seconds
+  const [isQrModalOpen, setIsQrModalOpen] = useState(false);
 
   useEffect(() => {
     const imagePaths = images.map((img) => img); // Extract the image path (Webpack adds `.default`)
@@ -147,14 +148,20 @@ const CharadesGame = () => {
     <div className="charades-game">
       <div className="top-bar">
         <h1 className="game-title">PayU Charades</h1>
-        <img className='qr' src={qr} alt='qr'/>
+        <img
+            className="qr"
+            src={qr}
+            alt="qr"
+            onClick={() => setIsQrModalOpen(true)} // Open the modal
+            style={{cursor: "pointer"}} // Indicate clickable behavior
+        />
       </div>
       <div className="game">
         <div className="left-panel">
           <div className="teams-section">
             <Card className="team-card">
               <CardContent>
-                <h2 className="section-title">Create a Team</h2>
+              <h2 className="section-title">Create a Team</h2>
                 <div className="input-group">
                   <input
                     type="text"
@@ -237,6 +244,15 @@ const CharadesGame = () => {
         onClose={closeModal}
         onNextTeam={nextTeam}
       />
+
+      {isQrModalOpen && (
+          <div className="qr-modal">
+            <button className="close-button" onClick={() => setIsQrModalOpen(false)}>
+              X
+            </button>
+            <img src={qr} alt="Enlarged QR Code" className="enlarged-qr" />
+          </div>
+      )}
     </div>
   );
 };

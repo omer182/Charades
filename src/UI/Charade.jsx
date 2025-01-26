@@ -25,6 +25,7 @@ const Button = ({ onClick, children }) => {
 const Modal = ({ isOpen, onClose, onNextTeam }) => {
   if (!isOpen) return null;
   return (
+    <div className="overlay">
     <div className="modal">
       <div className="modal-content">
         <h2>Time is Up!</h2>
@@ -33,6 +34,7 @@ const Modal = ({ isOpen, onClose, onNextTeam }) => {
           <Button onClick={onClose}>Close</Button>
         </div>
       </div>
+    </div>
     </div>
   );
 };
@@ -111,7 +113,7 @@ const CharadesGame = () => {
   };
 
   const handleTimerEnd = () => {
-    setIsModalOpen(true); 
+    setIsModalOpen(true);
     setIsTimerActive(false); // Start the timer for the next team
   };
 
@@ -218,13 +220,13 @@ const CharadesGame = () => {
         </Card>
       </div>
 
-      
+
       {/* Modal for Time's Up */}
       <Modal
         isOpen={isModalOpen}
         onClose={closeModal}
         onNextTeam={nextTeam}
-      />       
+      />
     </div>
   );
 };

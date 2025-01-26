@@ -149,9 +149,10 @@
 }
 
 .charades-image {
-  width: 1000px; /* Limits the image width */
-  height: 1000px; /* Limits the image height */
-  /* height: auto;  */
+  width: 800px; /* Limits the image width */
+  height: 800px; /* Limits the image height */
+   /*height: min-content;*/
+  /*width: min-content;*/
   object-fit: contain; /* Ensures image fits within the container without distortion */
 }
 
@@ -173,6 +174,8 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  width: 400px;
+  height: 300px;
   background: white;
   padding: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
@@ -181,11 +184,15 @@
 }
 
 .modal-content {
+    display: flex;
+flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
   text-align: center;
+  font-size: x-large;
 }
 
 .modal-actions {
-  margin-top: 20px;
   display: flex;
   justify-content: space-between;
 }
@@ -200,7 +207,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(4, 4, 4, 0.5);
   z-index: 999;
 }
 

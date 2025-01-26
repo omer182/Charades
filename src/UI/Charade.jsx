@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./Charade.css";
 import Timer from "./Components/Timer/Timer";
-
+import qr from '../assets/qr.svg'
 const importAll = (r) => r.keys().map(r);
 
 const images = importAll(require.context('../../pictures/result', false, /\.(jpg|jpeg|png|gif)$/));
@@ -143,7 +143,10 @@ const CharadesGame = () => {
 
   return (
     <div className="charades-game">
-      <h1 className="game-title">PayU Charades</h1>
+      <div className="top-bar">
+        <h1 className="game-title">PayU Charades</h1>
+        <img className='qr' src={qr} alt='qr'/>
+      </div>
       <div className="game">
         <div className="left-panel">
           <div className="teams-section">

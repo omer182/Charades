@@ -1,70 +1,80 @@
-# Getting Started with Create React App
+# Charade Game 🎭
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Welcome to the **Charade Game**, a fun and interactive way to test your guessing skills! This project allows you to create teams, set a timer, and start an engaging game of charades with your friends and family.
 
-## Available Scripts
+## Features ✨
 
-In the project directory, you can run:
+- **Team Creation:** Divide players into teams for friendly competition.
+- **Set Timer:** Customize the round duration to keep the game challenging and fair.
+- **Start the Game:** Kick off the fun with a user-friendly interface that tracks turns and scores.
 
-### `npm start`
+## Start the game
+To start the game just run the following:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```npm install```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```npm start```
 
-### `npm test`
+## Adding Pictures 🖼️
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+To make the game more dynamic, you can add your custom images to be used as clues in the game. Here’s how:
 
-### `npm run build`
+3. **Add Pictures to the Raw Folder:**
+    - Place your images in the `pictures/raw` directory.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+4. **Run the `addTextToImage` Script:**
+    - The `addTextToImage` script automatically processes your images.
+    - It adds the image's filename at the bottom of the picture to indicate its meaning.
+    - This makes it clear what mime act needs to be passed.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+   Command to run the script:
+    ```bash
+   cd scripts
+   node addTextToImage.js
+   ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+5. **Processed Images:**
+    - The script outputs the updated images to the `pictures/result` directory.
+    - The `pictures/result` directory is used by the UI to display the images during the game.
 
-### `npm run eject`
+## Folder Structure 📁
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```js
+charade-game/
+├── pictures/
+│   ├── raw/        # Add your raw images here
+│   ├── result/     # Processed images are stored here
+├── scripts/
+│   └── addTextToImage.js  # Script to process images
+├── README.md       # Documentation
+└── ...            # Other files and folders
+```
+## How to Play 🎮
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1. **Set Up Teams:**
+    - Divide the players into teams using the interface.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+2. **Start the Timer:**
+    - Choose the round duration and hit start.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+3. **Act and Guess:**
+    - A player acts out the clue shown in the image without speaking.
+    - Their teammates guess the correct word or phrase based on the mime.
 
-## Learn More
+4. **Score Points:**
+    - Keep track of the score for each team and see who wins!
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Contributing 🤝
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Feel free to contribute by:
+- Adding new features.
+- Improving the script functionality.
+- Creating a better UI for the game.
 
-### Code Splitting
+Pull requests are always welcome! 🎉
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+---
 
-### Analyzing the Bundle Size
+Enjoy the game, and may the best team win! 🏆 
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Omer S.

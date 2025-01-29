@@ -4,14 +4,16 @@ import './Timer.css'; // Import the CSS file
 const Timer = ({ initialTime, onTimeUp, onTimerChange, isActive }) => {
   const [time, setTime] = useState(initialTime); // Set the initial time
   const [isTimerActive, setIsTimerActive] = useState(isActive);
+  const [timer, setTimer] = useState(initialTime); // Default 60 seconds
 
-  console.log(isTimerActive)
+
   useEffect(() => {
     setIsTimerActive(isActive); // Update the timer state when isActive changes
   }, [isActive]);
 
   useEffect(() => {
     setTime(initialTime); // Reset the timer when initialTime changes
+    setTimer(initialTime); // Reset the timer when initialTime changes
   }, [initialTime]);
 
   useEffect(() => {
@@ -32,12 +34,15 @@ const Timer = ({ initialTime, onTimeUp, onTimerChange, isActive }) => {
 
   const startTimer = () => setIsTimerActive(true);
   const pauseTimer = () => setIsTimerActive(false);
-  const resetTimer = () => setTime(initialTime);
+  const resetTimer = () => {
+    setTime(initialTime);
+    setIsTimerActive(false);
+  }
 
-  const handleCustomTimerChange = (e) => {
-    const value = e.target.value;
+  const handleCustomTimerChange = (value) => {
     if (!isNaN(value) && value > 0) {
       setTime(Number(value));
+      setTimer(Number(value));
       if (onTimerChange) onTimerChange(Number(value)); // Notify the parent of the time change
     }
   };
@@ -54,12 +59,18 @@ const Timer = ({ initialTime, onTimeUp, onTimerChange, isActive }) => {
         <button onClick={resetTimer}>Reset</button>
       </div>
       <div className="timer-input-container">
+        <button onClick={() => handleCustomTimerChange(30)}>30</button>
+        <button onClick={() => handleCustomTimerChange(60)}>60</button>
+        <button onClick={() => handleCustomTimerChange(120)}>120</button>
+        <button onClick={() => handleCustomTimerChange(180)}>180</button>
+
         <input
-          type="number"
-          value={time}
-          onChange={handleCustomTimerChange}
-          className="input"
-          placeholder="Set Timer"
+            // type=""
+            value={timer}
+            onFocus={(event) => event.target.select()}
+            onChange={(e) => handleCustomTimerChange(e.target.value)}
+            className="input"
+            placeholder="Set Timer"
         />
       </div>
     </div>

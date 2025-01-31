@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import "./Charade.css";
 import Timer from "./Components/Timer/Timer";
 import qr from '../assets/qr.svg'
+import {Box, Button} from "@mui/material";
 const importAll = (r) => r.keys().map(r);
+
 
 const images = importAll(require.context('../../pictures/result', false, /\.(jpg|jpeg|png|gif)$/));
 const colors = ["#FF5733", "#33FF57", "#3357FF", "#FF33A8", "#33FFF5"]; // Add more colors if needed
@@ -15,29 +17,19 @@ const CardContent = ({ children }) => {
   return <div className="card-content">{children}</div>;
 };
 
-const Button = ({ onClick, children }) => {
-  return (
-    <button className="button" onClick={onClick}>
-      {children}
-    </button>
-  );
-};
-
-const Modal = ({ isOpen, onClose, onNextTeam }) => {
-  if (!isOpen) return null;
-  return (
+const Modal = ({ isOpen, onNextTeam }) => {
+  return isOpen ? (
     <div className="overlay">
     <div className="modal">
       <div className="modal-content">
         <h2>Time is Up!</h2>
         <div className="modal-actions">
           <Button onClick={onNextTeam}>Next Team</Button>
-          <Button onClick={onClose}>Close</Button>
         </div>
       </div>
     </div>
     </div>
-  );
+  ) : null ;
 };
 
 const CharadesGame = () => {
@@ -75,6 +67,11 @@ const CharadesGame = () => {
       setNewTeamName("");
     }
   };
+
+  const removeTeam = (index) => {
+    const updatedTeams = teams.filter((team, i) => i !== index);
+    setTeams(updatedTeams);
+  }
 
   const updateScore = (index, delta) => {
     const updatedTeams = teams.map((team, i) => {
@@ -186,6 +183,7 @@ const CharadesGame = () => {
                           className="team-item"
                           style={{ borderLeft: `5px solid ${team.color}` }}
                       >
+                        <Button color='error' onClick={() => removeTeam(index)}>X</Button>
                         <span className="team-name">{team.name}</span>
                         <div className="score-controls">
                           <Button onClick={() => updateScore(index, -1)}>-</Button>
@@ -208,40 +206,39 @@ const CharadesGame = () => {
               />
           </div>
         </div>
-        <Card className="game-card">
-          <CardContent className="game-card-content">
-            <div className="game-header">
-              <h3 className="section-title">Round {currentRound}</h3>
-              <h3>
-                Current Team:{" "}
-                <strong>{teams[currentTeamIndex]?.name || "No Team"}</strong>
-              </h3>
-            </div>
-            {shuffledImages.length > 0 && isGameActive ? (
-              <div className="image-container">
-                <img
-                  src={shuffledImages[currentImageIndex]}
-                  alt="Charades"
-                  className="charades-image"
-                />
-                <div className="image-controls">
-                <Button onClick={previousImage}>Previous</Button>
-                  <Button onClick={nextImage}>Next</Button>
-                  <Button onClick={skipImage}>Skip</Button>
-                </div>
+          <Card className="game-card">
+            <CardContent className="game-card-content">
+              <div className="game-header">
+                <h3 className="section-title">Round {currentRound}</h3>
+                <h3>
+                  Current Team:{" "}
+                  <strong>{teams[currentTeamIndex]?.name || "No Team"}</strong>
+                </h3>
               </div>
-            ) : (
-              <Button onClick={startGame}>Start Game</Button>
-            )}
-          </CardContent>
-        </Card>
+              {shuffledImages.length > 0 && isGameActive ? (
+                <div className="image-container">
+                  <img
+                    src={shuffledImages[currentImageIndex]}
+                    alt="Charades"
+                    className="charades-image"
+                  />
+                  <div className="image-controls">
+                    <Button variant='contained' onClick={previousImage}>Previous</Button>
+                    <Button variant='contained' color='success' onClick={nextImage}>Next</Button>
+                    <Button variant='contained' colot='error' onClick={skipImage}>Skip</Button>
+                  </div>
+                </div>
+              ) : (
+                <Button onClick={startGame}>Start Game</Button>
+              )}
+            </CardContent>
+          </Card>
       </div>
 
 
       {/* Modal for Time's Up */}
       <Modal
         isOpen={isModalOpen}
-        onClose={closeModal}
         onNextTeam={nextTeam}
       />
 

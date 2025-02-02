@@ -161,7 +161,12 @@ const CharadesGame = () => {
   return (
     <div className="charades-game">
       <div className="top-bar">
-        <h1 className="game-title">Charades</h1>
+        {/*<h1 className="game-title">Charades</h1>*/}
+        <img
+            className="logo"
+            src={logo}
+            alt="logo"
+        />
         <img
             className="qr"
             src={qr}
@@ -184,7 +189,7 @@ const CharadesGame = () => {
                     onChange={(e) => setNewTeamName(e.target.value)}
                     className="input"
                   />
-                  <Button onClick={addTeam}>Add Team</Button>
+                  <Button variant='contained' onClick={addTeam}>Add Team</Button>
                 </div>
               </CardContent>
             </Card>
@@ -224,6 +229,8 @@ const CharadesGame = () => {
               <Button
                   disabled={teams.length === 0}
                   onClick={startGame}
+                  color='success'
+                  variant='contained'
                   className={'game-buttons button'}
               >
                 Start
@@ -231,6 +238,7 @@ const CharadesGame = () => {
               <Button
                   disabled={!isGameActive}
                   onClick={restart}
+                  variant='contained'
                   className={'game-buttons button'}
               >
                 Restart

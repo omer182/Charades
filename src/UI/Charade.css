@@ -13,6 +13,18 @@
   background-color: #3498db;
 }
 
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: 2px;
+    margin-left: 50%;
+    font-size: 24px;
+    font-weight: bold;
+    width: 300px;
+    transform: translateX(-50%);
+}
+
 .game {
   display: flex;
   justify-content: center;
@@ -171,22 +183,6 @@
   border-color: #3498db;
 }
 
-/* Button styling */
-.button {
-  background-color: #3498db;
-  color: white;
-  font-size: large;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.button:hover {
-  background-color: #2980b9;
-}
-
 .game-card {
   flex: 1;
   display: flex;
@@ -249,7 +245,8 @@
   gap: 5px;
 
   .button {
-    font-size: 14px;
+    font-size: 12px;
+    padding: 0;
   }
 }
 

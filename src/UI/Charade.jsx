@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import "./Charade.css";
 import Timer from "./Components/Timer/Timer";
 import qr from '../assets/qr.svg'
-import {Box, Button} from "@mui/material";
-const importAll = (r) => r.keys().map(r);
+import {Button} from "@mui/material";
+import UndoIcon from '@mui/icons-material/Undo';
+import {Check, Close} from "@mui/icons-material";
 
+const importAll = (r) => r.keys().map(r);
 
 const images = importAll(require.context('../../pictures/result', false, /\.(jpg|jpeg|png|gif)$/));
 const colors = ["#FF5733", "#33FF57", "#3357FF", "#FF33A8", "#33FFF5"]; // Add more colors if needed
@@ -13,23 +15,23 @@ const Card = ({ className, children }) => {
   return <div className={`card ${className}`}>{children}</div>;
 };
 
-const CardContent = ({ children }) => {
-  return <div className="card-content">{children}</div>;
+const CardContent = ({ className, children }) => {
+  return <div className={`card-content ${className}`}>{children}</div>;
 };
 
 const Modal = ({ isOpen, onNextTeam }) => {
   return isOpen ? (
     <div className="overlay">
-    <div className="modal">
-      <div className="modal-content">
-        <h2>Time is Up!</h2>
-        <div className="modal-actions">
-          <Button onClick={onNextTeam}>Next Team</Button>
+      <div className="modal">
+        <div className="modal-content">
+          <h2>Time is Up!</h2>
+          <div className="modal-actions">
+            <Button onClick={onNextTeam}>Next Team</Button>
+          </div>
         </div>
       </div>
     </div>
-    </div>
-  ) : null ;
+  ) : null
 };
 
 const CharadesGame = () => {
@@ -74,9 +76,10 @@ const CharadesGame = () => {
   }
 
   const updateScore = (index, delta) => {
+    console.log(delta);
     const updatedTeams = teams.map((team, i) => {
       if (i === index) {
-        return { ...team, score: team.score + delta };
+        return { ...team, score: Math.max(0, team.score + delta) };
       }
       return team;
     });
@@ -84,13 +87,14 @@ const CharadesGame = () => {
   };
 
   const nextImage = () => {
-    updateScore(currentTeamIndex, 1); // Increase the score of the current team
+    updateScore(currentTeamIndex, 1);
     setCurrentImageIndex((prevIndex) =>
       prevIndex < shuffledImages.length - 1 ? prevIndex + 1 : 0
     );
   };
 
   const skipImage = () => {
+    updateScore(currentTeamIndex, -1);
     setCurrentImageIndex((prevIndex) =>
       prevIndex < shuffledImages.length - 1 ? prevIndex + 1 : 0
     );
@@ -158,7 +162,7 @@ const CharadesGame = () => {
           <div className="teams-section">
             <Card className="team-card">
               <CardContent>
-              <h2 className="section-title">Create a Team</h2>
+                <h2 className="section-title">Create a Team</h2>
                 <div className="input-group">
                   <input
                     type="text"
@@ -171,7 +175,6 @@ const CharadesGame = () => {
                 </div>
               </CardContent>
             </Card>
-
             {teams.length > 0 && (
               <Card className="team-list-card">
                 <CardContent>
@@ -198,41 +201,53 @@ const CharadesGame = () => {
             )}
           </div>
           <div className="timer-section">
-              <Timer
-                onTimeUp={handleTimerEnd}
-                onTimerChange={handleCustomTimerChange}
-                initialTime={customTimer}
-                isActive={isTimerActive}
-              />
+            <Timer
+              onTimeUp={handleTimerEnd}
+              onTimerChange={handleCustomTimerChange}
+              initialTime={customTimer}
+              isActive={isTimerActive}
+            />
+            <Button
+                disabled={teams.length === 0}
+                variant='contained'
+                color='success'
+                onClick={startGame}
+                className={"start-game"}
+            >
+              Start Game
+            </Button>
           </div>
         </div>
-          <Card className="game-card">
-            <CardContent className="game-card-content">
-              <div className="game-header">
-                <h3 className="section-title">Round {currentRound}</h3>
-                <h3>
-                  Current Team:{" "}
-                  <strong>{teams[currentTeamIndex]?.name || "No Team"}</strong>
-                </h3>
-              </div>
-              {shuffledImages.length > 0 && isGameActive ? (
-                <div className="image-container">
-                  <img
-                    src={shuffledImages[currentImageIndex]}
-                    alt="Charades"
-                    className="charades-image"
-                  />
-                  <div className="image-controls">
-                    <Button variant='contained' onClick={previousImage}>Previous</Button>
-                    <Button variant='contained' color='success' onClick={nextImage}>Next</Button>
-                    <Button variant='contained' colot='error' onClick={skipImage}>Skip</Button>
-                  </div>
+        <Card className="game-card">
+          {isGameActive && (
+              <CardContent className="game-card-content">
+                <div className="game-header">
+                  <h3 className="section-title">Round {currentRound}</h3>
+                  <h3>
+                    Current Team:{" "}
+                    <strong>{teams[currentTeamIndex]?.name || "No Team"}</strong>
+                  </h3>
                 </div>
-              ) : (
-                <Button onClick={startGame}>Start Game</Button>
-              )}
-            </CardContent>
-          </Card>
+                <img
+                  src={shuffledImages[currentImageIndex]}
+                  alt="Charades"
+                  className="charades-image"
+                />
+                <div className="image-controls">
+                  <Button  size='large' variant='contained' onClick={previousImage}>
+                    <UndoIcon />
+                  </Button>
+                  {/*<Button variant='contained' onClick={previousImage}>Previous</Button>*/}
+                  <Button size='large' variant='contained' color='success' onClick={nextImage}>
+                    <Check />
+                  </Button>
+                  <Button  size='large' variant='contained' color='error' onClick={skipImage}>
+                    <Close />
+                  </Button>
+                </div>
+              </CardContent>
+            )}
+        </Card>
       </div>
 
 

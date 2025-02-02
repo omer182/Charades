@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import './Timer.css'; // Import the CSS file
+import './Timer.css';
+import {Box, Button, Stack} from "@mui/material"; // Import the CSS file
+
+const Card = ({ className, children }) => {
+  return <div className={`card ${className}`}>{children}</div>;
+};
 
 const Timer = ({ initialTime, onTimeUp, onTimerChange, isActive }) => {
   const [time, setTime] = useState(initialTime); // Set the initial time
   const [isTimerActive, setIsTimerActive] = useState(isActive);
   const [timer, setTimer] = useState(initialTime); // Default 60 seconds
-
 
   useEffect(() => {
     setIsTimerActive(isActive); // Update the timer state when isActive changes
@@ -32,8 +36,7 @@ const Timer = ({ initialTime, onTimeUp, onTimerChange, isActive }) => {
     return () => clearInterval(timerInterval);
   }, [isTimerActive, time, onTimeUp]);
 
-  const startTimer = () => setIsTimerActive(true);
-  const pauseTimer = () => setIsTimerActive(false);
+  const pauseTimer = () => setIsTimerActive(!isTimerActive);
   const resetTimer = () => {
     setTime(initialTime);
     setIsTimerActive(false);
@@ -48,24 +51,41 @@ const Timer = ({ initialTime, onTimeUp, onTimerChange, isActive }) => {
   };
 
   return (
-    <div className="timer-container">
+    <Card className="timer-container">
       <div className="timer-header">Timer</div>
       <div className="timer-display">
         {time}s
       </div>
       <div className="timer-controls">
-        <button onClick={startTimer}>Start</button>
-        <button onClick={pauseTimer}>Pause</button>
-        <button onClick={resetTimer}>Reset</button>
+        <Button
+            color={isTimerActive ? 'error' : 'success'}
+            variant="contained"
+            onClick={pauseTimer}
+            sx={{ padding: '2px 6px', minWidth: 'auto' }}
+        >
+          {isTimerActive ? 'Pause' : 'Play'}
+        </Button>
+        <Button
+            variant="contained"
+            onClick={resetTimer}
+            sx={{ padding: '2px 6px', minWidth: 'auto' }}
+        >
+          Reset
+        </Button>
       </div>
-      <div className="timer-input-container">
-        <button onClick={() => handleCustomTimerChange(30)}>30</button>
-        <button onClick={() => handleCustomTimerChange(60)}>60</button>
-        <button onClick={() => handleCustomTimerChange(120)}>120</button>
-        <button onClick={() => handleCustomTimerChange(180)}>180</button>
+      <div className="timer-input-container" >
+        {[30,60,120,180].map((value) => (
+        <Button
+            variant="outlined"
+            sx={{ padding: '2px 6px', minWidth: 'auto' }}
+            size='small'
+            onClick={() => handleCustomTimerChange(value)}
+        >
+          {value}
+        </Button>
+        ))}
 
         <input
-            // type=""
             value={timer}
             onFocus={(event) => event.target.select()}
             onChange={(e) => handleCustomTimerChange(e.target.value)}
@@ -73,7 +93,7 @@ const Timer = ({ initialTime, onTimeUp, onTimerChange, isActive }) => {
             placeholder="Set Timer"
         />
       </div>
-    </div>
+    </Card>
   );
 };
 

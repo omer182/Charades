@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./Charade.css";
 import Timer from "./Components/Timer/Timer";
 import qr from '../assets/qr.svg'
+import logo from '../assets/logo.svg'
 import {Button} from "@mui/material";
 import UndoIcon from '@mui/icons-material/Undo';
 import {Check, Close} from "@mui/icons-material";
@@ -112,9 +113,21 @@ const CharadesGame = () => {
       return;
     }
     setIsGameActive(true);
-    setIsTimerActive(true); // Start the timer
+    setIsTimerActive(true);
     setCurrentImageIndex(0);
   };
+
+  const restart = () => {
+    setIsGameActive(false);
+    setCurrentRound(1);
+    setCurrentTeamIndex(0);
+    setTeams([]);
+    setNewTeamName("");
+    setCustomTimer(60);
+    setIsTimerActive(false);
+    setIsModalOpen(false);
+    setShuffledImages(shuffleArray(images.map((img) => img)));
+  }
 
   const handleTimerEnd = () => {
     setIsModalOpen(true);
@@ -148,7 +161,7 @@ const CharadesGame = () => {
   return (
     <div className="charades-game">
       <div className="top-bar">
-        <h1 className="game-title">PayU Charades</h1>
+        <h1 className="game-title">Charades</h1>
         <img
             className="qr"
             src={qr}
@@ -207,15 +220,22 @@ const CharadesGame = () => {
               initialTime={customTimer}
               isActive={isTimerActive}
             />
-            <Button
-                disabled={teams.length === 0}
-                variant='contained'
-                color='success'
-                onClick={startGame}
-                className={"start-game"}
-            >
-              Start Game
-            </Button>
+            <div className={"game-buttons"}>
+              <Button
+                  disabled={teams.length === 0}
+                  onClick={startGame}
+                  className={'game-buttons button'}
+              >
+                Start
+              </Button>
+              <Button
+                  disabled={!isGameActive}
+                  onClick={restart}
+                  className={'game-buttons button'}
+              >
+                Restart
+              </Button>
+            </div>
           </div>
         </div>
         <Card className="game-card">
@@ -249,14 +269,10 @@ const CharadesGame = () => {
             )}
         </Card>
       </div>
-
-
-      {/* Modal for Time's Up */}
       <Modal
         isOpen={isModalOpen}
         onNextTeam={nextTeam}
       />
-
       {isQrModalOpen && (
           <div className="qr-modal">
             <button className="close-button" onClick={() => setIsQrModalOpen(false)}>

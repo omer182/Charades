@@ -11,7 +11,6 @@
   box-sizing: border-box;
   border-radius: 5px;
   background-color: #3498db;
-  color: white;
 }
 
 .game {
@@ -133,9 +132,11 @@
 }
 
 .game-title {
-  font-size: 32px;
+  flex: 1;
+  text-align: center;
+  font-size: 40px;
   font-weight: bold;
-  color: #000000;
+  color: #fafafa;
 }
 
 .title {
@@ -235,6 +236,21 @@
     font-size: 24px;
     width: 200px;
     height: 200px;
+}
+
+.game-buttons {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  gap: 5px;
+
+  .button {
+    font-size: 14px;
+  }
 }
 
 .timer-section {

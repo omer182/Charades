@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Timer.css';
-import {Box, Button, Stack} from "@mui/material"; // Import the CSS file
+import { Button } from "@mui/material"; // Import the CSS file
 
 const Card = ({ className, children }) => {
   return <div className={`card ${className}`}>{children}</div>;
@@ -34,7 +34,7 @@ const Timer = ({ initialTime, onTimeUp, onTimerChange, isActive }) => {
       }
     }
     return () => clearInterval(timerInterval);
-  }, [isTimerActive, time, onTimeUp]);
+  }, [initialTime, isTimerActive, time, onTimeUp]);
 
   const pauseTimer = () => setIsTimerActive(!isTimerActive);
   const resetTimer = () => {

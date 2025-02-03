@@ -6,6 +6,7 @@ import logo from '../assets/logo.svg'
 import {Button} from "@mui/material";
 import UndoIcon from '@mui/icons-material/Undo';
 import {Check, Close} from "@mui/icons-material";
+import Modal from "./Components/Modal/Modal";
 
 const importAll = (r) => r.keys().map(r);
 
@@ -20,20 +21,20 @@ const CardContent = ({ className, children }) => {
   return <div className={`card-content ${className}`}>{children}</div>;
 };
 
-const Modal = ({ isOpen, onNextTeam }) => {
-  return isOpen ? (
-    <div className="overlay">
-      <div className="modal">
-        <div className="modal-content">
-          <h2>Time is Up!</h2>
-          <div className="modal-actions">
-            <Button onClick={onNextTeam}>Next Team</Button>
-          </div>
-        </div>
-      </div>
-    </div>
-  ) : null
-};
+// const Modal = ({ isOpen, nextTeam, roundScore, onNextTeam }) => {
+//   return isOpen ? (
+//     <div className="overlay">
+//       <Card className="modal">
+//         <div className="modal-content">
+//           <h2>Time is Up!</h2>
+//           <h3>Round Score: {roundScore}</h3>
+//           <h3>Up Next: {nextTeam}</h3>
+//         </div>
+//         <Button variant='contained' color='success' onClick={onNextTeam}>Ready</Button>
+//       </Card>
+//     </div>
+//   ) : null
+// };
 
 const CharadesGame = () => {
   const [teams, setTeams] = useState([]);
@@ -47,6 +48,7 @@ const CharadesGame = () => {
   const [isTimerActive, setIsTimerActive] = useState(false);
   const [customTimer, setCustomTimer] = useState(60); // Default 60 seconds
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
+  const [roundScore, setRoundScore] = useState(0); // Add roundScore state to track score per round
 
   useEffect(() => {
     const imagePaths = images.map((img) => img); // Extract the image path (Webpack adds `.default`)
@@ -77,10 +79,11 @@ const CharadesGame = () => {
   }
 
   const updateScore = (index, delta) => {
-    console.log(delta);
     const updatedTeams = teams.map((team, i) => {
       if (i === index) {
-        return { ...team, score: Math.max(0, team.score + delta) };
+    console.log({team, delta});
+        setRoundScore((prevScore) => prevScore + Number(delta)); // Update the round score
+        return { ...team, score: Math.max(0, team.score + Number(delta)) };
       }
       return team;
     });
@@ -94,8 +97,8 @@ const CharadesGame = () => {
     );
   };
 
-  const skipImage = () => {
-    updateScore(currentTeamIndex, -1);
+  const skipImage = (delta) => {
+    updateScore(currentTeamIndex, delta);
     setCurrentImageIndex((prevIndex) =>
       prevIndex < shuffledImages.length - 1 ? prevIndex + 1 : 0
     );
@@ -145,13 +148,15 @@ const CharadesGame = () => {
     if (nextIndex < teams.length) {
       // Move to the next team
       setCurrentTeamIndex(nextIndex);
+      setRoundScore(0);
     } else {
       // All teams have played, advance to the next round
       setCurrentRound((prevRound) => prevRound + 1);
       setCurrentTeamIndex(0);
+      setRoundScore(0);
     }
     setIsTimerActive(true); // Start the timer for the next team
-    skipImage(); // Skip to the next image
+    skipImage(0); // Skip to the next image
   };
 
   const handleCustomTimerChange = (time) => {
@@ -269,7 +274,7 @@ const CharadesGame = () => {
                   <Button size='large' variant='contained' color='success' onClick={nextImage}>
                     <Check />
                   </Button>
-                  <Button  size='large' variant='contained' color='error' onClick={skipImage}>
+                  <Button  size='large' variant='contained' color='error' onClick={() => skipImage(-1)}>
                     <Close />
                   </Button>
                 </div>
@@ -280,6 +285,8 @@ const CharadesGame = () => {
       <Modal
         isOpen={isModalOpen}
         onNextTeam={nextTeam}
+        nextTeam={teams[(currentTeamIndex + 1) % teams.length]?.name}
+        roundScore={roundScore}
       />
       {isQrModalOpen && (
           <div className="qr-modal">

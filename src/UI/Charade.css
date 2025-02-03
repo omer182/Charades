@@ -195,6 +195,7 @@
   flex-direction: column;
   justify-content: space-between;
   text-align: center;
+  width: 100%;
 }
 
 .image-container {
@@ -208,8 +209,7 @@
 }
 
 .charades-image {
-  width: 550px; /* Limits the image width */
-  height: 550px; /* Limits the image height */
+  height: 1000px; /* Limits the image height */
   object-fit: contain; /* Ensures image fits within the container without distortion */
 }
 
@@ -254,39 +254,6 @@
   display: flex;
   width: 100%;
   gap: 10px
-}
-
-.modal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 400px;
-  height: 300px;
-  background: white;
-  padding: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
-  z-index: 1000;
-}
-
-.modal-content {
-    display: flex;
-flex-direction: column;
-  height: 100%;
-  justify-content: space-between;
-  text-align: center;
-  font-size: x-large;
-}
-
-.modal-actions {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.modal-actions button {
-  margin: 0 10px;
 }
 
 .overlay {

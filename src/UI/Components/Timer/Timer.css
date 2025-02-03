@@ -10,60 +10,51 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   }
 
-  .timer-header {
-    font-size: 18px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 12px;
-  }
-
-  .timer-display {
-    font-size: 30px;
-    font-weight: bold;
-    color: #e74c3c;
-    margin-bottom: 12px;
-    text-align: center;
-      cursor: default;
-  }
-
-  .timer-controls {
+.timer-controls {
     display: flex;
     justify-content: space-around;
     gap: 5px;
     margin-bottom: 12px;
     width: 100%;
-  }
+}
 
-  .timer-controls button {
+.timer-controls button {
     padding: 4px 10px;
     border: none;
-      min-width: 70px;
+    min-width: 70px;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
-  }
+}
 
-  .timer-input-container {
+.timer-input-container {
     display: flex;
     justify-content: center;
     gap: 5px;
     width: 100%;
-  }
+}
 
-  .timer-input-container input {
-      width: 20px;
-      padding: 8px;
-      margin: 0;
-      text-align: center;
-      font-size: 12px;
-      border: 2px solid #ccc;
-      border-radius: 5px;
-      transition: border-color 0.3s;
-  }
-  .timer-input-container input:hover {
-      cursor: pointer;
-  }
-  .timer-input-container input:focus {
-      outline: none;
-      border-color: #3498db;
-  }
+.timer-input-container input {
+  width: 20px;
+  padding: 8px;
+  margin: 0;
+  text-align: center;
+  font-size: 12px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  transition: border-color 0.3s;
+}
+
+.timer-input-container input:hover {
+  cursor: pointer;
+}
+
+.timer-input-container input:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+.timer-slider {
+    width: 100%;
+    padding: 0 10px;
+}

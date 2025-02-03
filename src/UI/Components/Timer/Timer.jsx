@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Timer.css';
-import { Button } from "@mui/material"; // Import the CSS file
+import {Box, Button, Slider} from "@mui/material"; // Import the CSS file
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import {Pause} from "@mui/icons-material";
 
@@ -52,12 +52,41 @@ const Timer = ({ initialTime, onTimeUp, onTimerChange, isActive }) => {
     }
   };
 
+    const handleSliderChange = (event, value) => {
+    setTime(value);
+    setTimer(value);
+    }
+
+  const marks = [
+    { value: 30, label: "30s" },
+    { value: 120, label: "2m" },
+  ];
+
+    // Convert time to MM:SS format
+    const formatTime = (seconds) => {
+        const minutes = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${minutes}:${secs < 10 ? `0${secs}` : secs}`;
+    };
+
   return (
     <Card className="timer-container">
-      <div className="timer-header">Timer</div>
-      <div className="timer-display">
-        {time}s
-      </div>
+      <Box
+          sx={{
+            display: "inline-block",
+            backgroundColor: "#222",
+            color: "#fff",
+            fontSize: "32px",
+            fontWeight: "bold",
+            padding: "10px 20px",
+            borderRadius: "8px",
+            boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
+            fontFamily: "monospace",
+            mb: '10px'
+          }}
+      >
+        {formatTime(time)}
+      </Box>
       <div className="timer-controls">
         <Button
             disabled={!isActive}
@@ -77,17 +106,21 @@ const Timer = ({ initialTime, onTimeUp, onTimerChange, isActive }) => {
         </Button>
       </div>
       <div className="timer-input-container" >
-        {[30,60,120,180].map((value) => (
-        <Button
-            variant="outlined"
-            sx={{ padding: '2px 6px', minWidth: 'auto' }}
-            size='small'
-            onClick={() => handleCustomTimerChange(value)}
-        >
-          {value}
-        </Button>
-        ))}
-
+        <div className='timer-slider'>
+          <Slider
+              aria-label="Timer"
+              defaultValue={60}
+              value={timer}
+              disabled={isActive}
+              valueLabelDisplay="auto"
+              size='small'
+              step={30}
+              marks={true}
+              min={30}
+              max={120}
+              onChange={handleSliderChange}
+          />
+        </div>
         <input
             value={timer}
             onFocus={(event) => event.target.select()}

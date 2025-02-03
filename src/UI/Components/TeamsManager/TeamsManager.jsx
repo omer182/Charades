@@ -62,7 +62,7 @@ const TeamsManager = ({ teams, setTeams }) => {
                         />
                         <Button
                             variant="contained"
-                            color="primary"
+                            sx={{ backgroundColor: '#1ba7de'}}
                             onClick={addTeam}
                             disabled={teams.length >= 6}
                         >

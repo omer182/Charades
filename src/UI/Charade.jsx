@@ -2,13 +2,12 @@ import React, { useState, useEffect } from "react";
 import "./Charade.css";
 import Timer from "./Components/Timer/Timer";
 import qr from '../assets/qr.svg'
-import logo from '../assets/logo.svg'
+import logo from '../assets/logo2.png'
 import {Button, Slider, Typography} from "@mui/material";
 import UndoIcon from '@mui/icons-material/Undo';
 import {Check, Close, RestartAlt} from "@mui/icons-material";
 import Modal from "./Components/Modal/Modal";
 import TeamsManager from "./Components/TeamsManager/TeamsManager";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 const importAll = (r) => r.keys().map(r);
 
@@ -195,6 +194,7 @@ const CharadesGame = () => {
                   disabled={isGameActive}
                   step={1}
                   marks={true}
+                  sx={{ color: '#1ba7de'}}
                   min={2}
                   max={10}
                   onChange={(e, value) => setNumOfRounds(value)}
@@ -209,9 +209,15 @@ const CharadesGame = () => {
               />
               <div className={"game-buttons"}>
                 <Button
+                    sx={{
+                        background: 'linear-gradient(135deg, #a1c76d 30%, #6a9f36 90%)',
+                        '&:hover': {
+                            background: 'linear-gradient(135deg, #8aa756 30%, #4e7b2a 90%)'
+                        },
+                    }}
                     disabled={teams.length === 0 || isGameActive}
                     onClick={startGame}
-                    color='success'
+                    // color='success'
                     variant='contained'
                     className={'game-buttons button'}
                 >
@@ -221,6 +227,7 @@ const CharadesGame = () => {
                     disabled={!isGameActive}
                     onClick={restart}
                     variant='contained'
+                    sx={{ backgroundColor: '#1ba7de'}}
                     className={'game-buttons button'}
                 >
                   <RestartAlt/>
@@ -245,14 +252,17 @@ const CharadesGame = () => {
                   className="charades-image"
                 />
                 <div className="image-controls">
-                  <Button  size='large' variant='contained' onClick={previousImage}>
+                  <Button
+                      sx={{ backgroundColor: '#1ba7de'}}
+                      size='large' variant='contained' onClick={previousImage}>
                     <UndoIcon />
                   </Button>
                   {/*<Button variant='contained' onClick={previousImage}>Previous</Button>*/}
                   <Button size='large' variant='contained' color='success' onClick={nextImage}>
                     <Check />
                   </Button>
-                  <Button  size='large' variant='contained' color='error' onClick={() => skipImage(-1)}>
+                  <Button
+                      size='large' variant='contained' color='error' onClick={() => skipImage(-1)}>
                     <Close />
                   </Button>
                 </div>

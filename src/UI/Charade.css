@@ -1,4 +1,50 @@
 /* Full-screen container with padding around it */
+
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 10px;
+  height: 60px;
+  box-sizing: border-box;
+  border-radius: 5px;
+  background-color: #3498db;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: 2px;
+    margin-left: 50%;
+    font-size: 24px;
+    font-weight: bold;
+    width: 300px;
+    transform: translateX(-50%);
+}
+
+.game {
+  display: flex;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100%;
+  height: 20px;
+  padding: 20px;
+  box-sizing: border-box;
+  border-radius: 5px;
+  background-color: #3498db;
+  color: rgb(0, 0, 0);
+}
+
 .charades-game {
   display: flex;
   flex-direction: column;
@@ -11,33 +57,22 @@
 }
 
 
-.game {
-  display: flex;
-  justify-content: center;
-  gap: 50px;
-}
-
-.timer-section {
-  margin-bottom: 20px;
-}
-
-
 
 .left-panel {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  width: 600px;
+  margin: 0 20px;
+  width: 300px;
   gap: 20px;
 }
 
 .teams-section {
   display: flex;
   flex-direction: column;
-  align-items: center;
   width: 100%;
-  gap: 20px;
+  gap: 10px;
 }
 
 .team-list {
@@ -92,7 +127,6 @@
   background-color: white;
   border-radius: 8px;
   padding: 20px;
-  width: 100%;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -110,9 +144,11 @@
 }
 
 .game-title {
-  font-size: 32px;
+  flex: 1;
+  text-align: center;
+  font-size: 40px;
   font-weight: bold;
-  color: #333;
+  color: #fafafa;
 }
 
 .title {
@@ -147,30 +183,19 @@
   border-color: #3498db;
 }
 
-/* Button styling */
-.button {
-  background-color: #3498db;
-  color: white;
-  font-size: large;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.button:hover {
-  background-color: #2980b9;
+.game-card {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  margin-right: 20px;
 }
 
 .game-card-content {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   text-align: center;
-  gap: 20px; /* Adds space between the image and buttons */
-  padding: 20px;
+  width: 100%;
 }
 
 .image-container {
@@ -184,10 +209,7 @@
 }
 
 .charades-image {
-  width: 800px; /* Limits the image width */
-  height: 800px; /* Limits the image height */
-   /*height: min-content;*/
-  /*width: min-content;*/
+  height: 550px; /* Limits the image height */
   object-fit: contain; /* Ensures image fits within the container without distortion */
 }
 
@@ -199,41 +221,45 @@
   width: 100%;
 }
 
-/* Add additional styles for other elements as needed */
-.active-team {
-  font-weight: bold;
+.image-controls button {
+  min-width: 80px;
 }
 
-.modal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 400px;
-  height: 300px;
-  background: white;
-  padding: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
-  z-index: 1000;
-}
-
-.modal-content {
+.start-game {
     display: flex;
-flex-direction: column;
-  height: 100%;
-  justify-content: space-between;
-  text-align: center;
-  font-size: x-large;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    width: 200px;
+    height: 200px;
 }
 
-.modal-actions {
+.game-buttons {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  gap: 5px;
+
+  .button {
+    font-size: 12px;
+    padding: 0;
+  }
 }
 
-.modal-actions button {
-  margin: 0 10px;
+.game-settings {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.timer-section {
+  display: flex;
+  width: 100%;
+  gap: 10px
 }
 
 .overlay {
@@ -245,35 +271,6 @@ flex-direction: column;
   background: rgba(4, 4, 4, 0.5);
   z-index: 999;
 }
-
-.game-header {
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  width: 100%;
-  height: 20px;
-  padding: 20px;
-  box-sizing: border-box;
-  border-radius: 5px;
-  background-color: #3498db;
-  color: rgb(0, 0, 0);
-}
-
-.top-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  margin: 20px;
-  padding: 10px;
-  height: 60px;
-  box-sizing: border-box;
-  border-radius: 5px;
-  background-color: #3498db;
-  color: white;
-}
-
-
 
 /*QR*/
 .qr-modal {

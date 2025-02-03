@@ -2,6 +2,12 @@ import React, { useState, useEffect } from "react";
 import "./Charade.css";
 import Timer from "./Components/Timer/Timer";
 import qr from '../assets/qr.svg'
+import logo from '../assets/logo.svg'
+import {Button, Slider, Typography} from "@mui/material";
+import UndoIcon from '@mui/icons-material/Undo';
+import {Check, Close} from "@mui/icons-material";
+import Modal from "./Components/Modal/Modal";
+
 const importAll = (r) => r.keys().map(r);
 
 const images = importAll(require.context('../../pictures/result', false, /\.(jpg|jpeg|png|gif)$/));
@@ -11,33 +17,8 @@ const Card = ({ className, children }) => {
   return <div className={`card ${className}`}>{children}</div>;
 };
 
-const CardContent = ({ children }) => {
-  return <div className="card-content">{children}</div>;
-};
-
-const Button = ({ onClick, children }) => {
-  return (
-    <button className="button" onClick={onClick}>
-      {children}
-    </button>
-  );
-};
-
-const Modal = ({ isOpen, onClose, onNextTeam }) => {
-  if (!isOpen) return null;
-  return (
-    <div className="overlay">
-    <div className="modal">
-      <div className="modal-content">
-        <h2>Time is Up!</h2>
-        <div className="modal-actions">
-          <Button onClick={onNextTeam}>Next Team</Button>
-          <Button onClick={onClose}>Close</Button>
-        </div>
-      </div>
-    </div>
-    </div>
-  );
+const CardContent = ({ className, children }) => {
+  return <div className={`card-content ${className}`}>{children}</div>;
 };
 
 const CharadesGame = () => {
@@ -52,6 +33,10 @@ const CharadesGame = () => {
   const [isTimerActive, setIsTimerActive] = useState(false);
   const [customTimer, setCustomTimer] = useState(60); // Default 60 seconds
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
+  const [roundScore, setRoundScore] = useState(0); // Add roundScore state to track score per round
+  const [numOfRounds, setNumOfRounds] = useState(5);
+  const [isGameOver, setIsGameOver] = useState(false);
+  const [winningTeam, setWinningTeam] = useState(null);
 
   useEffect(() => {
     const imagePaths = images.map((img) => img); // Extract the image path (Webpack adds `.default`)
@@ -76,10 +61,17 @@ const CharadesGame = () => {
     }
   };
 
+  const removeTeam = (index) => {
+    const updatedTeams = teams.filter((team, i) => i !== index);
+    setTeams(updatedTeams);
+  }
+
   const updateScore = (index, delta) => {
     const updatedTeams = teams.map((team, i) => {
       if (i === index) {
-        return { ...team, score: team.score + delta };
+    console.log({team, delta});
+        setRoundScore((prevScore) => prevScore + Number(delta)); // Update the round score
+        return { ...team, score: Math.max(0, team.score + Number(delta)) };
       }
       return team;
     });
@@ -87,13 +79,14 @@ const CharadesGame = () => {
   };
 
   const nextImage = () => {
-    updateScore(currentTeamIndex, 1); // Increase the score of the current team
+    updateScore(currentTeamIndex, 1);
     setCurrentImageIndex((prevIndex) =>
       prevIndex < shuffledImages.length - 1 ? prevIndex + 1 : 0
     );
   };
 
-  const skipImage = () => {
+  const skipImage = (delta) => {
+    updateScore(currentTeamIndex, delta);
     setCurrentImageIndex((prevIndex) =>
       prevIndex < shuffledImages.length - 1 ? prevIndex + 1 : 0
     );
@@ -111,14 +104,44 @@ const CharadesGame = () => {
       return;
     }
     setIsGameActive(true);
-    setIsTimerActive(true); // Start the timer
+    setIsTimerActive(true);
     setCurrentImageIndex(0);
   };
 
-  const handleTimerEnd = () => {
-    setIsModalOpen(true);
-    setIsTimerActive(false); // Start the timer for the next team
+  const restart = () => {
+    setIsGameActive(false);
+    setCurrentRound(1);
+    setCurrentTeamIndex(0);
+    setTeams([]);
+    setNewTeamName("");
+    setCustomTimer(60);
+    setIsTimerActive(false);
+    setIsModalOpen(false);
+    setShuffledImages(shuffleArray(images.map((img) => img)));
+    setIsGameOver(false);
+    setNumOfRounds(5);
+  }
+
+  const handleGameOver = () => {
+      const winningTeam = teams.reduce((prev, current) =>
+          prev.score > current.score ? prev : current
+      );
+
+      setWinningTeam(winningTeam);
+      setIsGameOver(true);
+      setIsModalOpen(true); // Open modal instead of using alert
   };
+
+
+  const handleTimerEnd = () => {
+    setIsTimerActive(false); // Stop the timer
+
+    if (currentRound === numOfRounds && currentTeamIndex === teams.length - 1) {
+      handleGameOver();
+    } else {
+      setIsModalOpen(true);
+    }
+  }
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -131,23 +154,40 @@ const CharadesGame = () => {
     if (nextIndex < teams.length) {
       // Move to the next team
       setCurrentTeamIndex(nextIndex);
+      setRoundScore(0);
     } else {
       // All teams have played, advance to the next round
       setCurrentRound((prevRound) => prevRound + 1);
       setCurrentTeamIndex(0);
+      setRoundScore(0);
     }
     setIsTimerActive(true); // Start the timer for the next team
-    skipImage(); // Skip to the next image
+    skipImage(0); // Skip to the next image
   };
 
   const handleCustomTimerChange = (time) => {
     setCustomTimer(Number(time)); // Update the timer for the game
   };
 
+  const handlePlayAgain = () => {
+    setIsGameActive(false);
+    setCurrentRound(1);
+    setCurrentTeamIndex(0);
+    setNewTeamName("");
+    setIsTimerActive(false);
+    setIsModalOpen(false);
+    setIsGameOver(false);
+  }
+
   return (
     <div className="charades-game">
       <div className="top-bar">
-        <h1 className="game-title">PayU Charades</h1>
+        {/*<h1 className="game-title">Charades</h1>*/}
+        <img
+            className="logo"
+            src={logo}
+            alt="logo"
+        />
         <img
             className="qr"
             src={qr}
@@ -161,7 +201,7 @@ const CharadesGame = () => {
           <div className="teams-section">
             <Card className="team-card">
               <CardContent>
-              <h2 className="section-title">Create a Team</h2>
+                <h2 className="section-title">Create a Team</h2>
                 <div className="input-group">
                   <input
                     type="text"
@@ -170,11 +210,10 @@ const CharadesGame = () => {
                     onChange={(e) => setNewTeamName(e.target.value)}
                     className="input"
                   />
-                  <Button onClick={addTeam}>Add Team</Button>
+                  <Button variant='contained' onClick={addTeam}>Add Team</Button>
                 </div>
               </CardContent>
             </Card>
-
             {teams.length > 0 && (
               <Card className="team-list-card">
                 <CardContent>
@@ -186,6 +225,7 @@ const CharadesGame = () => {
                           className="team-item"
                           style={{ borderLeft: `5px solid ${team.color}` }}
                       >
+                        <Button color='error' onClick={() => removeTeam(index)}>X</Button>
                         <span className="team-name">{team.name}</span>
                         <div className="score-controls">
                           <Button onClick={() => updateScore(index, -1)}>-</Button>
@@ -199,52 +239,91 @@ const CharadesGame = () => {
               </Card>
             )}
           </div>
-          <div className="timer-section">
+          <div className='game-settings'>
+            <Card>
+              <Typography id="discrete-slider" gutterBottom>
+                  Number of Rounds: {numOfRounds}
+              </Typography>
+              <Slider
+                  aria-label="Custom marks"
+                  defaultValue={numOfRounds}
+                  disabled={isGameActive}
+                  step={1}
+                  marks={true}
+                  min={2}
+                  max={10}
+                  onChange={(e, value) => setNumOfRounds(value)}
+              />
+            </Card>
+            <div className="timer-section">
               <Timer
                 onTimeUp={handleTimerEnd}
                 onTimerChange={handleCustomTimerChange}
                 initialTime={customTimer}
                 isActive={isTimerActive}
               />
+              <div className={"game-buttons"}>
+                <Button
+                    disabled={teams.length === 0 || isGameActive}
+                    onClick={startGame}
+                    color='success'
+                    variant='contained'
+                    className={'game-buttons button'}
+                >
+                  Start
+                </Button>
+                <Button
+                    disabled={!isGameActive}
+                    onClick={restart}
+                    variant='contained'
+                    className={'game-buttons button'}
+                >
+                  Restart
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
         <Card className="game-card">
-          <CardContent className="game-card-content">
-            <div className="game-header">
-              <h3 className="section-title">Round {currentRound}</h3>
-              <h3>
-                Current Team:{" "}
-                <strong>{teams[currentTeamIndex]?.name || "No Team"}</strong>
-              </h3>
-            </div>
-            {shuffledImages.length > 0 && isGameActive ? (
-              <div className="image-container">
+          {isGameActive && (
+              <CardContent className="game-card-content">
+                <div className="game-header">
+                  <h3 className="section-title">Round {currentRound}</h3>
+                  <h3>
+                    Current Team:{" "}
+                    <strong>{teams[currentTeamIndex]?.name || "No Team"}</strong>
+                  </h3>
+                </div>
                 <img
                   src={shuffledImages[currentImageIndex]}
                   alt="Charades"
                   className="charades-image"
                 />
                 <div className="image-controls">
-                <Button onClick={previousImage}>Previous</Button>
-                  <Button onClick={nextImage}>Next</Button>
-                  <Button onClick={skipImage}>Skip</Button>
+                  <Button  size='large' variant='contained' onClick={previousImage}>
+                    <UndoIcon />
+                  </Button>
+                  {/*<Button variant='contained' onClick={previousImage}>Previous</Button>*/}
+                  <Button size='large' variant='contained' color='success' onClick={nextImage}>
+                    <Check />
+                  </Button>
+                  <Button  size='large' variant='contained' color='error' onClick={() => skipImage(-1)}>
+                    <Close />
+                  </Button>
                 </div>
-              </div>
-            ) : (
-              <Button onClick={startGame}>Start Game</Button>
+              </CardContent>
             )}
-          </CardContent>
         </Card>
       </div>
-
-
-      {/* Modal for Time's Up */}
       <Modal
         isOpen={isModalOpen}
-        onClose={closeModal}
+        isGameOver={isGameOver}
+        winningTeam={winningTeam}
         onNextTeam={nextTeam}
+        nextTeam={teams[(currentTeamIndex + 1) % teams.length]?.name}
+        roundScore={roundScore}
+        onGameOver={handlePlayAgain}
       />
-
       {isQrModalOpen && (
           <div className="qr-modal">
             <button className="close-button" onClick={() => setIsQrModalOpen(false)}>

@@ -209,7 +209,7 @@
 }
 
 .charades-image {
-  height: 1000px; /* Limits the image height */
+  height: 550px; /* Limits the image height */
   object-fit: contain; /* Ensures image fits within the container without distortion */
 }
 
@@ -248,6 +248,12 @@
     font-size: 12px;
     padding: 0;
   }
+}
+
+.game-settings {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .timer-section {

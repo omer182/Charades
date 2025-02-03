@@ -3,7 +3,7 @@ import "./Charade.css";
 import Timer from "./Components/Timer/Timer";
 import qr from '../assets/qr.svg'
 import logo from '../assets/logo.svg'
-import {Button} from "@mui/material";
+import {Button, Slider, Typography} from "@mui/material";
 import UndoIcon from '@mui/icons-material/Undo';
 import {Check, Close} from "@mui/icons-material";
 import Modal from "./Components/Modal/Modal";
@@ -21,21 +21,6 @@ const CardContent = ({ className, children }) => {
   return <div className={`card-content ${className}`}>{children}</div>;
 };
 
-// const Modal = ({ isOpen, nextTeam, roundScore, onNextTeam }) => {
-//   return isOpen ? (
-//     <div className="overlay">
-//       <Card className="modal">
-//         <div className="modal-content">
-//           <h2>Time is Up!</h2>
-//           <h3>Round Score: {roundScore}</h3>
-//           <h3>Up Next: {nextTeam}</h3>
-//         </div>
-//         <Button variant='contained' color='success' onClick={onNextTeam}>Ready</Button>
-//       </Card>
-//     </div>
-//   ) : null
-// };
-
 const CharadesGame = () => {
   const [teams, setTeams] = useState([]);
   const [newTeamName, setNewTeamName] = useState("");
@@ -49,6 +34,7 @@ const CharadesGame = () => {
   const [customTimer, setCustomTimer] = useState(60); // Default 60 seconds
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
   const [roundScore, setRoundScore] = useState(0); // Add roundScore state to track score per round
+  const [numOfRounds, setNumOfRounds] = useState(5);
 
   useEffect(() => {
     const imagePaths = images.map((img) => img); // Extract the image path (Webpack adds `.default`)
@@ -132,10 +118,23 @@ const CharadesGame = () => {
     setShuffledImages(shuffleArray(images.map((img) => img)));
   }
 
+  const handleGameOver = () => {
+    const winningTeam = teams.reduce((prev, current) =>
+      prev.score > current.score ? prev : current
+    );
+    // modal
+      alert(`Game Over! Winning Team: ${winningTeam.name} with a score of ${winningTeam.score}`);
+  }
+
   const handleTimerEnd = () => {
-    setIsModalOpen(true);
-    setIsTimerActive(false); // Start the timer for the next team
-  };
+    setIsTimerActive(false); // Stop the timer
+
+    if (currentRound === numOfRounds && currentTeamIndex === teams.length - 1) {
+      handleGameOver();
+    } else {
+      setIsModalOpen(true);
+    }
+  }
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -223,31 +222,48 @@ const CharadesGame = () => {
               </Card>
             )}
           </div>
-          <div className="timer-section">
-            <Timer
-              onTimeUp={handleTimerEnd}
-              onTimerChange={handleCustomTimerChange}
-              initialTime={customTimer}
-              isActive={isTimerActive}
-            />
-            <div className={"game-buttons"}>
-              <Button
-                  disabled={teams.length === 0}
-                  onClick={startGame}
-                  color='success'
-                  variant='contained'
-                  className={'game-buttons button'}
-              >
-                Start
-              </Button>
-              <Button
-                  disabled={!isGameActive}
-                  onClick={restart}
-                  variant='contained'
-                  className={'game-buttons button'}
-              >
-                Restart
-              </Button>
+          <div className='game-settings'>
+            <Card>
+              <Typography id="discrete-slider" gutterBottom>
+                  Number of Rounds: {numOfRounds}
+              </Typography>
+              <Slider
+                  aria-label="Custom marks"
+                  defaultValue={numOfRounds}
+                  disabled={isGameActive}
+                  step={1}
+                  marks={true}
+                  min={2}
+                  max={10}
+                  onChange={(e, value) => setNumOfRounds(value)}
+              />
+            </Card>
+            <div className="timer-section">
+              <Timer
+                onTimeUp={handleTimerEnd}
+                onTimerChange={handleCustomTimerChange}
+                initialTime={customTimer}
+                isActive={isTimerActive}
+              />
+              <div className={"game-buttons"}>
+                <Button
+                    disabled={teams.length === 0 || isGameActive}
+                    onClick={startGame}
+                    color='success'
+                    variant='contained'
+                    className={'game-buttons button'}
+                >
+                  Start
+                </Button>
+                <Button
+                    disabled={!isGameActive}
+                    onClick={restart}
+                    variant='contained'
+                    className={'game-buttons button'}
+                >
+                  Restart
+                </Button>
+              </div>
             </div>
           </div>
         </div>
@@ -284,6 +300,7 @@ const CharadesGame = () => {
       </div>
       <Modal
         isOpen={isModalOpen}
+        isFinalRound={currentRound === numOfRounds}
         onNextTeam={nextTeam}
         nextTeam={teams[(currentTeamIndex + 1) % teams.length]?.name}
         roundScore={roundScore}

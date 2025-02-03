@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {Button} from '@mui/material';
 import './Modal.css';
 
-const Modal = ({ isOpen, nextTeam, roundScore, onNextTeam }) => {
+const Modal = ({ isOpen, isGameOver, winningTeam, nextTeam, roundScore, onNextTeam, onGameOver }) => {
     const [countdown, setCountdown] = useState(null);
 
     const handleReadyClick = () => {
@@ -28,16 +28,26 @@ const Modal = ({ isOpen, nextTeam, roundScore, onNextTeam }) => {
         <div className="overlay">
             <div className="modal">
                 <div className="modal-content">
-                    <h2>Time is Up!</h2>
-                    <h3>Round Score: {roundScore}</h3>
-                    <h3>Up Next: {nextTeam}</h3>
+                    {isGameOver ? (
+                        <>
+                            <h2>Game Over!</h2>
+                            <h3>Winning Team: {winningTeam?.name}</h3>
+                            <h3>Final Score: {winningTeam?.score}</h3>
+                        </>
+                    ) : (
+                        <>
+                            <h2>Time is Up!</h2>
+                            <h3>Round Score: {roundScore}</h3>
+                            <h3>Up Next: {nextTeam}</h3>
+                        </>
+                    )}
                 </div>
                 <Button
                     variant="contained"
                     color="success"
-                    onClick={handleReadyClick}
+                    onClick={isGameOver ? onGameOver : handleReadyClick}
                 >
-                    {countdown !== null ? countdown : 'Ready'}  {/* Show countdown or 'Ready' */}
+                    {isGameOver ? 'Play Again' : (countdown !== null ? countdown : 'Ready')}
                 </Button>
             </div>
         </div>

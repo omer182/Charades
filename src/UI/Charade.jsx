@@ -35,6 +35,8 @@ const CharadesGame = () => {
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
   const [roundScore, setRoundScore] = useState(0); // Add roundScore state to track score per round
   const [numOfRounds, setNumOfRounds] = useState(5);
+  const [isGameOver, setIsGameOver] = useState(false);
+  const [winningTeam, setWinningTeam] = useState(null);
 
   useEffect(() => {
     const imagePaths = images.map((img) => img); // Extract the image path (Webpack adds `.default`)
@@ -116,15 +118,20 @@ const CharadesGame = () => {
     setIsTimerActive(false);
     setIsModalOpen(false);
     setShuffledImages(shuffleArray(images.map((img) => img)));
+    setIsGameOver(false);
+    setNumOfRounds(5);
   }
 
   const handleGameOver = () => {
-    const winningTeam = teams.reduce((prev, current) =>
-      prev.score > current.score ? prev : current
-    );
-    // modal
-      alert(`Game Over! Winning Team: ${winningTeam.name} with a score of ${winningTeam.score}`);
-  }
+      const winningTeam = teams.reduce((prev, current) =>
+          prev.score > current.score ? prev : current
+      );
+
+      setWinningTeam(winningTeam);
+      setIsGameOver(true);
+      setIsModalOpen(true); // Open modal instead of using alert
+  };
+
 
   const handleTimerEnd = () => {
     setIsTimerActive(false); // Stop the timer
@@ -161,6 +168,16 @@ const CharadesGame = () => {
   const handleCustomTimerChange = (time) => {
     setCustomTimer(Number(time)); // Update the timer for the game
   };
+
+  const handlePlayAgain = () => {
+    setIsGameActive(false);
+    setCurrentRound(1);
+    setCurrentTeamIndex(0);
+    setNewTeamName("");
+    setIsTimerActive(false);
+    setIsModalOpen(false);
+    setIsGameOver(false);
+  }
 
   return (
     <div className="charades-game">
@@ -300,10 +317,12 @@ const CharadesGame = () => {
       </div>
       <Modal
         isOpen={isModalOpen}
-        isFinalRound={currentRound === numOfRounds}
+        isGameOver={isGameOver}
+        winningTeam={winningTeam}
         onNextTeam={nextTeam}
         nextTeam={teams[(currentTeamIndex + 1) % teams.length]?.name}
         roundScore={roundScore}
+        onGameOver={handlePlayAgain}
       />
       {isQrModalOpen && (
           <div className="qr-modal">

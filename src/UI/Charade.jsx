@@ -5,13 +5,14 @@ import qr from '../assets/qr.svg'
 import logo from '../assets/logo.svg'
 import {Button, Slider, Typography} from "@mui/material";
 import UndoIcon from '@mui/icons-material/Undo';
-import {Check, Close} from "@mui/icons-material";
+import {Check, Close, RestartAlt} from "@mui/icons-material";
 import Modal from "./Components/Modal/Modal";
+import TeamsManager from "./Components/TeamsManager/TeamsManager";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 const importAll = (r) => r.keys().map(r);
 
 const images = importAll(require.context('../../pictures/result', false, /\.(jpg|jpeg|png|gif)$/));
-const colors = ["#FF5733", "#33FF57", "#3357FF", "#FF33A8", "#33FFF5"]; // Add more colors if needed
 
 const Card = ({ className, children }) => {
   return <div className={`card ${className}`}>{children}</div>;
@@ -23,7 +24,6 @@ const CardContent = ({ className, children }) => {
 
 const CharadesGame = () => {
   const [teams, setTeams] = useState([]);
-  const [newTeamName, setNewTeamName] = useState("");
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [shuffledImages, setShuffledImages] = useState([]);
   const [isGameActive, setIsGameActive] = useState(false);
@@ -53,24 +53,11 @@ const CharadesGame = () => {
     return shuffled;
   };
 
-  const addTeam = () => {
-    if (newTeamName.trim() !== "") {
-      const color = colors[teams.length % colors.length]; // Cycle through colors
-      setTeams([...teams, { name: newTeamName, score: 0, color }]);
-      setNewTeamName("");
-    }
-  };
-
-  const removeTeam = (index) => {
-    const updatedTeams = teams.filter((team, i) => i !== index);
-    setTeams(updatedTeams);
-  }
-
   const updateScore = (index, delta) => {
     const updatedTeams = teams.map((team, i) => {
       if (i === index) {
     console.log({team, delta});
-        setRoundScore((prevScore) => prevScore + Number(delta)); // Update the round score
+        setRoundScore((prevScore) => Math.max(0, prevScore + Number(delta))); // Update the round score
         return { ...team, score: Math.max(0, team.score + Number(delta)) };
       }
       return team;
@@ -113,7 +100,6 @@ const CharadesGame = () => {
     setCurrentRound(1);
     setCurrentTeamIndex(0);
     setTeams([]);
-    setNewTeamName("");
     setCustomTimer(60);
     setIsTimerActive(false);
     setIsModalOpen(false);
@@ -173,7 +159,6 @@ const CharadesGame = () => {
     setIsGameActive(false);
     setCurrentRound(1);
     setCurrentTeamIndex(0);
-    setNewTeamName("");
     setIsTimerActive(false);
     setIsModalOpen(false);
     setIsGameOver(false);
@@ -198,47 +183,7 @@ const CharadesGame = () => {
       </div>
       <div className="game">
         <div className="left-panel">
-          <div className="teams-section">
-            <Card className="team-card">
-              <CardContent>
-                <h2 className="section-title">Create a Team</h2>
-                <div className="input-group">
-                  <input
-                    type="text"
-                    placeholder="Team Name"
-                    value={newTeamName}
-                    onChange={(e) => setNewTeamName(e.target.value)}
-                    className="input"
-                  />
-                  <Button variant='contained' onClick={addTeam}>Add Team</Button>
-                </div>
-              </CardContent>
-            </Card>
-            {teams.length > 0 && (
-              <Card className="team-list-card">
-                <CardContent>
-                  <h2 className="section-title">Teams</h2>
-                  <ul className="team-list">
-                    {teams.map((team, index) => (
-                      <li
-                          key={index}
-                          className="team-item"
-                          style={{ borderLeft: `5px solid ${team.color}` }}
-                      >
-                        <Button color='error' onClick={() => removeTeam(index)}>X</Button>
-                        <span className="team-name">{team.name}</span>
-                        <div className="score-controls">
-                          <Button onClick={() => updateScore(index, -1)}>-</Button>
-                          <span className="team-score">{team.score}</span>
-                          <Button onClick={() => updateScore(index, 1)}>+</Button>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            )}
-          </div>
+          <TeamsManager teams={teams} setTeams={setTeams} />
           <div className='game-settings'>
             <Card>
               <Typography id="discrete-slider" gutterBottom>
@@ -278,7 +223,7 @@ const CharadesGame = () => {
                     variant='contained'
                     className={'game-buttons button'}
                 >
-                  Restart
+                  <RestartAlt/>
                 </Button>
               </div>
             </div>

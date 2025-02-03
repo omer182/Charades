@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './Timer.css';
 import { Button } from "@mui/material"; // Import the CSS file
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import {Pause} from "@mui/icons-material";
 
 const Card = ({ className, children }) => {
   return <div className={`card ${className}`}>{children}</div>;
@@ -58,12 +60,13 @@ const Timer = ({ initialTime, onTimeUp, onTimerChange, isActive }) => {
       </div>
       <div className="timer-controls">
         <Button
+            disabled={!isActive}
             color={isTimerActive ? 'error' : 'success'}
             variant="contained"
             onClick={pauseTimer}
             sx={{ padding: '2px 6px', minWidth: 'auto' }}
         >
-          {isTimerActive ? 'Pause' : 'Play'}
+          {isTimerActive ? <Pause /> : <PlayArrowIcon />}
         </Button>
         <Button
             variant="contained"

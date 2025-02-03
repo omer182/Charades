@@ -10,7 +10,6 @@
   height: 60px;
   box-sizing: border-box;
   border-radius: 5px;
-  background-color: #3498db;
 }
 
 .logo {
@@ -21,7 +20,7 @@
     margin-left: 50%;
     font-size: 24px;
     font-weight: bold;
-    width: 300px;
+    width: 400px;
     transform: translateX(-50%);
 }
 
@@ -41,7 +40,7 @@
   padding: 20px;
   box-sizing: border-box;
   border-radius: 5px;
-  background-color: #3498db;
+  background-color: #1ba7de;
   color: rgb(0, 0, 0);
 }
 
@@ -53,7 +52,7 @@
   height: 100vh;
   padding: 20px;
   box-sizing: border-box;
-  background-color: #f5f5f5; /* You can customize the background color */
+  background-color: #f5ebe0; /* You can customize the background color */
 }
 
 
@@ -66,60 +65,6 @@
   margin: 0 20px;
   width: 300px;
   gap: 20px;
-}
-
-.teams-section {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  gap: 10px;
-}
-
-.team-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin: 0;
-  font-size: 20px;
-  padding: 0;
-}
-
-.team-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  margin: 5px 0;
-  border-radius: 5px;
-}
-
-.team-item span.team-name {
-  font-weight: bold;
-  margin-right: 10px;
-}
-
-.team-item .score-controls {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.team-item .team-score {
-  font-size: 1.2em;
-  font-weight: bold;
-}
-
-.team-list-card {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-
-  .team-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5px;
-  }
 }
 
 /* Other general styles */

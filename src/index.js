@@ -6,11 +6,22 @@ import {createTheme, ThemeProvider} from "@mui/material";
 
 const theme = createTheme({
     palette: {
-        primary: {
-            main: '#3f51b5',
-        },
-        secondary: {
-            main: '#f50057',
+        palette: {
+            primary: {
+                main: "#006d77", // Example color
+            },
+            secondary: {
+                main: "#e29578",
+            },
+            tertiary: {
+                main: "#83c5be",
+            },
+            quaternary: {
+                main: "#ffddd2",
+            },
+            quinary: {
+                main: "#edf6f9",
+            },
         },
     }
 });

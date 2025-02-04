@@ -13,30 +13,22 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
-const colors = ["#FF5733", "#33FF57", "#3357FF", "#FF33A8", "#33FFF5"]; // Cycle through colors
+const colors = ["#006D77", "#E29578", "#FFDDD2", "#83C5BE", "#6c584c", '#EDF6F9']; // Cycle through colors
 
 const TeamsManager = ({ teams, setTeams }) => {
     const [newTeamName, setNewTeamName] = useState("");
-    const [error, setError] = useState(false);
 
     const addTeam = () => {
-        if (teams.length >= 6) {
-            setError(true);
-            return;
-        }
-
-        if (newTeamName.trim() !== "") {
+          if (newTeamName.trim() !== "") {
             const color = colors[teams.length % colors.length]; // Assign a cycling color
             setTeams([...teams, { name: newTeamName, score: 0, color }]);
             setNewTeamName("");
-            setError(false); // Reset error if adding is successful
         }
     };
 
     const removeTeam = (index) => {
         const updatedTeams = teams.filter((_, i) => i !== index);
         setTeams(updatedTeams);
-        setError(false);
     };
 
     const updateScore = (index, delta) => {
@@ -62,7 +54,10 @@ const TeamsManager = ({ teams, setTeams }) => {
                         />
                         <Button
                             variant="contained"
-                            sx={{ backgroundColor: '#1ba7de'}}
+                            sx={{
+                                background: "linear-gradient(90deg, #55c5f2, #1ba7de, #0a75a6)",
+                                padding: "8px",
+                            }}
                             onClick={addTeam}
                             disabled={teams.length >= 6}
                         >
@@ -86,7 +81,6 @@ const TeamsManager = ({ teams, setTeams }) => {
                                     p: 2,
                                     height: 12,
                                     borderRadius: 1,
-                                    backgroundColor: "#f5f5f5",
                                 }}
                             >
                                 <Typography variant="body1">{team.name}</Typography>
@@ -99,8 +93,9 @@ const TeamsManager = ({ teams, setTeams }) => {
                                     <IconButton size='small'  onClick={() => updateScore(index, 1)}>
                                         <AddCircleIcon/>
                                     </IconButton>
-                                    <IconButton color="error" onClick={() => removeTeam(index)}>
-                                        <DeleteIcon />
+                                    <IconButton color={"error"} size='small'
+                                        onClick={() => removeTeam(index)}>
+                                        <DeleteIcon/>
                                     </IconButton>
                                 </Stack>
                             </Box>

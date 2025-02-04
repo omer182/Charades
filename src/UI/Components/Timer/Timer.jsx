@@ -100,7 +100,12 @@ const Timer = ({ initialTime, onTimeUp, onTimerChange, isActive }) => {
         <Button
             variant="contained"
             onClick={resetTimer}
-            sx={{ padding: '2px 6px', minWidth: 'auto', backgroundColor: '#1ba7de' }}
+            color="primary"
+            sx={{
+                background: "linear-gradient(90deg, #55c5f2, #1ba7de, #0a75a6)",
+                padding: '2px 6px',
+                minWidth: 'auto'
+            }}
         >
           Reset
         </Button>
@@ -116,7 +121,7 @@ const Timer = ({ initialTime, onTimeUp, onTimerChange, isActive }) => {
               size='small'
               step={30}
               marks={true}
-              sx={{ color: '#1ba7de'}}
+              color="primary"
               min={30}
               max={120}
               onChange={handleSliderChange}

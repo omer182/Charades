@@ -186,7 +186,7 @@ const CharadesGame = () => {
           <div className='game-settings'>
             <Card>
               <Typography id="discrete-slider" gutterBottom>
-                  Number of Rounds: {numOfRounds}
+                  Rounds: {numOfRounds}
               </Typography>
               <Slider
                   aria-label="Custom marks"
@@ -194,7 +194,7 @@ const CharadesGame = () => {
                   disabled={isGameActive}
                   step={1}
                   marks={true}
-                  sx={{ color: '#1ba7de'}}
+                  color="primary"
                   min={2}
                   max={10}
                   onChange={(e, value) => setNumOfRounds(value)}
@@ -214,10 +214,10 @@ const CharadesGame = () => {
                         '&:hover': {
                             background: 'linear-gradient(135deg, #8aa756 30%, #4e7b2a 90%)'
                         },
+                      borderRadius: 5
                     }}
                     disabled={teams.length === 0 || isGameActive}
                     onClick={startGame}
-                    // color='success'
                     variant='contained'
                     className={'game-buttons button'}
                 >
@@ -227,7 +227,11 @@ const CharadesGame = () => {
                     disabled={!isGameActive}
                     onClick={restart}
                     variant='contained'
-                    sx={{ backgroundColor: '#1ba7de'}}
+                    sx={{
+                      background: "linear-gradient(90deg, #55c5f2, #1ba7de, #0a75a6)",
+                      padding: "8px",
+                      borderRadius: 5
+                    }}
                     className={'game-buttons button'}
                 >
                   <RestartAlt/>
@@ -240,9 +244,9 @@ const CharadesGame = () => {
           {isGameActive && (
               <CardContent className="game-card-content">
                 <div className="game-header">
-                  <h3 className="section-title">Round {currentRound}</h3>
+                  <h3>Round {currentRound}</h3>
                   <h3>
-                    Current Team:{" "}
+                    Team:{" "}
                     <strong>{teams[currentTeamIndex]?.name || "No Team"}</strong>
                   </h3>
                 </div>
@@ -253,16 +257,38 @@ const CharadesGame = () => {
                 />
                 <div className="image-controls">
                   <Button
-                      sx={{ backgroundColor: '#1ba7de'}}
+                      sx={{
+                        background: "linear-gradient(90deg, #55c5f2, #1ba7de, #0a75a6)",
+                        padding: "8px",
+                      }}
                       size='large' variant='contained' onClick={previousImage}>
                     <UndoIcon />
                   </Button>
                   {/*<Button variant='contained' onClick={previousImage}>Previous</Button>*/}
-                  <Button size='large' variant='contained' color='success' onClick={nextImage}>
+                  <Button
+                      size='large'
+                      variant='contained'
+                      onClick={nextImage}
+                      sx={{
+                        background: 'linear-gradient(135deg, #a1c76d 30%, #6a9f36 90%)',
+                        '&:hover': {
+                          background: 'linear-gradient(135deg, #8aa756 30%, #4e7b2a 90%)'
+                        },
+                      }}
+                  >
                     <Check />
                   </Button>
                   <Button
-                      size='large' variant='contained' color='error' onClick={() => skipImage(-1)}>
+                      size='large'
+                      variant='contained'
+                      sx={{
+                        background: 'linear-gradient(135deg, #e64c82 30%, #c2185b 90%)',
+                        '&:hover': {
+                          background: 'linear-gradient(135deg, #d8436a 30%, #a5144a 90%)',
+                        },
+                      }}
+                      onClick={() => skipImage(-1)}
+                  >
                     <Close />
                   </Button>
                 </div>

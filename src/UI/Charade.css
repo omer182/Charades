@@ -40,7 +40,7 @@
   padding: 20px;
   box-sizing: border-box;
   border-radius: 5px;
-  background-color: #1ba7de;
+  background: linear-gradient(90deg, #55c5f2, #1ba7de, #0a75a6);
   color: rgb(0, 0, 0);
 }
 
@@ -103,9 +103,7 @@
 }
 
 .title, .section-title {
-  font-size: 24px;
   margin: 5px;
-  font-weight: bold;
   color: #333;
 }
 
@@ -154,7 +152,7 @@
 }
 
 .charades-image {
-  height: 550px; /* Limits the image height */
+  height: 1000px; /* Limits the image height */
   object-fit: contain; /* Ensures image fits within the container without distortion */
 }
 

@@ -44,7 +44,13 @@ const Modal = ({ isOpen, isGameOver, winningTeam, nextTeam, roundScore, onNextTe
                 </div>
                 <Button
                     variant="contained"
-                    color="success"
+                    sx={{
+                        background: 'linear-gradient(135deg, #a1c76d 30%, #6a9f36 90%)',
+                        '&:hover': {
+                            background: 'linear-gradient(135deg, #8aa756 30%, #4e7b2a 90%)'
+                        },
+                        width: '120px'
+                    }}
                     onClick={isGameOver ? onGameOver : handleReadyClick}
                 >
                     {isGameOver ? 'Play Again' : (countdown !== null ? countdown : 'Ready')}

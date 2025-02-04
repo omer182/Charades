@@ -41,6 +41,7 @@ const Timer = ({ initialTime, onTimeUp, onTimerChange, isActive }) => {
   const pauseTimer = () => setIsTimerActive(!isTimerActive);
   const resetTimer = () => {
     setTime(initialTime);
+    setTimer(initialTime);
     setIsTimerActive(false);
   }
 
@@ -56,11 +57,6 @@ const Timer = ({ initialTime, onTimeUp, onTimerChange, isActive }) => {
     setTime(value);
     setTimer(value);
     }
-
-  const marks = [
-    { value: 30, label: "30s" },
-    { value: 120, label: "2m" },
-  ];
 
     // Convert time to MM:SS format
     const formatTime = (seconds) => {
@@ -127,13 +123,13 @@ const Timer = ({ initialTime, onTimeUp, onTimerChange, isActive }) => {
               onChange={handleSliderChange}
           />
         </div>
-        <input
-            value={timer}
-            onFocus={(event) => event.target.select()}
-            onChange={(e) => handleCustomTimerChange(e.target.value)}
-            className="input"
-            placeholder="Set Timer"
-        />
+        {/*<input*/}
+        {/*    value={timer}*/}
+        {/*    onFocus={(event) => event.target.select()}*/}
+        {/*    onChange={(e) => handleCustomTimerChange(e.target.value)}*/}
+        {/*    className="input"*/}
+        {/*    placeholder="Set Timer"*/}
+        {/*/>*/}
       </div>
     </Card>
   );

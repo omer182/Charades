@@ -138,21 +138,12 @@
   flex-direction: column;
   justify-content: space-between;
   text-align: center;
-  width: 100%;
-}
-
-.image-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* Centers the image horizontally */
-  justify-content: center; /* Centers the image vertically */
-  width: 100%;
-  height: auto;
-  overflow: hidden;
+  /*width: 100%;*/
 }
 
 .charades-image {
-  height: 1000px; /* Limits the image height */
+  height: 550px; /* Limits the image height */
+  width: 550px;
   object-fit: contain; /* Ensures image fits within the container without distortion */
 }
 

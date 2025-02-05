@@ -12,16 +12,14 @@ RUN npm install --frozen-lockfile
 COPY . .
 RUN npm run build
 
-FROM node:20-alpine AS runtime
+# Use Nginx to serve the React app
+FROM nginx:alpine AS runtime
 
-# Set working directory
-WORKDIR /app
+# Copy the built React app to Nginx's default public directory
+COPY --from=build /app/build /usr/share/nginx/html
 
-# Copy built files from the previous stage
-COPY --from=build /app ./
+# Expose port 80
+EXPOSE 80
 
-# Expose port 3000
-EXPOSE 3000
-
-# Start the app
-CMD ["npm", "start"]
+# Start Nginx
+CMD ["nginx", "-g", "daemon off;"]

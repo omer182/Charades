@@ -29,6 +29,8 @@
   justify-content: center;
   width: 100vw;
   height: 100vh;
+  flex: 1;
+  overflow: hidden; /* Hide overflow */
 }
 
 .game-header {
@@ -53,9 +55,8 @@
   padding: 20px;
   box-sizing: border-box;
   background-color: #f5ebe0; /* You can customize the background color */
+  overflow: hidden; /* Prevent overflow from pushing content down */
 }
-
-
 
 .left-panel {
   display: flex;
@@ -138,13 +139,16 @@
   flex-direction: column;
   justify-content: space-between;
   text-align: center;
-  /*width: 100%;*/
+  width: 100%;
+  overflow: hidden; /* Hide overflow */
 }
 
 .charades-image {
-  height: 550px; /* Limits the image height */
-  width: 550px;
-  object-fit: contain; /* Ensures image fits within the container without distortion */
+  max-width: 100%;
+  overflow: hidden; /* Hide overflow */
+  width: 100%;
+  height: auto;
+  object-fit: contain; /* Keeps the aspect ratio intact */
 }
 
 .image-controls {

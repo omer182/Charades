@@ -12,7 +12,6 @@ RUN npm install --frozen-lockfile
 COPY . .
 RUN npm run build
 
-# Use Nginx to serve the built app
 FROM nginx:alpine
 
 # Remove default Nginx static files and copy the built React app

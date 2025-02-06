@@ -6,20 +6,17 @@ WORKDIR /app
 
 # Copy package.json and install dependencies
 COPY package.json package-lock.json ./
-RUN npm install --legacy-peer-deps
+RUN npm ci
 
 # Copy the rest of the app and build it
 COPY . .
 RUN npm run build
 
-# Use Nginx to serve the React app
-FROM nginx:alpine AS runtime
+RUN npm install -g serve
 
-# Copy the built React app to Nginx's default public directory
-COPY --from=build /app/build /usr/share/nginx/html
+# Uses port which is used by the actual application
+EXPOSE 5000
 
-# Expose port 80
-EXPOSE 3000
-
-# Start Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Run application
+#CMD [ "npm", "start" ]
+CMD serve -s build

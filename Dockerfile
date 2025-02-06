@@ -1,5 +1,5 @@
 # Use a lightweight Node.js image to build the app (ARM64)
-FROM --platform=linux/arm64 node:20-alpine AS build
+FROM node:20-alpine AS build
 
 # Set working directory
 WORKDIR /app
@@ -13,7 +13,7 @@ COPY . .
 RUN npm run build
 
 # Use Nginx to serve the React app (ARM64)
-FROM --platform=linux/arm64 nginx:alpine AS runtime
+FROM nginx:alpine AS runtime
 
 # Copy the built React app to Nginx's default public directory
 COPY --from=build /app/build /usr/share/nginx/html

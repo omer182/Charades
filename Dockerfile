@@ -1,12 +1,12 @@
 # Use a lightweight Node.js image to build the app
-FROM node:20-alpine AS build
+FROM node:22-alpine AS build
 
 # Set working directory
 WORKDIR /app
 
 # Copy package.json and install dependencies
 COPY package.json package-lock.json ./
-RUN npm ci
+RUN npm install --legacy-peer-deps
 
 # Copy the rest of the app and build it
 COPY . .

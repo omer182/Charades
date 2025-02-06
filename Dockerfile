@@ -1,5 +1,5 @@
 # Use a lightweight Node.js image to build the app
-FROM node:20-alpine AS build
+FROM --platform=linux/arm64 node:20-alpine AS build
 
 # Set working directory
 WORKDIR /app
@@ -15,7 +15,7 @@ RUN npm run build
 RUN npm install -g serve
 
 # Uses port which is used by the actual application
-EXPOSE 5000
+EXPOSE 3000
 
 # Run application
 #CMD [ "npm", "start" ]

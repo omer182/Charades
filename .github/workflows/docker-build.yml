@@ -23,5 +23,6 @@ jobs:
       - name: Build and push Docker image
         run: |
           IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/charades
-          docker build --platform linux/arm64 -t $IMAGE_NAME:latest .
+          # docker build --platform linux/arm64 -t $IMAGE_NAME:latest .
+          docker buildx build --platform linux/arm64,linux/amd64 -t $IMAGE_NAME:latest --push .
           docker push $IMAGE_NAME:latest

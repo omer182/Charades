@@ -1,5 +1,5 @@
 # Use a lightweight Node.js image to build the app
-FROM arm64v8/node:20-alpine AS build
+FROM node:20-alpine AS build
 
 # Set working directory
 WORKDIR /app

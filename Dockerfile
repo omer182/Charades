@@ -18,8 +18,8 @@ FROM nginx:alpine AS runtime
 # Copy the built React app to Nginx's default public directory
 COPY --from=build /app/build /usr/share/nginx/html
 
-# Expose port 80
-EXPOSE 80
+# Expose port 3000
+EXPOSE 3000
 
 # Start Nginx
 CMD ["nginx", "-g", "daemon off;"]

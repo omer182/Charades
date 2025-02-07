@@ -19,6 +19,7 @@ const fetchAIContent = async (genre) => {
                                 "text": `Generate a list of 30 words related to the genre: ${genre}. 
                                 The words should be commonly associated with this genre and suitable for a charades game. 
                                 For example, if recieved "famous rappers" - returns a list of famous rappers like akon, 2pac, eminem and etc.
+                                Make sure its a name of a ${genre}.
                                 Do not include explanations, just return a clean JSON array of words.`
                             }
                         ]

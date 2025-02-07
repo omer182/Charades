@@ -37,6 +37,28 @@ To make the game more dynamic, you can add your custom images to be used as clue
     - The script outputs the updated images to the `pictures/result` directory.
     - The `pictures/result` directory is used by the UI to display the images during the game.
 
+
+## 🔑 Obtaining the OpenRouter API Key
+
+To fetch words dynamically by genre or custom genre from AI, you need to obtain an API key from OpenRouter. Follow these steps:
+
+1. **Go to OpenRouter**:  
+   [Click here to visit OpenRouter](https://openrouter.ai/google/gemini-2.0-flash-thinking-exp:free/api)
+
+2. **Create an Account/Login**:  
+   If you don’t have an account, sign up. Otherwise, log in.
+
+3. **Generate an API Key**:  
+   - Click on the **"Create API Key"** button (🔑) as shown below.  
+   - Copy the API key **immediately**, as it won't be shown again.
+
+   ![API Key Creation](path/to/api-key-image.png)  
+
+4. **Store the API Key Securely**:  
+   - Do **NOT** share this key publicly.
+   - Add it to a `.env` file in your project directory.
+
+
 ## Folder Structure 📁
 
 ```js

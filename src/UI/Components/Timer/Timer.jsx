@@ -31,7 +31,7 @@ const Timer = ({ initialTime, onTimeUp, onTimerChange, isActive }) => {
     } else if (time === 0) {
       setIsTimerActive(false);
       if (onTimeUp) {
-        setTime(initialTime)
+        setTime(timer)
         onTimeUp(); // Trigger the callback when time is up
       }
     }
@@ -112,7 +112,6 @@ const Timer = ({ initialTime, onTimeUp, onTimerChange, isActive }) => {
               aria-label="Timer"
               defaultValue={60}
               value={timer}
-              disabled={isActive}
               valueLabelDisplay="auto"
               size='small'
               step={30}

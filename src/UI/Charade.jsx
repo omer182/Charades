@@ -191,7 +191,6 @@ const CharadesGame = () => {
               <Slider
                   aria-label="Custom marks"
                   defaultValue={numOfRounds}
-                  disabled={isGameActive}
                   step={1}
                   marks={true}
                   color="primary"

@@ -40,8 +40,7 @@ const Timer = ({ initialTime, onTimeUp, onTimerChange, isActive }) => {
 
   const pauseTimer = () => setIsTimerActive(!isTimerActive);
   const resetTimer = () => {
-    setTime(initialTime);
-    setTimer(initialTime);
+    setTime(timer);
     setIsTimerActive(false);
   }
 
@@ -54,8 +53,9 @@ const Timer = ({ initialTime, onTimeUp, onTimerChange, isActive }) => {
   };
 
     const handleSliderChange = (event, value) => {
-    setTime(value);
-    setTimer(value);
+      setIsTimerActive(false);
+      setTime(value);
+      setTimer(value);
     }
 
     // Convert time to MM:SS format

@@ -85,7 +85,6 @@ const CharadesGame = () => {
   const [winningTeam, setWinningTeam] = useState(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [roundEndSound] = useState(new Audio('/round-end-dramatic.mp3'));
-  const [soundVolume, setSoundVolume] = useState(0.5);
 
   const TOP_BAR_HEIGHT = 64; // px
   const VERTICAL_PADDING = 2; // px, matches md:2 (theme.spacing(2))
@@ -172,7 +171,7 @@ const CharadesGame = () => {
     setIsTimerActive(false);
     
     // Play round end sound
-    roundEndSound.volume = soundVolume;
+    roundEndSound.volume = 1.0;
     roundEndSound.play().catch(error => {
       console.log('Audio playback failed:', error);
     });
@@ -584,34 +583,42 @@ const CharadesGame = () => {
               <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
                 Number of Rounds
               </Typography>
-              <TextField
-                label="Rounds"
-                type="number"
-                value={numOfRounds}
-                onChange={(e) => setNumOfRounds(Math.max(2, Math.min(10, parseInt(e.target.value) || 2)))}
-                fullWidth
-                inputProps={{ min: 2, max: 10 }}
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.8)',
-                    '& fieldset': {
-                      borderColor: 'rgba(139, 92, 246, 0.5)',
+              <Box sx={{ px: 1 }}>
+                <Typography gutterBottom sx={{ 
+                  fontSize: '0.9rem', 
+                  fontWeight: 500,
+                  textAlign: 'center',
+                  color: isDarkMode ? 'rgba(255, 255, 255, 0.8)' : 'rgba(55, 65, 81, 0.8)'
+                }}>
+                  {numOfRounds} rounds
+                </Typography>
+                <Slider
+                  value={numOfRounds}
+                  step={1}
+                  marks
+                  min={2}
+                  max={10}
+                  onChange={(e, value) => setNumOfRounds(value)}
+                  sx={{
+                    '& .MuiSlider-thumb': {
+                      background: 'linear-gradient(45deg, #8b5cf6, #06b6d4)',
+                      height: 20,
+                      width: 20,
                     },
-                    '&:hover fieldset': {
-                      borderColor: 'rgba(139, 92, 246, 0.7)',
+                    '& .MuiSlider-track': {
+                      background: 'linear-gradient(45deg, #8b5cf6, #06b6d4)',
                     },
-                    '&.Mui-focused fieldset': {
-                      borderColor: '#8b5cf6',
+                    '& .MuiSlider-mark': {
+                      backgroundColor: 'rgba(139, 92, 246, 0.5)',
+                      height: 4,
                     },
-                  },
-                  '& .MuiInputLabel-root': {
-                    color: isDarkMode ? 'rgba(255, 255, 255, 0.8)' : 'rgba(55, 65, 81, 0.8)',
-                    '&.Mui-focused': {
-                      color: '#8b5cf6',
+                    '& .MuiSlider-markLabel': {
+                      fontSize: '0.75rem',
+                      color: isDarkMode ? 'rgba(255, 255, 255, 0.6)' : 'rgba(55, 65, 81, 0.6)'
                     }
-                  }
-                }}
-              />
+                  }}
+                />
+              </Box>
             </Box>
 
             {/* Timer Setting */}
@@ -658,47 +665,7 @@ const CharadesGame = () => {
               </Box>
             </Box>
 
-            {/* Sound Volume Setting */}
-            <Box>
-              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-                Sound Volume
-              </Typography>
-              <Box sx={{ px: 1 }}>
-                <Typography gutterBottom sx={{ 
-                  fontSize: '0.9rem', 
-                  fontWeight: 500,
-                  textAlign: 'center',
-                  color: isDarkMode ? 'rgba(255, 255, 255, 0.8)' : 'rgba(55, 65, 81, 0.8)'
-                }}>
-                  {Math.round(soundVolume * 100)}%
-                </Typography>
-                <Slider
-                  value={soundVolume}
-                  step={0.1}
-                  min={0}
-                  max={1}
-                  onChange={(e, value) => setSoundVolume(value)}
-                  sx={{
-                    '& .MuiSlider-thumb': {
-                      background: 'linear-gradient(45deg, #8b5cf6, #06b6d4)',
-                      height: 20,
-                      width: 20,
-                    },
-                    '& .MuiSlider-track': {
-                      background: 'linear-gradient(45deg, #8b5cf6, #06b6d4)',
-                    },
-                    '& .MuiSlider-mark': {
-                      backgroundColor: 'rgba(139, 92, 246, 0.5)',
-                      height: 4,
-                    },
-                    '& .MuiSlider-markLabel': {
-                      fontSize: '0.75rem',
-                      color: isDarkMode ? 'rgba(255, 255, 255, 0.6)' : 'rgba(55, 65, 81, 0.6)'
-                    }
-                  }}
-                />
-              </Box>
-            </Box>
+
 
             {/* Theme Setting */}
             <Box>
@@ -725,7 +692,7 @@ const CharadesGame = () => {
           </Box>
         </DialogContent>
         
-        <DialogActions sx={{ p: 2 }}>
+        <DialogActions sx={{ p: 2, justifyContent: 'center' }}>
           <Button 
             onClick={closeSettings}
             variant="contained"

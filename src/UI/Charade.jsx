@@ -117,13 +117,14 @@ const CharadesGame = () => {
   const [currentTeamIndex, setCurrentTeamIndex] = useState(initialState.currentTeamIndex);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isTimerActive, setIsTimerActive] = useState(false);
-  const [customTimer, setCustomTimer] = useState(initialState.customTimer);
+  const [customTimer, setCustomTimer] = useState(initialState.customTimer || 60);
   const [roundScore, setRoundScore] = useState(initialState.roundScore);
   const [numOfRounds, setNumOfRounds] = useState(initialState.numOfRounds);
   const [isGameOver, setIsGameOver] = useState(initialState.isGameOver);
   const [winningTeam, setWinningTeam] = useState(initialState.winningTeam);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [roundEndSound] = useState(new Audio('/round-end-dramatic.mp3'));
+  const [timerKey, setTimerKey] = useState(0);
 
   const TOP_BAR_HEIGHT = 64; // px
   const VERTICAL_PADDING = 2; // px, matches md:2 (theme.spacing(2))
@@ -225,6 +226,7 @@ const CharadesGame = () => {
     setNumOfRounds(5);
     setRoundScore(0);
     setWinningTeam(null);
+    setTimerKey((prev) => prev + 1);
   }
 
   const handleGameOver = () => {
@@ -397,6 +399,7 @@ const CharadesGame = () => {
             <ModernCard sx={{ flexShrink: 0 }}>
               <ModernCardContent sx={{ p: 1, gap: 0.5 }}>
                 <Timer
+                  key={timerKey}
                   onTimeUp={handleTimerEnd}
                   onTimerChange={handleCustomTimerChange}
                   initialTime={customTimer}
@@ -439,7 +442,6 @@ const CharadesGame = () => {
                     {isTimerActive ? <Pause fontSize="small" /> : <PlayArrow fontSize="small" />}
                   </IconButton>
                   <IconButton
-                    disabled={!isGameActive}
                     onClick={restart}
                     size="small"
                     sx={{
@@ -712,10 +714,10 @@ const CharadesGame = () => {
                 </Typography>
                 <Slider
                   value={customTimer}
-                  step={5}
+                  step={30}
                   marks
-                  min={12}
-                  max={120}
+                  min={30}
+                  max={180}
                   onChange={(e, value) => handleCustomTimerChange(value)}
                   disabled={isTimerActive}
                   sx={{
@@ -739,8 +741,6 @@ const CharadesGame = () => {
                 />
               </Box>
             </Box>
-
-
 
             {/* Theme Setting */}
             <Box>

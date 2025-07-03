@@ -204,7 +204,7 @@ const TeamsManager = ({ teams, setTeams }) => {
                                         }}
                                     >
                                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                            <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                                            <Typography variant="body2" sx={{ fontWeight: 600, color: '#222', textShadow: '0 1px 4px rgba(0,0,0,0.08)' }}>
                                                 {team.name}
                                             </Typography>
                                         </Box>

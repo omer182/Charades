@@ -1,42 +1,18 @@
-.modal {
-    position: fixed;
-    display: flex;
-    flex-direction: column;
-    top: 50%;
-    left: 50%;
-    align-items: center;
-    transform: translate(-50%, -50%);
-    width: 400px;
-    background: white;
-    padding: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
-    z-index: 1000;
+/* Modal CSS - now handled by Material-UI Backdrop and Paper components */
+
+/* Only keeping any custom animations that might be needed */
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
-.modal-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    text-align: center;
-}
-
-.modal-actions {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.modal-actions button {
-    margin: 0 10px;
-}
-
-.overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(4, 4, 4, 0.5);
-    z-index: 999;
+/* Legacy styles - kept for any edge cases */
+.modal-legacy {
+    animation: modalFadeIn 0.3s ease-out;
 }

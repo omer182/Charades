@@ -84,6 +84,8 @@ const CharadesGame = () => {
   const [isGameOver, setIsGameOver] = useState(false);
   const [winningTeam, setWinningTeam] = useState(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [roundEndSound] = useState(new Audio('/round-end-dramatic.mp3'));
+  const [soundVolume, setSoundVolume] = useState(0.5);
 
   const TOP_BAR_HEIGHT = 64; // px
   const VERTICAL_PADDING = 2; // px, matches md:2 (theme.spacing(2))
@@ -168,6 +170,12 @@ const CharadesGame = () => {
 
   const handleTimerEnd = () => {
     setIsTimerActive(false);
+    
+    // Play round end sound
+    roundEndSound.volume = soundVolume;
+    roundEndSound.play().catch(error => {
+      console.log('Audio playback failed:', error);
+    });
 
     if (currentRound === numOfRounds && currentTeamIndex === teams.length - 1) {
       handleGameOver();
@@ -624,10 +632,52 @@ const CharadesGame = () => {
                   value={customTimer}
                   step={5}
                   marks
-                  min={30}
+                  min={12}
                   max={120}
                   onChange={(e, value) => handleCustomTimerChange(value)}
                   disabled={isTimerActive}
+                  sx={{
+                    '& .MuiSlider-thumb': {
+                      background: 'linear-gradient(45deg, #8b5cf6, #06b6d4)',
+                      height: 20,
+                      width: 20,
+                    },
+                    '& .MuiSlider-track': {
+                      background: 'linear-gradient(45deg, #8b5cf6, #06b6d4)',
+                    },
+                    '& .MuiSlider-mark': {
+                      backgroundColor: 'rgba(139, 92, 246, 0.5)',
+                      height: 4,
+                    },
+                    '& .MuiSlider-markLabel': {
+                      fontSize: '0.75rem',
+                      color: isDarkMode ? 'rgba(255, 255, 255, 0.6)' : 'rgba(55, 65, 81, 0.6)'
+                    }
+                  }}
+                />
+              </Box>
+            </Box>
+
+            {/* Sound Volume Setting */}
+            <Box>
+              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+                Sound Volume
+              </Typography>
+              <Box sx={{ px: 1 }}>
+                <Typography gutterBottom sx={{ 
+                  fontSize: '0.9rem', 
+                  fontWeight: 500,
+                  textAlign: 'center',
+                  color: isDarkMode ? 'rgba(255, 255, 255, 0.8)' : 'rgba(55, 65, 81, 0.8)'
+                }}>
+                  {Math.round(soundVolume * 100)}%
+                </Typography>
+                <Slider
+                  value={soundVolume}
+                  step={0.1}
+                  min={0}
+                  max={1}
+                  onChange={(e, value) => setSoundVolume(value)}
                   sx={{
                     '& .MuiSlider-thumb': {
                       background: 'linear-gradient(45deg, #8b5cf6, #06b6d4)',

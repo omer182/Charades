@@ -70,19 +70,58 @@ const ModernCardContent = ({ className, children, sx, ...props }) => {
 
 const CharadesGame = () => {
   const { isDarkMode, toggleTheme } = useThemeMode();
-  const [teams, setTeams] = useState([]);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  
+  // Load initial state from localStorage or use defaults
+  const loadGameState = () => {
+    try {
+      const savedState = localStorage.getItem('charadesGameState');
+      if (savedState) {
+        const parsed = JSON.parse(savedState);
+        return {
+          teams: parsed.teams || [],
+          currentImageIndex: parsed.currentImageIndex || 0,
+          isGameActive: parsed.isGameActive || false,
+          currentRound: parsed.currentRound || 1,
+          currentTeamIndex: parsed.currentTeamIndex || 0,
+          customTimer: parsed.customTimer || 60,
+          roundScore: parsed.roundScore || 0,
+          numOfRounds: parsed.numOfRounds || 5,
+          isGameOver: parsed.isGameOver || false,
+          winningTeam: parsed.winningTeam || null,
+        };
+      }
+    } catch (error) {
+      console.log('Error loading game state:', error);
+    }
+    return {
+      teams: [],
+      currentImageIndex: 0,
+      isGameActive: false,
+      currentRound: 1,
+      currentTeamIndex: 0,
+      customTimer: 60,
+      roundScore: 0,
+      numOfRounds: 5,
+      isGameOver: false,
+      winningTeam: null,
+    };
+  };
+
+  const initialState = loadGameState();
+  
+  const [teams, setTeams] = useState(initialState.teams);
+  const [currentImageIndex, setCurrentImageIndex] = useState(initialState.currentImageIndex);
   const [shuffledImages, setShuffledImages] = useState([]);
-  const [isGameActive, setIsGameActive] = useState(false);
-  const [currentRound, setCurrentRound] = useState(1);
-  const [currentTeamIndex, setCurrentTeamIndex] = useState(0);
+  const [isGameActive, setIsGameActive] = useState(initialState.isGameActive);
+  const [currentRound, setCurrentRound] = useState(initialState.currentRound);
+  const [currentTeamIndex, setCurrentTeamIndex] = useState(initialState.currentTeamIndex);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isTimerActive, setIsTimerActive] = useState(false);
-  const [customTimer, setCustomTimer] = useState(60);
-  const [roundScore, setRoundScore] = useState(0);
-  const [numOfRounds, setNumOfRounds] = useState(5);
-  const [isGameOver, setIsGameOver] = useState(false);
-  const [winningTeam, setWinningTeam] = useState(null);
+  const [customTimer, setCustomTimer] = useState(initialState.customTimer);
+  const [roundScore, setRoundScore] = useState(initialState.roundScore);
+  const [numOfRounds, setNumOfRounds] = useState(initialState.numOfRounds);
+  const [isGameOver, setIsGameOver] = useState(initialState.isGameOver);
+  const [winningTeam, setWinningTeam] = useState(initialState.winningTeam);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [roundEndSound] = useState(new Audio('/round-end-dramatic.mp3'));
 
@@ -94,6 +133,11 @@ const CharadesGame = () => {
     setShuffledImages(shuffleArray(imagePaths));
   }, []);
 
+  // Save game state whenever relevant state changes
+  useEffect(() => {
+    saveGameState();
+  }, [teams, currentImageIndex, isGameActive, currentRound, currentTeamIndex, customTimer, roundScore, numOfRounds, isGameOver, winningTeam]);
+
   const shuffleArray = (array) => {
     const shuffled = [...array];
     for (let i = shuffled.length - 1; i > 0; i--) {
@@ -101,6 +145,27 @@ const CharadesGame = () => {
       [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
     return shuffled;
+  };
+
+  // Save game state to localStorage
+  const saveGameState = () => {
+    try {
+      const gameState = {
+        teams,
+        currentImageIndex,
+        isGameActive,
+        currentRound,
+        currentTeamIndex,
+        customTimer,
+        roundScore,
+        numOfRounds,
+        isGameOver,
+        winningTeam,
+      };
+      localStorage.setItem('charadesGameState', JSON.stringify(gameState));
+    } catch (error) {
+      console.log('Error saving game state:', error);
+    }
   };
 
   const updateScore = (index, delta) => {
@@ -145,6 +210,9 @@ const CharadesGame = () => {
   };
 
   const restart = () => {
+    // Clear localStorage
+    localStorage.removeItem('charadesGameState');
+    
     setIsGameActive(false);
     setCurrentRound(1);
     setCurrentTeamIndex(0);
@@ -155,6 +223,8 @@ const CharadesGame = () => {
     setShuffledImages(shuffleArray(images.map((img) => img)));
     setIsGameOver(false);
     setNumOfRounds(5);
+    setRoundScore(0);
+    setWinningTeam(null);
   }
 
   const handleGameOver = () => {
@@ -208,12 +278,17 @@ const CharadesGame = () => {
   };
 
   const handlePlayAgain = () => {
+    // Clear localStorage
+    localStorage.removeItem('charadesGameState');
+    
     setIsGameActive(false);
     setCurrentRound(1);
     setCurrentTeamIndex(0);
     setIsTimerActive(false);
     setIsModalOpen(false);
     setIsGameOver(false);
+    setRoundScore(0);
+    setWinningTeam(null);
   }
 
   const openSettings = () => setIsSettingsOpen(true);

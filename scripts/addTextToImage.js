@@ -59,5 +59,5 @@ async function addTextToImages(inputFolder) {
 }
 
 // Replace this with your folder path
-const folderPath = "../pictures/raw";
+const folderPath = "../pictures/new";
 addTextToImages(folderPath);

@@ -7,6 +7,27 @@ const Timer = ({ initialTime, onTimeUp, onTimerChange, isActive }) => {
   const [time, setTime] = useState(initialTime);
   const [isTimerActive, setIsTimerActive] = useState(isActive);
   const [timer, setTimer] = useState(initialTime);
+  const [tickAudio] = useState(() => {
+    // Create audio element for ticking sound
+    const audio = new Audio();
+    // Use a simple beep sound - we'll create this using a data URL
+    const sampleRate = 44100;
+    const duration = 0.1; // 100ms
+    const frequency = 800; // 800Hz beep
+    
+    const samples = sampleRate * duration;
+    const audioData = new Float32Array(samples);
+    
+    for (let i = 0; i < samples; i++) {
+      audioData[i] = Math.sin(2 * Math.PI * frequency * i / sampleRate) * 0.3;
+    }
+    
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const audioBuffer = audioContext.createBuffer(1, samples, sampleRate);
+    audioBuffer.getChannelData(0).set(audioData);
+    
+    return { audioContext, audioBuffer };
+  });
 
   useEffect(() => {
     setIsTimerActive(isActive);
@@ -21,7 +42,23 @@ const Timer = ({ initialTime, onTimeUp, onTimerChange, isActive }) => {
     let timerInterval;
     if (isTimerActive && time > 0) {
       timerInterval = setInterval(() => {
-        setTime((prevTime) => prevTime - 1);
+        setTime((prevTime) => {
+          const newTime = prevTime - 1;
+          
+          // Play ticking sound in last 10 seconds
+          if (newTime <= 10 && newTime > 0) {
+            try {
+              const source = tickAudio.audioContext.createBufferSource();
+              source.buffer = tickAudio.audioBuffer;
+              source.connect(tickAudio.audioContext.destination);
+              source.start();
+            } catch (e) {
+              console.log('Audio play failed:', e);
+            }
+          }
+          
+          return newTime;
+        });
       }, 1000);
     } else if (time === 0) {
       setIsTimerActive(false);
@@ -31,7 +68,7 @@ const Timer = ({ initialTime, onTimeUp, onTimerChange, isActive }) => {
       }
     }
     return () => clearInterval(timerInterval);
-  }, [initialTime, isTimerActive, time, onTimeUp, timer]);
+  }, [initialTime, isTimerActive, time, onTimeUp, timer, tickAudio]);
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);

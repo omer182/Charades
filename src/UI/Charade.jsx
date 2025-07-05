@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "./Charade.css";
 import Timer from "./Components/Timer/Timer";
 import { useThemeMode } from '../index';
@@ -229,7 +229,7 @@ const CharadesGame = () => {
     setTimerKey((prev) => prev + 1);
   }
 
-  const handleGameOver = () => {
+  const handleGameOver = useCallback(() => {
     const winningTeam = teams.reduce((prev, current) =>
       prev.score > current.score ? prev : current
     );
@@ -237,9 +237,9 @@ const CharadesGame = () => {
     setWinningTeam(winningTeam);
     setIsGameOver(true);
     setIsModalOpen(true);
-  };
+  }, [teams]);
 
-  const handleTimerEnd = () => {
+  const handleTimerEnd = useCallback(() => {
     setIsTimerActive(false);
     
     // Play round end sound
@@ -253,7 +253,7 @@ const CharadesGame = () => {
     } else {
       setIsModalOpen(true);
     }
-  }
+  }, [currentRound, numOfRounds, currentTeamIndex, teams.length, roundEndSound]);
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -623,6 +623,8 @@ const CharadesGame = () => {
         currentRound={currentRound}
         numOfRounds={numOfRounds}
         setNumOfRounds={setNumOfRounds}
+        teams={teams}
+        updateScore={updateScore}
       />
 
       {/* Settings Modal */}

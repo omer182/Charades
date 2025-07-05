@@ -129,8 +129,9 @@ No API endpoints or OpenAPI documentation exist. This is a purely frontend appli
 ### Component Architecture
 - **ModernCard**: Custom wrapper around MUI Card with glassmorphism effects
 - **TeamsManager**: Team management with color coding and animations
-- **Timer**: Timer with progress bars, color-coded status, and sound effects
-- **Modal**: Game transition modals with round info and last round warning
+- **Timer**: Decoupled timer with progress bars, color-coded status, and sound effects
+- **Modal**: Dual-modal system with team standings and round transition modals
+- **Responsive Layout**: Side-by-side modals on desktop, stacked on mobile
 
 ### Game Features
 - **Team Management**: Up to 6 teams with unique colors and names
@@ -148,10 +149,14 @@ No API endpoints or OpenAPI documentation exist. This is a purely frontend appli
 - **localStorage Integration**: Game state persists across browser refreshes
 - **Sound System**: Dramatic round-end sound effects with full volume
 - **Enhanced Timer Settings**: 30-180 second range with 30-second steps
-- **Improved Team Visibility**: Better contrast for team names
+- **Improved Team Visibility**: Better contrast for team names with white text and shadows
 - **Timer Reset**: Timer fully resets when game is restarted
 - **Settings UI**: Slider-based configuration for rounds and timer duration
 - **Centered Settings**: "Done" button centered in settings modal
+- **Dual-Modal Layout**: Separate team standings modal on the left during round transitions
+- **Timer Decoupling**: Fixed timer freezing issue when interacting with picture controls
+- **Modal Positioning**: Team standings in left top corner, main modal centered
+- **Compact Design**: Reduced modal sizes by 25% for better screen fit
 
 ## Processes & Gotchas
 
@@ -190,6 +195,8 @@ No API endpoints or OpenAPI documentation exist. This is a purely frontend appli
 - **Performance**: Optimized with React.memo potential and efficient re-rendering
 - **localStorage**: Automatic game state persistence with error handling
 - **Audio System**: HTML5 Audio API for sound effects with volume control
+- **Timer Architecture**: Decoupled timer using useCallback and separated useEffect hooks
+- **Modal System**: Dual-modal layout with absolute positioning and responsive design
 
 ### UI Considerations
 - **Fixed Height Layout**: Uses `100vh` minus top bar and padding to prevent scrolling issues
@@ -233,4 +240,10 @@ No API endpoints or OpenAPI documentation exist. This is a purely frontend appli
 - Theme preference doesn't persist across page refreshes
 - No loading states for image switching
 - Timer doesn't pause when browser tab is inactive
-- No keyboard shortcuts for game controls 
+- No keyboard shortcuts for game controls
+
+### Recent Bug Fixes
+- **Timer Coupling Issue**: Fixed timer freezing when clicking picture control buttons
+- **Modal Sizing**: Reduced modal sizes by 25% to prevent overflow on smaller screens
+- **Team Text Visibility**: Improved contrast with white text and stronger shadows
+- **Component Re-rendering**: Optimized with useCallback to prevent unnecessary re-renders 

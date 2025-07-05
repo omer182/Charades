@@ -60,15 +60,20 @@ const Timer = ({ initialTime, onTimeUp, onTimerChange, isActive }) => {
           return newTime;
         });
       }, 1000);
-    } else if (time === 0) {
+    }
+    return () => clearInterval(timerInterval);
+  }, [isTimerActive, time, tickAudio]);
+
+  // Separate useEffect for handling time up
+  useEffect(() => {
+    if (time === 0 && isTimerActive) {
       setIsTimerActive(false);
       if (onTimeUp) {
-        setTime(timer)
+        setTime(timer);
         onTimeUp();
       }
     }
-    return () => clearInterval(timerInterval);
-  }, [initialTime, isTimerActive, time, onTimeUp, timer, tickAudio]);
+  }, [time, isTimerActive, onTimeUp, timer]);
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);

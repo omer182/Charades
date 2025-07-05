@@ -10,7 +10,7 @@ This is a **Charades Game** web application built with React that allows players
 - **Material-UI (MUI) 6.4.2** - Component library for modern UI design
   - `@emotion/react` & `@emotion/styled` - CSS-in-JS styling solution
   - `@mui/icons-material` - Icon components
-- **Sharp 0.33.5** - High-performance image processing library (for the build script)
+- **Sharp 0.34.2** - High-performance image processing library (for the build script)
 - **fs-extra 11.3.0** - Enhanced file system operations
 - **Create React App 5.0.1** - Build toolchain and development server
 - **nodemon 3.1.10** (dev) - Hot-reloading for development
@@ -19,6 +19,8 @@ This is a **Charades Game** web application built with React that allows players
 
 ```
 ├── public/                    # Static assets and HTML template
+│   ├── round-end-dramatic.mp3 # Sound effect for round endings
+│   └── eye-face.png          # Game logo/icon
 ├── src/
 │   ├── index.js              # Application entry point with React 19 root and theme provider
 │   ├── index.css             # Global styles and CSS reset
@@ -79,8 +81,9 @@ docker run -p 3000:3000 charades-game
 
 **No database is used.** This is a client-side only application that:
 - Stores game state in React component state
+- Uses **localStorage** for persistent game state across browser refreshes
 - Uses local images from the `pictures/result` directory
-- All data is ephemeral and resets on page refresh
+- All data persists until manually reset or localStorage is cleared
 - Theme preferences are not persisted (resets on page refresh)
 
 ## Migrations
@@ -132,11 +135,23 @@ No API endpoints or OpenAPI documentation exist. This is a purely frontend appli
 ### Game Features
 - **Team Management**: Up to 6 teams with unique colors and names
 - **Smart Scoring**: Real-time score tracking with manual adjustment
-- **Dynamic Timer**: Configurable timer (30-120 seconds) with visual feedback
+- **Dynamic Timer**: Configurable timer (30-180 seconds, 30s steps) with visual feedback
 - **Round System**: Configurable rounds (2-10) with automatic progression
 - **Image Navigation**: Previous/next image controls with undo functionality
 - **Victory Detection**: Automatic game-over detection with winner announcement
 - **Last Round Warning**: Modal displays a warning when it's the last round for a team
+- **Sound Effects**: Dramatic buzzer sound when rounds end
+- **Game Persistence**: localStorage saves game state across browser refreshes
+- **Always-Available Reset**: Restart button is always enabled for quick game resets
+
+### Recent Improvements (Latest Version)
+- **localStorage Integration**: Game state persists across browser refreshes
+- **Sound System**: Dramatic round-end sound effects with full volume
+- **Enhanced Timer Settings**: 30-180 second range with 30-second steps
+- **Improved Team Visibility**: Better contrast for team names
+- **Timer Reset**: Timer fully resets when game is restarted
+- **Settings UI**: Slider-based configuration for rounds and timer duration
+- **Centered Settings**: "Done" button centered in settings modal
 
 ## Processes & Gotchas
 
@@ -155,28 +170,33 @@ No API endpoints or OpenAPI documentation exist. This is a purely frontend appli
 
 ### Game Flow
 1. **Team Setup**: Add 1-6 teams with auto-assigned unique colors
-2. **Configuration**: Set number of rounds (2-10) and timer duration (30-120 seconds) in the settings modal
+2. **Configuration**: Set number of rounds (2-10) and timer duration (30-180 seconds) in the settings modal
 3. **Gameplay**: 
    - Teams take turns guessing based on displayed images
    - Use check (✓) for correct guesses, X for skips/incorrect
    - Timer automatically advances to next team/round
    - Visual feedback with progress bars and status indicators
+   - Dramatic sound plays when round ends
 4. **Scoring**: Real-time score tracking with manual adjustment capabilities
 5. **Victory**: Automatic winner detection with celebration modal
+6. **Persistence**: Game state automatically saved and restored on page refresh
 
 ### Technical Notes
 - **React 19 Features**: Uses `ReactDOM.createRoot()` for concurrent rendering
 - **Theme Context**: Custom React Context for theme management across components
 - **Image Loading**: Dynamic imports using `require.context()` for automatic image discovery
-- **State Management**: All state managed in main component, no external state library
+- **State Management**: All state managed in main component with localStorage persistence
 - **Responsive Design**: CSS Grid and Material-UI responsive breakpoints
 - **Performance**: Optimized with React.memo potential and efficient re-rendering
+- **localStorage**: Automatic game state persistence with error handling
+- **Audio System**: HTML5 Audio API for sound effects with volume control
 
 ### UI Considerations
 - **Fixed Height Layout**: Uses `100vh` minus top bar and padding to prevent scrolling issues
 - **Overflow Management**: Only main game area scrolls if needed
 - **Touch-Friendly**: Large touch targets for mobile devices
 - **Accessibility**: High contrast themes and proper focus management
+- **Sound Feedback**: Audio cues for better user experience
 
 ## TODOs
 
@@ -192,10 +212,10 @@ No API endpoints or OpenAPI documentation exist. This is a purely frontend appli
 - **Testing**: Add unit tests for game logic and component behavior
 - **Accessibility**: Add ARIA labels and keyboard navigation support
 - **Performance**: Implement image lazy loading for large picture sets
-- **Data Persistence**: Add localStorage to save game progress and theme preferences
 - **Internationalization**: Extract Hebrew text to support multiple languages
-- **Sound Effects**: Add audio feedback for timer and game events
 - **PWA Features**: Add service worker for offline functionality
+- **Additional Sound Effects**: Add sounds for correct/incorrect guesses
+- **Keyboard Shortcuts**: Add keyboard controls for game actions
 
 ### Code Quality
 - Some legacy CSS in `Charade.css` could be fully migrated to MUI theming

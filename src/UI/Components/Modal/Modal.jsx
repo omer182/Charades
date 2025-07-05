@@ -9,18 +9,22 @@ import {
     CircularProgress,
     Chip,
     Stack,
-    TextField
+    TextField,
+    IconButton,
+    Divider
 } from '@mui/material';
 import { 
     EmojiEvents, 
     Timer as TimerIcon, 
     Groups,
     PlayArrow,
-    Replay
+    Replay,
+    Add as AddIcon,
+    Remove as RemoveIcon
 } from '@mui/icons-material';
 import './Modal.css';
 
-const Modal = ({ isOpen, isGameOver, winningTeam, nextTeam, roundScore, onNextTeam, onGameOver, currentRound, numOfRounds, setNumOfRounds }) => {
+const Modal = ({ isOpen, isGameOver, winningTeam, nextTeam, roundScore, onNextTeam, onGameOver, currentRound, numOfRounds, setNumOfRounds, teams, updateScore }) => {
     const [countdown, setCountdown] = useState(null);
     const [isDarkMode, setIsDarkMode] = useState(false);
 
@@ -43,6 +47,9 @@ const Modal = ({ isOpen, isGameOver, winningTeam, nextTeam, roundScore, onNextTe
         }
     }, [countdown, onNextTeam]);
 
+    // Sort teams by score (highest first)
+    const sortedTeams = teams ? [...teams].sort((a, b) => b.score - a.score) : [];
+
     return (
         <Backdrop
             sx={{
@@ -54,44 +61,196 @@ const Modal = ({ isOpen, isGameOver, winningTeam, nextTeam, roundScore, onNextTe
             open={isOpen}
         >
             <Fade in={isOpen} timeout={500}>
-                <Paper
+                <Box
                     sx={{
+                        display: 'flex',
+                        gap: 2,
+                        alignItems: 'flex-start',
+                        justifyContent: 'center',
+                        width: '100vw',
+                        height: '100vh',
                         position: 'relative',
-                        background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05))',
-                        backdropFilter: 'blur(20px)',
-                        border: '1px solid rgba(255, 255, 255, 0.2)',
-                        borderRadius: 4,
-                        p: { xs: 3, md: 5 },
-                        textAlign: 'center',
-                        minWidth: { xs: 300, md: 450 },
-                        maxWidth: { xs: '90vw', md: 500 },
-                        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5)',
-                        color: 'white'
+                        flexDirection: { xs: 'column', md: 'row' }
                     }}
                 >
+                    {/* Team Scores Modal - Left Side */}
+                    {!isGameOver && teams && teams.length > 0 && (
+                        <Paper
+                            sx={{
+                                background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05))',
+                                backdropFilter: 'blur(20px)',
+                                border: '1px solid rgba(255, 255, 255, 0.2)',
+                                borderRadius: 3,
+                                p: { xs: 2.25, md: 3 },
+                                textAlign: 'center',
+                                minWidth: { xs: 225, md: 280 },
+                                maxWidth: { xs: '75vw', md: 320 },
+                                maxHeight: '75vh',
+                                overflow: 'auto',
+                                boxShadow: '0 15px 45px rgba(0, 0, 0, 0.5)',
+                                color: 'white',
+                                position: { xs: 'static', md: 'absolute' },
+                                left: { xs: 'auto', md: 20 },
+                                top: { xs: 'auto', md: 20 },
+                                transform: { xs: 'none', md: 'none' }
+                            }}
+                        >
+                            <Typography 
+                                variant="h6" 
+                                sx={{ 
+                                    fontWeight: 700,
+                                    mb: 2,
+                                    color: 'rgba(255, 255, 255, 0.9)'
+                                }}
+                            >
+                                Current Standings
+                            </Typography>
+                            <Stack spacing={0.75} sx={{ maxHeight: 400, overflow: 'auto' }}>
+                                {sortedTeams.map((team, index) => (
+                                    <Box
+                                        key={team.name}
+                                        sx={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'space-between',
+                                            background: `linear-gradient(45deg, ${team.color}25, ${team.color}15)`,
+                                            borderLeft: `3px solid ${team.color}`,
+                                            borderRadius: 1.5,
+                                            p: 1.125,
+                                            position: 'relative'
+                                        }}
+                                    >
+                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                                            {/* Position Badge */}
+                                            <Box
+                                                sx={{
+                                                    width: 18,
+                                                    height: 18,
+                                                    borderRadius: '50%',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    background: index === 0 ? 'linear-gradient(45deg, #f59e0b, #d97706)' :
+                                                               index === 1 ? 'linear-gradient(45deg, #6b7280, #4b5563)' :
+                                                               index === 2 ? 'linear-gradient(45deg, #cd7f32, #b8860b)' :
+                                                               'rgba(255, 255, 255, 0.2)',
+                                                    color: 'white',
+                                                    fontWeight: 700,
+                                                    fontSize: '0.6rem'
+                                                }}
+                                            >
+                                                {index + 1}
+                                            </Box>
+                                            
+                                            {/* Team Name */}
+                                            <Typography 
+                                                variant="body2" 
+                                                sx={{ 
+                                                    fontWeight: 600,
+                                                    color: 'white',
+                                                    textShadow: '0 1px 4px rgba(0,0,0,0.5)'
+                                                }}
+                                            >
+                                                {team.name}
+                                            </Typography>
+                                        </Box>
+                                        
+                                        {/* Score and Controls */}
+                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                            <IconButton
+                                                size="small"
+                                                onClick={() => updateScore(teams.findIndex(t => t.name === team.name), -1)}
+                                                sx={{
+                                                    background: 'rgba(239, 68, 68, 0.2)',
+                                                    color: '#ef4444',
+                                                    width: 18,
+                                                    height: 18,
+                                                    '&:hover': {
+                                                        background: 'rgba(239, 68, 68, 0.3)',
+                                                    }
+                                                }}
+                                            >
+                                                <RemoveIcon sx={{ fontSize: 12 }} />
+                                            </IconButton>
+                                            
+                                            <Typography 
+                                                variant="body1" 
+                                                sx={{ 
+                                                    fontWeight: 700,
+                                                    color: team.color,
+                                                    minWidth: 30,
+                                                    textAlign: 'center'
+                                                }}
+                                            >
+                                                {team.score}
+                                            </Typography>
+                                            
+                                            <IconButton
+                                                size="small"
+                                                onClick={() => updateScore(teams.findIndex(t => t.name === team.name), 1)}
+                                                sx={{
+                                                    background: 'rgba(16, 185, 129, 0.2)',
+                                                    color: '#10b981',
+                                                    width: 18,
+                                                    height: 18,
+                                                    '&:hover': {
+                                                        background: 'rgba(16, 185, 129, 0.3)',
+                                                    }
+                                                }}
+                                            >
+                                                <AddIcon sx={{ fontSize: 12 }} />
+                                            </IconButton>
+                                        </Box>
+                                    </Box>
+                                ))}
+                            </Stack>
+                        </Paper>
+                    )}
+
+                    {/* Main Modal - Center */}
+                    <Paper
+                        sx={{
+                            background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05))',
+                            backdropFilter: 'blur(20px)',
+                            border: '1px solid rgba(255, 255, 255, 0.2)',
+                            borderRadius: 3,
+                            p: { xs: 2.25, md: 3.75 },
+                            textAlign: 'center',
+                            minWidth: { xs: 225, md: 337 },
+                            maxWidth: { xs: '75vw', md: 450 },
+                            maxHeight: '75vh',
+                            overflow: 'auto',
+                            boxShadow: '0 15px 45px rgba(0, 0, 0, 0.5)',
+                            color: 'white',
+                            position: { xs: 'static', md: 'absolute' },
+                            left: { xs: 'auto', md: '50%' },
+                            top: { xs: 'auto', md: '50%' },
+                            transform: { xs: 'none', md: 'translate(-50%, -50%)' }
+                        }}
+                    >
                     {isGameOver ? (
                         <Box>
                             {/* Game Over Content */}
                             <Box sx={{ mb: 4 }}>
                                 <EmojiEvents 
                                     sx={{ 
-                                        fontSize: { xs: 64, md: 80 },
+                                        fontSize: { xs: 48, md: 60 },
                                         color: '#f59e0b',
-                                        mb: 2,
-                                        filter: 'drop-shadow(0 4px 8px rgba(245, 158, 11, 0.3))',
+                                        mb: 1.5,
+                                        filter: 'drop-shadow(0 3px 6px rgba(245, 158, 11, 0.3))',
                                         animation: 'bounce 2s infinite'
                                     }} 
                                 />
                                 <Typography 
-                                    variant="h3" 
+                                    variant="h4" 
                                     sx={{ 
                                         fontWeight: 800,
-                                        mb: 3,
+                                        mb: 2.25,
                                         background: 'linear-gradient(45deg, #f59e0b, #d97706)',
                                         WebkitBackgroundClip: 'text',
                                         WebkitTextFillColor: 'transparent',
                                         backgroundClip: 'text',
-                                        textShadow: '2px 2px 4px rgba(0,0,0,0.3)'
+                                        textShadow: '1.5px 1.5px 3px rgba(0,0,0,0.3)'
                                     }}
                                 >
                                     Game Over!
@@ -132,6 +291,8 @@ const Modal = ({ isOpen, isGameOver, winningTeam, nextTeam, roundScore, onNextTe
                                     Final Score: {winningTeam?.score}
                                 </Typography>
                             </Box>
+
+
 
                             <Button
                                 variant="contained"
@@ -174,29 +335,29 @@ const Modal = ({ isOpen, isGameOver, winningTeam, nextTeam, roundScore, onNextTe
                             <Box sx={{ mb: 4 }}>
                                 <TimerIcon 
                                     sx={{ 
-                                        fontSize: { xs: 56, md: 72 },
+                                        fontSize: { xs: 42, md: 54 },
                                         color: '#ef4444',
-                                        mb: 2,
-                                        filter: 'drop-shadow(0 4px 8px rgba(239, 68, 68, 0.3))'
+                                        mb: 1.5,
+                                        filter: 'drop-shadow(0 3px 6px rgba(239, 68, 68, 0.3))'
                                     }} 
                                 />
                                 <Typography 
-                                    variant="h4" 
+                                    variant="h5" 
                                     sx={{ 
                                         fontWeight: 700,
-                                        mb: 3,
+                                        mb: 2.25,
                                         background: 'linear-gradient(45deg, #ef4444, #dc2626)',
                                         WebkitBackgroundClip: 'text',
                                         WebkitTextFillColor: 'transparent',
                                         backgroundClip: 'text',
-                                        textShadow: '2px 2px 4px rgba(0,0,0,0.3)'
+                                        textShadow: '1.5px 1.5px 3px rgba(0,0,0,0.3)'
                                     }}
                                 >
                                     Time's Up!
                                 </Typography>
                             </Box>
 
-                            <Stack spacing={3} sx={{ mb: 4 }}>
+                            <Stack spacing={2.25} sx={{ mb: 3 }}>
                                 {/* Round Score */}
                                 <Box>
                                     <Chip
@@ -209,11 +370,11 @@ const Modal = ({ isOpen, isGameOver, winningTeam, nextTeam, roundScore, onNextTe
                                         }}
                                     />
                                     <Typography 
-                                        variant="h3" 
+                                        variant="h4" 
                                         sx={{ 
                                             fontWeight: 800,
                                             color: roundScore > 0 ? '#10b981' : '#6b7280',
-                                            textShadow: '2px 2px 4px rgba(0,0,0,0.3)'
+                                            textShadow: '1.5px 1.5px 3px rgba(0,0,0,0.3)'
                                         }}
                                     >
                                         {roundScore}
@@ -347,6 +508,7 @@ const Modal = ({ isOpen, isGameOver, winningTeam, nextTeam, roundScore, onNextTe
                         `}
                     </style>
                 </Paper>
+            </Box>
             </Fade>
         </Backdrop>
     );

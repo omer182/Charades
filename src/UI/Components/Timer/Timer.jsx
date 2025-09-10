@@ -1,136 +1,148 @@
 import React, { useState, useEffect } from 'react';
 import './Timer.css';
-import {Box, Button, Slider} from "@mui/material"; // Import the CSS file
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import {Pause} from "@mui/icons-material";
-
-const Card = ({ className, children }) => {
-  return <div className={`card ${className}`}>{children}</div>;
-};
+import { Box, Typography, LinearProgress, Chip, Button } from "@mui/material";
+import { AccessTime } from "@mui/icons-material";
 
 const Timer = ({ initialTime, onTimeUp, onTimerChange, isActive }) => {
-  const [time, setTime] = useState(initialTime); // Set the initial time
+  const [time, setTime] = useState(initialTime);
   const [isTimerActive, setIsTimerActive] = useState(isActive);
-  const [timer, setTimer] = useState(initialTime); // Default 60 seconds
+  const [timer, setTimer] = useState(initialTime);
+  const [tickAudio] = useState(() => {
+    // Create audio element for ticking sound
+    const audio = new Audio();
+    // Use a simple beep sound - we'll create this using a data URL
+    const sampleRate = 44100;
+    const duration = 0.1; // 100ms
+    const frequency = 800; // 800Hz beep
+    
+    const samples = sampleRate * duration;
+    const audioData = new Float32Array(samples);
+    
+    for (let i = 0; i < samples; i++) {
+      audioData[i] = Math.sin(2 * Math.PI * frequency * i / sampleRate) * 0.3;
+    }
+    
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const audioBuffer = audioContext.createBuffer(1, samples, sampleRate);
+    audioBuffer.getChannelData(0).set(audioData);
+    
+    return { audioContext, audioBuffer };
+  });
 
   useEffect(() => {
-    setIsTimerActive(isActive); // Update the timer state when isActive changes
+    setIsTimerActive(isActive);
   }, [isActive]);
 
   useEffect(() => {
-    setTime(initialTime); // Reset the timer when initialTime changes
-    setTimer(initialTime); // Reset the timer when initialTime changes
+    setTime(initialTime);
+    setTimer(initialTime);
   }, [initialTime]);
 
   useEffect(() => {
     let timerInterval;
     if (isTimerActive && time > 0) {
       timerInterval = setInterval(() => {
-        setTime((prevTime) => prevTime - 1);
+        setTime((prevTime) => {
+          const newTime = prevTime - 1;
+          
+          // Play ticking sound in last 10 seconds
+          if (newTime <= 10 && newTime > 0) {
+            try {
+              const source = tickAudio.audioContext.createBufferSource();
+              source.buffer = tickAudio.audioBuffer;
+              source.connect(tickAudio.audioContext.destination);
+              source.start();
+            } catch (e) {
+              console.log('Audio play failed:', e);
+            }
+          }
+          
+          return newTime;
+        });
       }, 1000);
-    } else if (time === 0) {
-      setIsTimerActive(false);
-      if (onTimeUp) {
-        setTime(timer)
-        onTimeUp(); // Trigger the callback when time is up
-      }
     }
     return () => clearInterval(timerInterval);
-  }, [initialTime, isTimerActive, time, onTimeUp]);
+  }, [isTimerActive, time, tickAudio]);
 
-  const pauseTimer = () => setIsTimerActive(!isTimerActive);
-  const resetTimer = () => {
-    setTime(timer);
-    setIsTimerActive(false);
-  }
-
-  const handleCustomTimerChange = (value) => {
-    if (!isNaN(value) && value > 0) {
-      setTime(Number(value));
-      setTimer(Number(value));
-      if (onTimerChange) onTimerChange(Number(value)); // Notify the parent of the time change
+  // Separate useEffect for handling time up
+  useEffect(() => {
+    if (time === 0 && isTimerActive) {
+      setIsTimerActive(false);
+      if (onTimeUp) {
+        setTime(timer);
+        onTimeUp();
+      }
     }
+  }, [time, isTimerActive, onTimeUp, timer]);
+
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${minutes}:${secs < 10 ? `0${secs}` : secs}`;
   };
 
-    const handleSliderChange = (event, value) => {
-      setIsTimerActive(false);
-      setTime(value);
-      setTimer(value);
-    }
+  const getProgressColor = () => {
+    const percentage = (time / timer) * 100;
+    if (percentage > 60) return '#10b981'; // Green
+    if (percentage > 30) return '#f59e0b'; // Orange
+    return '#ef4444'; // Red
+  };
 
-    // Convert time to MM:SS format
-    const formatTime = (seconds) => {
-        const minutes = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        return `${minutes}:${secs < 10 ? `0${secs}` : secs}`;
-    };
+  const getTimeColor = () => {
+    const percentage = (time / timer) * 100;
+    if (percentage > 60) return 'success.main';
+    if (percentage > 30) return 'warning.main';
+    return 'error.main';
+  };
 
   return (
-    <Card className="timer-container">
-      <Box
+    <Box sx={{ 
+      background: 'rgba(255, 255, 255, 0.05)',
+      borderRadius: 2,
+      p: 1.5,
+      border: '1px solid rgba(139, 92, 246, 0.2)',
+      backdropFilter: 'blur(8px)'
+    }}>
+      {/* Time Display */}
+      <Box sx={{ textAlign: 'center', mb: 1.5 }}>
+        <Box
           sx={{
-            display: "inline-block",
-            backgroundColor: "#222",
-            color: "#fff",
-            fontSize: "32px",
-            fontWeight: "bold",
-            padding: "10px 20px",
-            borderRadius: "8px",
-            boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
+            display: "inline-flex",
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'linear-gradient(145deg, #1e293b, #334155)',
+            color: getTimeColor(),
+            fontSize: { xs: '2.5rem', md: '3.5rem' },
+            fontWeight: 800,
+            padding: { xs: '18px 28px', md: '24px 40px' },
+            borderRadius: 2,
+            boxShadow: "inset 0 2px 4px rgba(0,0,0,0.3), 0 2px 8px rgba(0,0,0,0.3)",
             fontFamily: "monospace",
-            mb: '10px'
+            mb: 1,
+            border: `2px solid ${getProgressColor()}40`,
+            transition: 'all 0.3s ease',
+            minWidth: 120
           }}
-      >
-        {formatTime(time)}
+        >
+          {formatTime(time)}
+        </Box>
+        {/* Progress Bar */}
+        <LinearProgress
+          variant="determinate"
+          value={(time / timer) * 100}
+          sx={{
+            height: 6,
+            borderRadius: 3,
+            backgroundColor: 'rgba(255,255,255,0.1)',
+            '& .MuiLinearProgress-bar': {
+              background: `linear-gradient(90deg, ${getProgressColor()}, ${getProgressColor()}CC)`,
+              borderRadius: 3,
+              transition: 'all 0.3s ease'
+            }
+          }}
+        />
       </Box>
-      <div className="timer-controls">
-        <Button
-            disabled={!isActive}
-            color={isTimerActive ? 'error' : 'success'}
-            variant="contained"
-            onClick={pauseTimer}
-            sx={{ padding: '2px 6px', minWidth: 'auto' }}
-        >
-          {isTimerActive ? <Pause /> : <PlayArrowIcon />}
-        </Button>
-        <Button
-            variant="contained"
-            onClick={resetTimer}
-            color="primary"
-            sx={{
-                background: "linear-gradient(90deg, #55c5f2, #1ba7de, #0a75a6)",
-                padding: '2px 6px',
-                minWidth: 'auto'
-            }}
-        >
-          Reset
-        </Button>
-      </div>
-      <div className="timer-input-container" >
-        <div className='timer-slider'>
-          <Slider
-              aria-label="Timer"
-              defaultValue={60}
-              value={timer}
-              valueLabelDisplay="auto"
-              size='small'
-              step={30}
-              marks={true}
-              color="primary"
-              min={30}
-              max={120}
-              onChange={handleSliderChange}
-          />
-        </div>
-        {/*<input*/}
-        {/*    value={timer}*/}
-        {/*    onFocus={(event) => event.target.select()}*/}
-        {/*    onChange={(e) => handleCustomTimerChange(e.target.value)}*/}
-        {/*    className="input"*/}
-        {/*    placeholder="Set Timer"*/}
-        {/*/>*/}
-      </div>
-    </Card>
+    </Box>
   );
 };
 

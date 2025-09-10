@@ -1,3 +1,26 @@
+/* Minimal Timer CSS - most styling now handled by Material-UI */
+
+/* Custom animations for timer */
+@keyframes timerPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+  }
+  70% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+
+/* Apply animation when timer is low */
+.timer-urgent {
+  animation: timerPulse 1s infinite;
+}
+
 .timer-container {
     display: flex;
     flex-direction: column;

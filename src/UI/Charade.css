@@ -1,328 +1,45 @@
-/* Full-screen container with padding around it */
+/* Neo-Arcade utility animations & helpers.
+   Most styling lives in MUI sx prop + theme; this file holds keyframes
+   and a couple of class-level effects that are awkward to express inline. */
 
-.top-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  margin-bottom: 20px;
-  padding: 10px;
-  height: 60px;
-  box-sizing: border-box;
-  border-radius: 5px;
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.55; }
 }
 
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    border-radius: 2px;
-    margin-left: 50%;
-    font-size: 24px;
-    font-weight: bold;
-    width: 400px;
-    transform: translateX(-50%);
+@keyframes glow-sweep {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
 }
 
-.game {
-  display: flex;
-  justify-content: center;
-  width: 100vw;
-  height: 100vh;
-  flex: 1;
-  overflow: hidden; /* Hide overflow */
+@keyframes confetti-pop {
+  0%   { transform: scale(0.6); opacity: 0; }
+  60%  { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1);   opacity: 1; }
 }
 
-.game-header {
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  width: 100%;
-  height: 20px;
-  padding: 20px;
-  box-sizing: border-box;
-  border-radius: 5px;
-  background: linear-gradient(90deg, #55c5f2, #1ba7de, #0a75a6);
-  color: rgb(0, 0, 0);
+.neon-ring {
+  position: relative;
+  isolation: isolate;
 }
-
-.charades-game {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  height: 100vh;
-  padding: 20px;
-  box-sizing: border-box;
-  background-color: #f5ebe0; /* You can customize the background color */
-  overflow: hidden; /* Prevent overflow from pushing content down */
-}
-
-.left-panel {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  margin: 0 20px;
-  width: 300px;
-  gap: 20px;
-}
-
-/* Other general styles */
-.card {
-  background-color: white;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.card-content {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.score-controls {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  align-items: center;
-}
-
-.game-title {
-  flex: 1;
-  text-align: center;
-  font-size: 40px;
-  font-weight: bold;
-  color: #fafafa;
-}
-
-.title {
-  font-size: 24px;
-  font-weight: bold;
-  color: #333;
-}
-
-.title, .section-title {
-  margin: 5px;
-  color: #333;
-}
-
-.input-group {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.input-group input {
-  padding: 10px;
-  font-size: 16px;
-  border: 2px solid #ccc;
-  border-radius: 5px;
-  transition: border-color 0.3s;
-}
-
-.input-group input:focus {
-  outline: none;
-  border-color: #3498db;
-}
-
-.game-card {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  margin-right: 20px;
-}
-
-.game-card-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  text-align: center;
-  width: 100%;
-  overflow: hidden; /* Hide overflow */
-}
-
-.charades-image {
-  max-width: 100%;
-  overflow: hidden; /* Hide overflow */
-  width: 100%;
-  height: auto;
-  object-fit: contain; /* Keeps the aspect ratio intact */
-}
-
-.image-controls {
-  display: flex;
-  justify-content: center; /* Centers buttons horizontally */
-  margin-top: 20px;
-  gap: 20px; /* 20px gap between the buttons */
-  width: 100%;
-}
-
-.image-controls button {
-  min-width: 80px;
-}
-
-.start-game {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 24px;
-    width: 200px;
-    height: 200px;
-}
-
-.game-buttons {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  gap: 5px;
-
-  .button {
-    font-size: 12px;
-    padding: 0;
-  }
-}
-
-.game-settings {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.timer-section {
-  display: flex;
-  width: 100%;
-  gap: 10px
-}
-
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(4, 4, 4, 0.5);
-  z-index: 999;
-}
-
-/*QR*/
-.qr-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.enlarged-qr {
-  max-width: 80%;
-  max-height: 80%;
-  border-radius: 10px;
-}
-
-.close-button {
+.neon-ring::before {
+  content: "";
   position: absolute;
-  top: 20px;
-  right: 20px;
-  background-color: #ff5c5c;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 5px 10px;
-  font-size: 16px;
-  cursor: pointer;
-  z-index: 1001;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(from 0deg, var(--ring, #c6ff3d), transparent 40%, var(--ring, #c6ff3d) 70%, transparent);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  animation: spin-conic 6s linear infinite;
+  pointer-events: none;
+  z-index: -1;
 }
 
-.close-button:hover {
-  background-color: #e60000;
-}
-
-.qr {
-  transition: transform 0.2s ease;
-  border-radius: 5px;
-  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3); /* Shadow effect */
-  width: 50px;
-  height: 50px;
-}
-
-.qr:hover {
-  /* Removed jumping scale effect */
-}
-
-/* Legacy styles - most styling now handled by Material-UI */
-
-/* Custom animations and transitions */
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-@keyframes slideInUp {
-  from {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-/* Modern card hover effects - removed jumping animations */
-.modern-card:hover {
-  /* No jumping animations */
-}
-
-/* Responsive design helpers */
-@media (max-width: 768px) {
-  .game-grid {
-    grid-template-columns: 1fr !important;
-    gap: 1rem !important;
-  }
-  
-  .modern-card {
-    margin: 0.5rem !important;
-  }
-}
-
-/* Custom glassmorphism effects */
-.glass-effect {
-  backdrop-filter: blur(16px);
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-/* Utility classes */
 .gradient-text {
-  background: linear-gradient(45deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #c6ff3d 0%, #3df0ff 50%, #d63dff 100%);
   -webkit-background-clip: text;
+          background-clip: text;
   -webkit-text-fill-color: transparent;
-  background-clip: text;
 }

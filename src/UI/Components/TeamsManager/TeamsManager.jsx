@@ -1,315 +1,277 @@
 import React, { useState } from "react";
 import {
-    Button,
-    Card,
-    CardContent,
-    TextField,
-    Typography,
-    IconButton,
-    Box,
-    Stack,
-    Divider,
-    Zoom
+  Button, Card, CardContent, TextField, Typography,
+  IconButton, Box, Stack, Zoom,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RemoveIcon from "@mui/icons-material/Remove";
+import AddIcon from "@mui/icons-material/Add";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import GroupsIcon from "@mui/icons-material/Groups";
-import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 
-const colors = [
-    { color: "#8b5cf6", name: "Purple Haze" },
-    { color: "#06b6d4", name: "Ocean Blue" },
-    { color: "#f59e0b", name: "Golden Sun" },
-    { color: "#10b981", name: "Emerald Green" },
-    { color: "#ef4444", name: "Cherry Red" },
-    { color: "#8b5cf6", name: "Violet Dream" }
+const NEON_PALETTE = [
+  { color: "#c6ff3d", name: "Acid Lime" },
+  { color: "#3df0ff", name: "Cyan Pulse" },
+  { color: "#ff3d8a", name: "Hot Pink" },
+  { color: "#ff8a3d", name: "Tangerine" },
+  { color: "#d63dff", name: "Magenta" },
+  { color: "#6366f1", name: "Indigo" },
 ];
 
-const TeamsManager = ({ teams, setTeams }) => {
-    const [newTeamName, setNewTeamName] = useState("");
+const TeamsManager = ({ teams, setTeams, activeTeamIndex = -1 }) => {
+  const [newTeamName, setNewTeamName] = useState("");
 
-    const addTeam = () => {
-        if (newTeamName.trim() !== "" && teams.length < 6) {
-            const colorData = colors[teams.length % colors.length];
-            setTeams([...teams, { 
-                name: newTeamName.trim(), 
-                score: 0, 
-                color: colorData.color,
-                colorName: colorData.name 
-            }]);
-            setNewTeamName("");
-        }
-    };
+  const addTeam = () => {
+    if (newTeamName.trim() !== "" && teams.length < 6) {
+      const palette = NEON_PALETTE[teams.length % NEON_PALETTE.length];
+      setTeams([...teams, {
+        name: newTeamName.trim(),
+        score: 0,
+        color: palette.color,
+        colorName: palette.name,
+      }]);
+      setNewTeamName("");
+    }
+  };
 
-    const removeTeam = (index) => {
-        const updatedTeams = teams.filter((_, i) => i !== index);
-        setTeams(updatedTeams);
-    };
+  const removeTeam = (index) => {
+    setTeams(teams.filter((_, i) => i !== index));
+  };
 
-    const updateScore = (index, delta) => {
-        const updatedTeams = teams.map((team, i) =>
-            i === index ? { ...team, score: Math.max(0, team.score + delta) } : team
-        );
-        setTeams(updatedTeams);
-    };
+  const updateScore = (index, delta) => {
+    setTeams(teams.map((team, i) =>
+      i === index ? { ...team, score: Math.max(0, team.score + delta) } : team
+    ));
+  };
 
-    const handleKeyPress = (event) => {
-        if (event.key === 'Enter') {
-            addTeam();
-        }
-    };
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') addTeam();
+  };
 
-    return (
-        <Card sx={{ 
-            backdropFilter: "blur(16px)",
-            background: "rgba(255, 255, 255, 0.95)",
-            border: "1px solid rgba(139, 92, 246, 0.3)",
-            borderRadius: 3,
-            transition: "box-shadow 0.3s ease",
-            '&:hover': {
-                boxShadow: "0 8px 25px 0 rgba(31, 38, 135, 0.3)"
-            }
-        }}>
-            {/* Header */}
-            <CardContent sx={{ pb: 0.5 }}>
-                <Box sx={{ 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center',
-                    mb: 1.5,
-                    gap: 1
-                }}>
-                    <GroupsIcon sx={{ 
-                        fontSize: 20, 
-                        background: 'linear-gradient(45deg, #8b5cf6, #06b6d4)',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        backgroundClip: 'text'
-                    }} />
-                    <Typography variant="body1" sx={{ 
-                        fontWeight: 700,
-                        background: 'linear-gradient(45deg, #8b5cf6, #06b6d4)',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        backgroundClip: 'text'
-                    }}>
-                        Teams
-                    </Typography>
-                </Box>
+  return (
+    <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <CardContent sx={{ pb: 1.5 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1.5 }}>
+          <Typography
+            sx={{
+              fontSize: '0.7rem',
+              fontWeight: 700,
+              letterSpacing: '0.22em',
+              color: 'rgba(244,244,248,0.5)',
+              textTransform: 'uppercase',
+            }}
+          >
+            Teams
+          </Typography>
+          <Typography
+            sx={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: '0.78rem',
+              fontWeight: 700,
+              color: teams.length >= 6 ? '#ff8a3d' : 'rgba(244,244,248,0.4)',
+            }}
+          >
+            {teams.length}<Box component="span" sx={{ color: 'rgba(244,244,248,0.25)' }}>/6</Box>
+          </Typography>
+        </Box>
 
-                {/* Add Team Section */}
-                <Stack direction="row" spacing={1} alignItems="center" sx={{ width: '100%' }}>
-                    <TextField
-                        label="Team Name"
-                        variant="outlined"
-                        value={newTeamName}
-                        size="small"
-                        onChange={(e) => setNewTeamName(e.target.value)}
-                        onKeyPress={handleKeyPress}
-                        disabled={teams.length >= 6}
+        <Stack direction="row" spacing={1} alignItems="center">
+          <TextField
+            placeholder={teams.length >= 6 ? 'Max teams reached' : 'Add team name'}
+            variant="outlined"
+            value={newTeamName}
+            size="small"
+            onChange={(e) => setNewTeamName(e.target.value)}
+            onKeyPress={handleKeyPress}
+            disabled={teams.length >= 6}
+            sx={{ flex: 1 }}
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={addTeam}
+            disabled={teams.length >= 6 || !newTeamName.trim()}
+            sx={{
+              minWidth: 44,
+              width: 44,
+              height: 40,
+              p: 0,
+              '&.Mui-disabled': {
+                background: 'rgba(255,255,255,0.04)',
+                color: 'rgba(244,244,248,0.25)',
+                boxShadow: 'none',
+              },
+            }}
+          >
+            <AddCircleIcon fontSize="small" />
+          </Button>
+        </Stack>
+      </CardContent>
+
+      {teams.length > 0 ? (
+        <CardContent sx={{ pt: 0, flex: 1, overflow: 'auto', '&:last-child': { pb: 2 } }}>
+          <Stack spacing={1}>
+            {teams.map((team, index) => {
+              const isActive = index === activeTeamIndex;
+              return (
+                <Zoom in key={`${team.name}-${index}`} timeout={250 + index * 80}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      gap: 1,
+                      p: 1.25,
+                      borderRadius: 3,
+                      position: 'relative',
+                      background: isActive
+                        ? `linear-gradient(135deg, ${team.color}1f, ${team.color}0a)`
+                        : 'rgba(255,255,255,0.025)',
+                      border: isActive
+                        ? `1px solid ${team.color}55`
+                        : '1px solid rgba(255,255,255,0.06)',
+                      boxShadow: isActive
+                        ? `0 0 24px -6px ${team.color}80, inset 0 1px 0 rgba(255,255,255,0.05)`
+                        : 'inset 0 1px 0 rgba(255,255,255,0.03)',
+                      transition: 'background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease',
+                      '&:hover': !isActive && {
+                        background: `linear-gradient(135deg, ${team.color}12, transparent)`,
+                        borderColor: `${team.color}40`,
+                      },
+                    }}
+                  >
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.25, minWidth: 0, flex: 1 }}>
+                      <Box
                         sx={{
-                            flex: 1,
-                            '& .MuiOutlinedInput-root': {
-                                borderRadius: 2,
-                                backgroundColor: 'rgba(255, 255, 255, 0.8)',
-                                color: '#000',
-                                '& input': {
-                                    color: '#000',
-                                },
-                                '& fieldset': {
-                                    borderColor: 'rgba(139, 92, 246, 0.5)',
-                                },
-                                '&:hover fieldset': {
-                                    borderColor: 'rgba(139, 92, 246, 0.7)',
-                                },
-                                '&.Mui-focused fieldset': {
-                                    borderColor: '#8b5cf6',
-                                },
-                            },
-                            '& .MuiInputLabel-root': {
-                                color: 'rgba(55, 65, 81, 0.8)',
-                                '&.Mui-focused': {
-                                    color: '#8b5cf6',
-                                }
-                            }
+                          width: 8,
+                          height: 8,
+                          borderRadius: '50%',
+                          background: team.color,
+                          boxShadow: `0 0 10px ${team.color}, 0 0 2px ${team.color}`,
+                          flexShrink: 0,
                         }}
-                    />
-                    <Button
-                        variant="contained"
-                        onClick={addTeam}
-                        disabled={teams.length >= 6 || !newTeamName.trim()}
+                      />
+                      <Typography
                         sx={{
-                            minWidth: 40,
-                            height: 40,
+                          fontWeight: 600,
+                          fontSize: '0.95rem',
+                          color: '#f4f4f8',
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          minWidth: 0,
+                        }}
+                      >
+                        {team.name}
+                      </Typography>
+                      {isActive && (
+                        <Box
+                          sx={{
                             ml: 'auto',
-                            background: 'linear-gradient(45deg, #8b5cf6, #06b6d4)',
-                            borderRadius: 2,
-                            boxShadow: '0 2px 8px rgba(139, 92, 246, 0.4)',
-                            '&:hover': {
-                                background: 'linear-gradient(45deg, #a78bfa, #22d3ee)',
-                                boxShadow: '0 4px 12px rgba(139, 92, 246, 0.5)',
-                            },
-                            '&:disabled': {
-                                background: 'rgba(0,0,0,0.1)',
-                                color: 'rgba(0,0,0,0.3)',
-                                boxShadow: 'none'
-                            }
+                            px: 0.75,
+                            py: 0.15,
+                            borderRadius: 999,
+                            background: `${team.color}22`,
+                            border: `1px solid ${team.color}66`,
+                            fontSize: '0.58rem',
+                            fontWeight: 700,
+                            letterSpacing: '0.12em',
+                            color: team.color,
+                            textTransform: 'uppercase',
+                            whiteSpace: 'nowrap',
+                            animation: 'pulse-soft 1.8s ease-in-out infinite',
+                          }}
+                        >
+                          On stage
+                        </Box>
+                      )}
+                    </Box>
+
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.25, flexShrink: 0 }}>
+                      <IconButton
+                        size="small"
+                        onClick={() => updateScore(index, -1)}
+                        sx={{
+                          width: 26, height: 26,
+                          color: 'rgba(244,244,248,0.5)',
+                          '&:hover': { background: 'rgba(255, 61, 138, 0.12)', color: '#ff3d8a' },
                         }}
-                    >
-                        <AddCircleIcon fontSize="small" />
-                    </Button>
-                </Stack>
+                      >
+                        <RemoveIcon sx={{ fontSize: 14 }} />
+                      </IconButton>
 
-                {teams.length >= 6 && (
-                    <Typography variant="caption" sx={{ 
-                        color: 'warning.main', 
-                        mt: 0.5, 
-                        display: 'block',
-                        textAlign: 'center'
-                    }}>
-                        Maximum 6 teams allowed
-                    </Typography>
-                )}
-            </CardContent>
+                      <Typography
+                        sx={{
+                          fontFamily: 'var(--font-mono)',
+                          fontWeight: 700,
+                          fontSize: '1.05rem',
+                          color: team.score > 0 ? team.color : 'rgba(244,244,248,0.5)',
+                          textShadow: team.score > 0 ? `0 0 12px ${team.color}80` : 'none',
+                          minWidth: 28,
+                          textAlign: 'center',
+                          fontVariantNumeric: 'tabular-nums',
+                        }}
+                      >
+                        {team.score}
+                      </Typography>
 
-            {/* Team List */}
-            {teams.length > 0 && (
-                <>
-                    <Divider sx={{ 
-                        borderColor: 'rgba(139, 92, 246, 0.2)',
-                        mx: 2
-                    }} />
-                    <CardContent sx={{ pt: 1 }}>
-                        <Stack spacing={1}>
-                            {teams.map((team, index) => (
-                                <Zoom 
-                                    key={`${team.name}-${index}`} 
-                                    in={true} 
-                                    timeout={300 + index * 100}
-                                >
-                                    <Box
-                                        sx={{
-                                            display: "flex",
-                                            alignItems: "center",
-                                            justifyContent: "space-between",
-                                            background: `linear-gradient(45deg, ${team.color}25, ${team.color}15)`,
-                                            borderLeft: `3px solid ${team.color}`,
-                                            borderRadius: 2,
-                                            p: 1,
-                                            transition: "box-shadow 0.3s ease",
-                                            '&:hover': {
-                                                boxShadow: `0 2px 12px ${team.color}40`
-                                            }
-                                        }}
-                                    >
-                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                            <Typography variant="body2" sx={{ fontWeight: 600, color: '#222', textShadow: '0 1px 4px rgba(0,0,0,0.08)' }}>
-                                                {team.name}
-                                            </Typography>
-                                        </Box>
-                                        
-                                        <Stack direction="row" spacing={0.5} alignItems="center">
-                                            <IconButton 
-                                                size="small" 
-                                                onClick={() => updateScore(index, -1)}
-                                                sx={{
-                                                    background: 'rgba(239, 68, 68, 0.2)',
-                                                    color: '#ef4444',
-                                                    width: 28,
-                                                    height: 28,
-                                                    '&:hover': {
-                                                        background: 'rgba(239, 68, 68, 0.3)',
-                                                    }
-                                                }}
-                                            >
-                                                <RemoveIcon fontSize="small" />
-                                            </IconButton>
-                                            
-                                            <Box sx={{ 
-                                                display: 'flex', 
-                                                alignItems: 'center',
-                                                gap: 0.5,
-                                                minWidth: 35,
-                                                justifyContent: 'center'
-                                            }}>
-                                                {team.score > 0 && (
-                                                    <EmojiEventsIcon 
-                                                        sx={{ 
-                                                            fontSize: 14, 
-                                                            color: '#f59e0b' 
-                                                        }} 
-                                                    />
-                                                )}
-                                                <Typography 
-                                                    variant="body2" 
-                                                    sx={{ 
-                                                        fontWeight: 700,
-                                                        color: team.color,
-                                                        textAlign: 'center'
-                                                    }}
-                                                >
-                                                    {team.score}
-                                                </Typography>
-                                            </Box>
-                                            
-                                            <IconButton 
-                                                size="small" 
-                                                onClick={() => updateScore(index, 1)}
-                                                sx={{
-                                                    background: 'rgba(16, 185, 129, 0.2)',
-                                                    color: '#10b981',
-                                                    width: 28,
-                                                    height: 28,
-                                                    '&:hover': {
-                                                        background: 'rgba(16, 185, 129, 0.3)',
-                                                    }
-                                                }}
-                                            >
-                                                <AddCircleIcon fontSize="small" />
-                                            </IconButton>
-                                            
-                                            <IconButton 
-                                                size="small"
-                                                onClick={() => removeTeam(index)}
-                                                sx={{
-                                                    color: '#ef4444',
-                                                    width: 28,
-                                                    height: 28,
-                                                    ml: 0.5,
-                                                    '&:hover': {
-                                                        background: 'rgba(239, 68, 68, 0.1)',
-                                                    }
-                                                }}
-                                            >
-                                                <DeleteIcon fontSize="small" />
-                                            </IconButton>
-                                        </Stack>
-                                    </Box>
-                                </Zoom>
-                            ))}
-                        </Stack>
-                    </CardContent>
-                </>
-            )}
+                      <IconButton
+                        size="small"
+                        onClick={() => updateScore(index, 1)}
+                        sx={{
+                          width: 26, height: 26,
+                          color: 'rgba(244,244,248,0.5)',
+                          '&:hover': { background: 'rgba(198, 255, 61, 0.12)', color: '#c6ff3d' },
+                        }}
+                      >
+                        <AddIcon sx={{ fontSize: 14 }} />
+                      </IconButton>
 
-            {teams.length === 0 && (
-                <CardContent sx={{ textAlign: 'center', py: 2 }}>
-                    <GroupsIcon sx={{ 
-                        fontSize: 36, 
-                        color: 'rgba(139, 92, 246, 0.4)',
-                        mb: 1 
-                    }} />
-                    <Typography variant="body2" sx={{ 
-                        color: 'rgba(55, 65, 81, 0.7)',
-                        fontStyle: 'italic'
-                    }}>
-                        No teams yet. Add your first team!
-                    </Typography>
-                </CardContent>
-            )}
-        </Card>
-    );
+                      <IconButton
+                        size="small"
+                        onClick={() => removeTeam(index)}
+                        sx={{
+                          width: 26, height: 26,
+                          ml: 0.25,
+                          color: 'rgba(244,244,248,0.3)',
+                          '&:hover': { background: 'rgba(255, 61, 138, 0.1)', color: '#ff3d8a' },
+                        }}
+                      >
+                        <DeleteIcon sx={{ fontSize: 14 }} />
+                      </IconButton>
+                    </Box>
+                  </Box>
+                </Zoom>
+              );
+            })}
+          </Stack>
+        </CardContent>
+      ) : (
+        <CardContent sx={{ textAlign: 'center', py: 4, opacity: 0.6 }}>
+          <Box
+            sx={{
+              width: 40, height: 40, borderRadius: '50%',
+              mx: 'auto', mb: 1.5,
+              border: '1px dashed rgba(255,255,255,0.2)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              color: 'rgba(244,244,248,0.35)',
+              fontSize: 20,
+            }}
+          >
+            +
+          </Box>
+          <Typography
+            sx={{
+              fontSize: '0.85rem',
+              color: 'rgba(244,244,248,0.5)',
+              fontWeight: 500,
+            }}
+          >
+            Add your first team above.
+          </Typography>
+        </CardContent>
+      )}
+    </Card>
+  );
 };
 
 export default TeamsManager;

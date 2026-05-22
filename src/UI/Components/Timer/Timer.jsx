@@ -1,147 +1,156 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import './Timer.css';
-import { Box, Typography, LinearProgress, Chip, Button } from "@mui/material";
-import { AccessTime } from "@mui/icons-material";
+import { Box, Typography, LinearProgress } from '@mui/material';
 
-const Timer = ({ initialTime, onTimeUp, onTimerChange, isActive }) => {
+const Timer = ({ initialTime, onTimeUp, isActive, accentColor = '#c6ff3d' }) => {
   const [time, setTime] = useState(initialTime);
   const [isTimerActive, setIsTimerActive] = useState(isActive);
-  const [timer, setTimer] = useState(initialTime);
-  const [tickAudio] = useState(() => {
-    // Create audio element for ticking sound
-    const audio = new Audio();
-    // Use a simple beep sound - we'll create this using a data URL
-    const sampleRate = 44100;
-    const duration = 0.1; // 100ms
-    const frequency = 800; // 800Hz beep
-    
-    const samples = sampleRate * duration;
-    const audioData = new Float32Array(samples);
-    
-    for (let i = 0; i < samples; i++) {
-      audioData[i] = Math.sin(2 * Math.PI * frequency * i / sampleRate) * 0.3;
-    }
-    
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    const audioBuffer = audioContext.createBuffer(1, samples, sampleRate);
-    audioBuffer.getChannelData(0).set(audioData);
-    
-    return { audioContext, audioBuffer };
-  });
+  const [duration, setDuration] = useState(initialTime);
 
-  useEffect(() => {
-    setIsTimerActive(isActive);
-  }, [isActive]);
+  const tickAudio = useMemo(() => {
+    try {
+      const sampleRate = 44100;
+      const length = sampleRate * 0.08;
+      const frequency = 880;
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const audioBuffer = audioContext.createBuffer(1, length, sampleRate);
+      const data = audioBuffer.getChannelData(0);
+      for (let i = 0; i < length; i++) {
+        const envelope = Math.exp(-i / (sampleRate * 0.03));
+        data[i] = Math.sin((2 * Math.PI * frequency * i) / sampleRate) * 0.3 * envelope;
+      }
+      return { audioContext, audioBuffer };
+    } catch {
+      return null;
+    }
+  }, []);
+
+  useEffect(() => { setIsTimerActive(isActive); }, [isActive]);
 
   useEffect(() => {
     setTime(initialTime);
-    setTimer(initialTime);
+    setDuration(initialTime);
   }, [initialTime]);
 
   useEffect(() => {
-    let timerInterval;
-    if (isTimerActive && time > 0) {
-      timerInterval = setInterval(() => {
-        setTime((prevTime) => {
-          const newTime = prevTime - 1;
-          
-          // Play ticking sound in last 10 seconds
-          if (newTime <= 10 && newTime > 0) {
-            try {
-              const source = tickAudio.audioContext.createBufferSource();
-              source.buffer = tickAudio.audioBuffer;
-              source.connect(tickAudio.audioContext.destination);
-              source.start();
-            } catch (e) {
-              console.log('Audio play failed:', e);
-            }
+    if (!isTimerActive || time <= 0) return undefined;
+    const id = setInterval(() => {
+      setTime((prev) => {
+        const next = prev - 1;
+        if (next <= 10 && next > 0 && tickAudio) {
+          try {
+            const source = tickAudio.audioContext.createBufferSource();
+            source.buffer = tickAudio.audioBuffer;
+            source.connect(tickAudio.audioContext.destination);
+            source.start();
+          } catch (e) {
+            // ignore audio failures
           }
-          
-          return newTime;
-        });
-      }, 1000);
-    }
-    return () => clearInterval(timerInterval);
+        }
+        return next;
+      });
+    }, 1000);
+    return () => clearInterval(id);
   }, [isTimerActive, time, tickAudio]);
 
-  // Separate useEffect for handling time up
   useEffect(() => {
     if (time === 0 && isTimerActive) {
       setIsTimerActive(false);
       if (onTimeUp) {
-        setTime(timer);
+        setTime(duration);
         onTimeUp();
       }
     }
-  }, [time, isTimerActive, onTimeUp, timer]);
+  }, [time, isTimerActive, onTimeUp, duration]);
 
-  const formatTime = (seconds) => {
-    const minutes = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${minutes}:${secs < 10 ? `0${secs}` : secs}`;
-  };
+  const minutes = Math.floor(time / 60);
+  const secs = time % 60;
+  const percentage = duration > 0 ? (time / duration) * 100 : 0;
 
-  const getProgressColor = () => {
-    const percentage = (time / timer) * 100;
-    if (percentage > 60) return '#10b981'; // Green
-    if (percentage > 30) return '#f59e0b'; // Orange
-    return '#ef4444'; // Red
-  };
+  const urgencyColor =
+    percentage > 60 ? accentColor :
+    percentage > 30 ? '#ff8a3d' :
+                      '#ff3d8a';
 
-  const getTimeColor = () => {
-    const percentage = (time / timer) * 100;
-    if (percentage > 60) return 'success.main';
-    if (percentage > 30) return 'warning.main';
-    return 'error.main';
-  };
+  const isCritical = percentage <= 30 && isTimerActive;
 
   return (
-    <Box sx={{ 
-      background: 'rgba(255, 255, 255, 0.05)',
-      borderRadius: 2,
-      p: 1.5,
-      border: '1px solid rgba(139, 92, 246, 0.2)',
-      backdropFilter: 'blur(8px)'
-    }}>
-      {/* Time Display */}
-      <Box sx={{ textAlign: 'center', mb: 1.5 }}>
-        <Box
+    <Box>
+      <Box sx={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', mb: 1 }}>
+        <Typography
           sx={{
-            display: "inline-flex",
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'linear-gradient(145deg, #1e293b, #334155)',
-            color: getTimeColor(),
-            fontSize: { xs: '2.5rem', md: '3.5rem' },
-            fontWeight: 800,
-            padding: { xs: '18px 28px', md: '24px 40px' },
-            borderRadius: 2,
-            boxShadow: "inset 0 2px 4px rgba(0,0,0,0.3), 0 2px 8px rgba(0,0,0,0.3)",
-            fontFamily: "monospace",
-            mb: 1,
-            border: `2px solid ${getProgressColor()}40`,
-            transition: 'all 0.3s ease',
-            minWidth: 120
+            fontSize: '0.62rem',
+            fontWeight: 700,
+            letterSpacing: '0.22em',
+            color: 'rgba(244,244,248,0.45)',
+            textTransform: 'uppercase',
           }}
         >
-          {formatTime(time)}
-        </Box>
-        {/* Progress Bar */}
-        <LinearProgress
-          variant="determinate"
-          value={(time / timer) * 100}
-          sx={{
-            height: 6,
-            borderRadius: 3,
-            backgroundColor: 'rgba(255,255,255,0.1)',
-            '& .MuiLinearProgress-bar': {
-              background: `linear-gradient(90deg, ${getProgressColor()}, ${getProgressColor()}CC)`,
-              borderRadius: 3,
-              transition: 'all 0.3s ease'
-            }
-          }}
-        />
+          Time remaining
+        </Typography>
+        {isTimerActive && (
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 0.5,
+              fontSize: '0.6rem',
+              fontWeight: 600,
+              letterSpacing: '0.15em',
+              color: isCritical ? '#ff3d8a' : 'rgba(244,244,248,0.4)',
+              textTransform: 'uppercase',
+            }}
+          >
+            <Box
+              sx={{
+                width: 6, height: 6, borderRadius: '50%',
+                background: isCritical ? '#ff3d8a' : '#c6ff3d',
+                animation: 'pulse-soft 1.2s ease-in-out infinite',
+              }}
+            />
+            Live
+          </Box>
+        )}
       </Box>
+
+      <Box
+        sx={{
+          textAlign: 'center',
+          py: 1,
+          position: 'relative',
+          fontFamily: 'var(--font-mono)',
+          fontWeight: 800,
+          fontSize: { xs: '3.4rem', md: '4.2rem' },
+          lineHeight: 1,
+          letterSpacing: '-0.04em',
+          color: urgencyColor,
+          textShadow: `0 0 28px ${urgencyColor}80, 0 0 60px ${urgencyColor}40`,
+          fontVariantNumeric: 'tabular-nums',
+          transition: 'color 0.3s ease, text-shadow 0.3s ease',
+          animation: isCritical ? 'pulse-soft 0.8s ease-in-out infinite' : 'none',
+        }}
+      >
+        {minutes}
+        <Box component="span" sx={{ opacity: 0.5, mx: 0.25 }}>:</Box>
+        {secs < 10 ? `0${secs}` : secs}
+      </Box>
+
+      <LinearProgress
+        variant="determinate"
+        value={percentage}
+        sx={{
+          height: 4,
+          borderRadius: 999,
+          mt: 1,
+          backgroundColor: 'rgba(255,255,255,0.06)',
+          '& .MuiLinearProgress-bar': {
+            background: `linear-gradient(90deg, ${urgencyColor}, ${urgencyColor}99)`,
+            borderRadius: 999,
+            boxShadow: `0 0 12px ${urgencyColor}80`,
+            transition: 'transform 0.6s linear, background 0.3s ease',
+          },
+        }}
+      />
     </Box>
   );
 };

@@ -20,9 +20,67 @@ import UndoIcon from '@mui/icons-material/Undo';
 import { Check, Close, RestartAlt, Settings, Pause, PlayArrow } from "@mui/icons-material";
 import Modal from "./Components/Modal/Modal";
 import TeamsManager from "./Components/TeamsManager/TeamsManager";
+import difficultyData from "../data/difficulty.json";
 
-const importAll = (r) => r.keys().map(r);
+const importAll = (r) =>
+  r.keys().map((key) => ({
+    src: r(key),
+    name: key.replace(/^\.\//, "").replace(/\.[^.]+$/, ""),
+  }));
 const images = importAll(require.context('../../pictures/result', false, /\.(jpg|jpeg|png|gif)$/));
+
+const DIFFICULTY_MAP = (() => {
+  const map = {};
+  ["easy", "medium", "hard"].forEach((level) => {
+    (difficultyData[level] || []).forEach((name) => { map[name] = level; });
+  });
+  return map;
+})();
+
+const DIFFICULTY_PATTERN = ["easy", "easy", "easy", "medium", "medium", "hard", "easy", "easy"];
+
+const shuffleInPlace = (array) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+};
+
+const buildBalancedDeck = (allImages) => {
+  const byLevel = { easy: [], medium: [], hard: [] };
+  allImages.forEach((img) => {
+    const level = DIFFICULTY_MAP[img.name] || "medium";
+    byLevel[level].push(img);
+  });
+
+  const pools = {
+    easy: shuffleInPlace([...byLevel.easy]),
+    medium: shuffleInPlace([...byLevel.medium]),
+    hard: shuffleInPlace([...byLevel.hard]),
+  };
+
+  const drawFrom = (level) => {
+    if (pools[level].length === 0) {
+      const source = byLevel[level];
+      if (source.length === 0) return null;
+      pools[level] = shuffleInPlace([...source]);
+    }
+    return pools[level].shift();
+  };
+
+  const deck = [];
+  for (let i = 0; i < allImages.length; i++) {
+    const slot = DIFFICULTY_PATTERN[i % DIFFICULTY_PATTERN.length];
+    let pick = drawFrom(slot);
+    if (!pick) {
+      pick = drawFrom("medium") || drawFrom("easy") || drawFrom("hard");
+    }
+    if (!pick) break;
+    deck.push(pick.src);
+  }
+  return deck;
+};
 
 const TOP_BAR_HEIGHT = 68;
 
@@ -101,17 +159,8 @@ const CharadesGame = () => {
   const [roundEndSound] = useState(new Audio('/round-end-dramatic.mp3'));
   const [timerKey, setTimerKey] = useState(0);
 
-  const shuffleArray = (array) => {
-    const shuffled = [...array];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
-  };
-
   useEffect(() => {
-    setShuffledImages(shuffleArray(images.map((img) => img)));
+    setShuffledImages(buildBalancedDeck(images));
   }, []);
 
   useEffect(() => {
@@ -174,7 +223,7 @@ const CharadesGame = () => {
     setCustomTimer(60);
     setIsTimerActive(false);
     setIsModalOpen(false);
-    setShuffledImages(shuffleArray(images.map((img) => img)));
+    setShuffledImages(buildBalancedDeck(images));
     setIsGameOver(false);
     setNumOfRounds(3);
     setRoundScore(0);
@@ -214,7 +263,8 @@ const CharadesGame = () => {
       setRoundScore(0);
     }
     setIsTimerActive(true);
-    skipImage(0);
+    setShuffledImages(buildBalancedDeck(images));
+    setCurrentImageIndex(0);
   };
 
   const handleCustomTimerChange = (time) => setCustomTimer(Number(time));

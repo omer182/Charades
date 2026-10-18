@@ -5,7 +5,7 @@ interface Particle {
   size: number; rot: number; spin: number; color: string; round: boolean; life: number; maxLife: number;
 }
 
-/** Canvas confetti cannons from both bottom corners, plus a center burst. */
+/** Canvas confetti cannons from both bottom corners. */
 export default function Confetti({ colors }: { colors: string[] }) {
   const ref = useRef<HTMLCanvasElement>(null);
 
@@ -43,40 +43,13 @@ export default function Confetti({ colors }: { colors: string[] }) {
       }
     };
 
-    // Gentle fall from the top edge, spread across the width.
-    const rain = (count: number) => {
-      for (let i = 0; i < count; i++) {
-        particles.push({
-          x: Math.random() * canvas.width,
-          y: -20 * dpr - Math.random() * 200 * dpr,
-          vx: (Math.random() - 0.5) * 3 * dpr,
-          vy: (1 + Math.random() * 3) * dpr,
-          size: (6 + Math.random() * 8) * dpr,
-          rot: Math.random() * Math.PI,
-          spin: (Math.random() - 0.5) * 0.3,
-          color: colors[Math.floor(Math.random() * colors.length)],
-          round: Math.random() < 0.3,
-          life: 0,
-          maxLife: 420 + Math.random() * 200,
-        });
-      }
-    };
-
+    // A few bursts from the two bottom corners only, so the middle of the podium stays clear.
     const up = -Math.PI / 2;
     const cannons = (count: number) => {
-      fire(0, up + 0.5, 0.55, count);
-      fire(1, up - 0.5, 0.55, count);
+      fire(0, up + 0.22, 0.35, count);
+      fire(1, up - 0.22, 0.35, count);
     };
-    const timers = [
-      setTimeout(() => cannons(160), 150),
-      setTimeout(() => fire(0.5, up, 1.1, 160), 600),
-      setTimeout(() => { fire(0.25, up + 0.15, 0.7, 90); fire(0.75, up - 0.15, 0.7, 90); }, 1100),
-      setTimeout(() => cannons(120), 1800),
-      setTimeout(() => fire(0.5, up, 1.3, 200), 2800),
-      setTimeout(() => cannons(140), 3800),
-      // Then a steady shower for a few seconds.
-      ...Array.from({ length: 14 }, (_, i) => setTimeout(() => rain(45), 600 + i * 450)),
-    ];
+    const timers = [150, 1300, 2600].map((at, i) => setTimeout(() => cannons(i === 0 ? 80 : 55), at));
 
     // Physics are tuned per 60 fps frame and scaled by elapsed time, so 120 Hz screens
     // and throttled tabs play at the same speed.

@@ -9,6 +9,9 @@ import { Kbd, vars } from './ui';
 import type { ScreenProps } from './types';
 
 const STEPS = ['3', '2', '1', 'בהצלחה!'];
+/** A real second per number, then a beat on the last word before the clock starts. */
+const STEP_MS = 1000;
+const LAST_STEP_MS = 800;
 
 export default function GetReady({ state, dispatch }: ScreenProps) {
   const { teams, teamIndex, round, settings } = state;
@@ -27,7 +30,7 @@ export default function GetReady({ state, dispatch }: ScreenProps) {
     vibrate(step === STEPS.length - 1 ? 60 : 20);
     const id = setTimeout(
       () => (step === STEPS.length - 1 ? dispatch({ type: 'beginTurn', now: Date.now() }) : setStep(step + 1)),
-      step === STEPS.length - 1 ? 450 : 700,
+      step === STEPS.length - 1 ? LAST_STEP_MS : STEP_MS,
     );
     return () => clearTimeout(id);
   }, [step, dispatch]);

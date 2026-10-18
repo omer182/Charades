@@ -66,7 +66,7 @@ export default function Lobby({ state, dispatch }: ScreenProps) {
           <Sparkles size={14} /> ערב משחקים · {Object.keys(CARDS).length} קלפים
         </p>
         <h1 className="hero-title">
-          בלי <span className="hero-title__pop">מילים.</span>
+          בלי <span className="hero-title__pop">מילים...</span>
         </h1>
         <p className="lede">
           שחקן אחד מציג את הקלף בלי לדבר, והקבוצה שלו צועקת ניחושים. כמה שיותר קלפים לפני הצלצול — ואז

@@ -31,5 +31,5 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/charades
+          IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/speechless
           docker buildx build --platform linux/amd64 -t $IMAGE_NAME:latest --push .

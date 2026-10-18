@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useGame } from './hooks/useGame';
+import { RoomContext } from './net/RoomContext';
 import { useWakeLock } from './hooks/useWakeLock';
 import { standings } from './game/reducer';
 import { sound } from './game/sound';
@@ -14,7 +15,7 @@ import GameOver from './components/GameOver';
 const HOUSE_COLOR = '#ffd23f';
 
 export default function App() {
-  const [state, dispatch] = useGame();
+  const { state, dispatch, room, openRoom, closeRoom } = useGame();
   const { phase, teams, teamIndex, settings } = state;
 
   const accent =
@@ -51,23 +52,25 @@ export default function App() {
   }[phase];
 
   return (
-    <div className="app" data-phase={phase}>
-      <div className="backdrop" aria-hidden />
-      <Header state={state} dispatch={dispatch} />
-      <main className="main">
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.div
-            key={phase}
-            className="screen"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-          >
-            {screen}
-          </motion.div>
-        </AnimatePresence>
-      </main>
-    </div>
+    <RoomContext.Provider value={{ room, openRoom, closeRoom }}>
+      <div className="app" data-phase={phase}>
+        <div className="backdrop" aria-hidden />
+        <Header state={state} dispatch={dispatch} />
+        <main className="main">
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={phase}
+              className="screen"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+            >
+              {screen}
+            </motion.div>
+          </AnimatePresence>
+        </main>
+      </div>
+    </RoomContext.Provider>
   );
 }

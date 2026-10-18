@@ -83,6 +83,8 @@ export const sound = {
 
 export const vibrate = (pattern: number | number[]) => {
   try {
+    // Browsers refuse (and log an error) until the page has been tapped.
+    if (navigator.userActivation && !navigator.userActivation.hasBeenActive) return;
     navigator.vibrate?.(pattern);
   } catch {
     // unsupported

@@ -15,5 +15,5 @@
     "noEmit": true,
     "types": ["vite/client", "node"]
   },
-  "include": ["src", "vite.config.mts"]
+  "include": ["src", "server", "vite.config.mts"]
 }

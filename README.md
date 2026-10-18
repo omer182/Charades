@@ -88,8 +88,8 @@ scripts/
 
 ## Deploying
 
-Pushing to `main` builds the Docker image `ghcr.io/omer182/charades:latest` (the image keeps its old
-name so existing deployments keep pulling it): a static build served by nginx on port 3000.
+Pushing to `main` builds the Docker image `ghcr.io/omer182/speechless:latest`: a static build served by
+nginx on port 3000.
 
 ```bash
 docker build -t speechless .

@@ -142,6 +142,11 @@ ul {
   overflow: hidden auto;
 }
 
+/* A turn fills the screen exactly; a card flying off must not flash a scrollbar. */
+.app[data-phase='playing'] .main {
+  overflow: hidden;
+}
+
 .screen {
   min-height: 100%;
   display: flex;

@@ -5,6 +5,7 @@ import { currentCard, standings } from '../game/reducer';
 import { CARDS } from '../game/cards';
 import { sound, vibrate } from '../game/sound';
 import { useHotkeys } from '../hooks/useHotkeys';
+import { screenRoom } from '../net/screenRoom';
 import { Kbd, vars } from './ui';
 import type { ScreenProps } from './types';
 
@@ -35,8 +36,16 @@ export default function GetReady({ state, dispatch }: ScreenProps) {
     return () => clearTimeout(id);
   }, [step, dispatch]);
 
-  const go = () => step === null && setStep(0);
+  const go = () => setStep((s) => s ?? 0);
   useHotkeys({ Space: go, Enter: go });
+
+  // The host can start the countdown from their phone.
+  useEffect(() => {
+    const off = screenRoom.onCue((cue) => {
+      if (cue.type === 'go') setStep((s) => s ?? 0);
+    });
+    return () => void off();
+  }, []);
 
   if (!team) return null;
 

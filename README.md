@@ -10,6 +10,12 @@ out the card without a word, their team (backs to the screen) shouts guesses, an
 - Add 1–8 teams, choose card categories, the number of rounds and the turn length, and whether skipping costs a point.
 - Each turn opens with a get-ready screen and a 3-2-1 countdown.
 - During a turn: **swipe right / → / Space** = got it, **swipe left / ←** = skip, **Z** = undo, **P** = pause.
+- **Who runs the turn** is picked in the lobby:
+  - **From the screen**: whoever has the laptop uses the buttons, keyboard or swipes. Works offline.
+  - **From a phone**: the screen shows a QR code and a 4-letter room code. Someone from another team
+    scans it and runs turns from `/r/CODE` with the same buttons, while the big screen shows just the card,
+    timer and scores. The phone can also start the countdown and fix calls in the review.
+  - The header's phone button shows the QR mid-game, or switches back to the screen.
 - **Golden cards** score +2 instead of +1. They have a gold frame and ribbon, a shimmer and a chime,
   and the got-it button turns gold.
 - When time's up you review the turn's cards (tap one to fix a wrong call; golden ones are tagged),
@@ -61,12 +67,24 @@ The app shows the word above the photo, so nothing is drawn on the image itself.
 
 ```bash
 npm install
-npm run dev        # http://localhost:3000
-npm test           # game logic tests (vitest)
+npm run dev          # the site, http://localhost:3000 (proxies /socket.io to the room server)
+npm run dev:server   # the room server for phone control, port 3001
+npm test             # game logic and room tests (vitest)
 npm run typecheck
 npm run lint
-npm run build      # → dist/
+npm run build        # → dist/ (site) and dist-server/index.mjs (server)
+npm start            # the built server: site + rooms on port 3000
 ```
+
+To try phone control on a real phone, run Vite with `--host` and open the QR's address on the same Wi-Fi.
+
+**Phone control:**
+- The server keeps each room's game in memory and runs the same reducer the offline game uses.
+- Clients send actions and get the new state back. A tap shows at once, and the server's answer
+  replaces it, with any taps it hasn't confirmed yet replayed on top.
+- Turn times are stamped with the server's clock, and each device corrects for its own clock being off.
+- If the server restarts, the screen rebuilds its room under the same code from its saved game, and
+  phones reconnect on their own.
 
 Stack: Vite, React 19, TypeScript, [motion](https://motion.dev) for animation, plain CSS with design
 tokens (`src/styles/global.css`), Rubik for the Hebrew type. The page is right-to-left; the got-it /
@@ -75,9 +93,14 @@ skip buttons deliberately stay in physical order so "got it" is on the right, ma
 ```
 src/
   game/             pure logic: reducer (state machine), deck + golden picker, card catalog, sound
-  hooks/            persistence, rAF timer, wake lock, hotkeys
+  hooks/            persistence (offline or room), rAF timer, wake lock, hotkeys
   components/       one component per screen: Lobby → GetReady → Stage → TurnEnd → GameOver
+  net/              phone control: message types, room client, the screen's room, synced clock
+  remote/           the phone remote at /r/CODE
   data/cards.json   card catalog
+server/
+  index.ts          Node server: serves dist/ and runs rooms over Socket.IO
+  rooms.ts          in-memory rooms (tested in rooms.test.ts)
 pictures/
   raw/              original photos; the file name is the word to act out
   cards/            generated WebP, which is what the app ships
@@ -88,10 +111,24 @@ scripts/
 
 ## Deploying
 
-Pushing to `main` builds the Docker image `ghcr.io/omer182/speechless:latest`: a static build served by
-nginx on port 3000.
+Pushing to `main` builds the Docker image `ghcr.io/omer182/speechless:latest`. It runs one Node
+process on port 3000 that serves the site and the phone rooms, with a health check at `/healthz`.
 
 ```bash
 docker build -t speechless .
 docker run -p 3000:3000 speechless
 ```
+
+Behind a reverse proxy, phone control needs WebSockets passed through. For nginx:
+
+```nginx
+location / {
+  proxy_pass http://speechless:3000;
+  proxy_http_version 1.1;
+  proxy_set_header Upgrade $http_upgrade;
+  proxy_set_header Connection "upgrade";
+  proxy_set_header Host $host;
+}
+```
+
+Rooms live in memory, so run a single instance.

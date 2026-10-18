@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useMotionValue, useTransform, type PanInfo } from 'motion/react';
-import { Check, Pause, Play, Star, Undo2, X } from 'lucide-react';
+import { Play, Smartphone, Star } from 'lucide-react';
 import { CARDS, CATEGORY, cardLabel } from '../game/cards';
 import { currentCard, isGolden, turnPoints } from '../game/reducer';
 import { sound, vibrate } from '../game/sound';
-import type { CardResult } from '../game/types';
+import type { CardResult, TurnEntry } from '../game/types';
 import { useHotkeys } from '../hooks/useHotkeys';
 import { useRemaining } from '../hooks/useRemaining';
+import { usePhoneInControl } from '../net/RoomContext';
+import ActionBar from './ActionBar';
 import Scoreboard from './Scoreboard';
 import TimerRing from './TimerRing';
 import CategoryIcon from './CategoryIcon';
@@ -85,6 +87,14 @@ function Card({ name, golden, onSwipe, disabled }: { name: string; golden: boole
   );
 }
 
+/** What the last change to the turn was, so the card flies the right way and a score pops. */
+interface Track {
+  turn: TurnEntry[];
+  dir: Motion;
+  pops: { id: number; result: CardResult; golden: boolean }[];
+  nextPop: number;
+}
+
 export default function Stage({ state, dispatch }: ScreenProps) {
   const { teams, teamIndex, settings, turn, timer, deck, cursor } = state;
   const team = teams[teamIndex];
@@ -92,9 +102,55 @@ export default function Stage({ state, dispatch }: ScreenProps) {
   const golden = card !== undefined && isGolden(state, card);
   const paused = timer.endsAt === null;
   const remaining = useRemaining(timer);
-  const [dir, setDir] = useState<Motion>({ exit: 0, enter: 0 });
-  const [pops, setPops] = useState<{ id: number; result: CardResult; golden: boolean }[]>([]);
-  const popId = useRef(0);
+  const phoneInControl = usePhoneInControl();
+
+  // Taps may come from this screen or a phone, so animation and sound follow the state, not the click.
+  // Adjusting state while rendering is React's pattern for reacting to a prop change.
+  const [track, setTrack] = useState<Track>({ turn, dir: { exit: 0, enter: 0 }, pops: [], nextPop: 0 });
+  if (track.turn !== turn) {
+    if (turn.length > track.turn.length) {
+      const entry = turn[turn.length - 1];
+      setTrack({
+        turn,
+        dir: { exit: entry.result === 'got' ? 1 : -1, enter: 0 },
+        pops: [...track.pops, { id: track.nextPop, result: entry.result, golden: Boolean(entry.golden) }],
+        nextPop: track.nextPop + 1,
+      });
+    } else if (turn.length < track.turn.length) {
+      const undone = track.turn[track.turn.length - 1];
+      setTrack({ ...track, turn, dir: { exit: 0, enter: undone.result === 'got' ? 1 : -1 } });
+    } else {
+      setTrack({ ...track, turn });
+    }
+  }
+
+  // Sounds and buzz for each new call or undo.
+  const heard = useRef(turn);
+  useEffect(() => {
+    const before = heard.current;
+    heard.current = turn;
+    if (turn.length > before.length) {
+      const entry = turn[turn.length - 1];
+      if (entry.result === 'got') {
+        if (entry.golden) sound.golden();
+        else sound.correct();
+        vibrate(30);
+      } else {
+        sound.skip();
+        vibrate([15, 40, 15]);
+      }
+    } else if (turn.length < before.length) {
+      sound.undo();
+    }
+  }, [turn]);
+
+  // Each score pop fades out on its own.
+  const lastPop = track.pops.at(-1)?.id;
+  useEffect(() => {
+    if (lastPop === undefined) return;
+    const id = setTimeout(() => setTrack((t) => ({ ...t, pops: t.pops.filter((p) => p.id !== lastPop) })), 900);
+    return () => clearTimeout(id);
+  }, [lastPop]);
 
   // Buzzer when the clock runs out.
   useEffect(() => {
@@ -125,30 +181,11 @@ export default function Stage({ state, dispatch }: ScreenProps) {
   }, [deck, cursor]);
 
   const mark = (result: CardResult) => {
-    if (paused) return;
-    setDir({ exit: result === 'got' ? 1 : -1, enter: 0 });
-    const id = ++popId.current;
-    setPops((p) => [...p, { id, result, golden }]);
-    setTimeout(() => setPops((p) => p.filter((x) => x.id !== id)), 900);
-    if (result === 'got') {
-      if (golden) sound.golden();
-      else sound.correct();
-      vibrate(30);
-    } else {
-      sound.skip();
-      vibrate([15, 40, 15]);
-    }
-    dispatch({ type: 'mark', result });
+    if (!paused) dispatch({ type: 'mark', result });
   };
-
   const undo = () => {
-    const last = turn[turn.length - 1];
-    if (!last || paused) return;
-    setDir({ exit: 0, enter: last.result === 'got' ? 1 : -1 });
-    sound.undo();
-    dispatch({ type: 'undo' });
+    if (turn.length > 0 && !paused) dispatch({ type: 'undo' });
   };
-
   const togglePause = () => dispatch({ type: paused ? 'resume' : 'pause', now: Date.now() });
 
   useHotkeys({
@@ -166,6 +203,7 @@ export default function Stage({ state, dispatch }: ScreenProps) {
   if (!team) return null;
   const points = turnPoints(turn);
   const got = turn.filter((e) => e.result === 'got').length;
+  const { dir, pops } = track;
 
   return (
     <section className="stage">
@@ -233,26 +271,18 @@ export default function Stage({ state, dispatch }: ScreenProps) {
           </AnimatePresence>
         </div>
 
-        <div className="actions">
-          <button className="act act--small" onClick={undo} disabled={turn.length === 0 || paused} aria-label="ביטול הקלף האחרון" title="ביטול (Z)">
-            <Undo2 size={22} />
-          </button>
-          <button className="act act--skip" onClick={() => mark('skip')} disabled={paused} aria-label="דילוג">
-            <X size={30} strokeWidth={2.6} />
-            <span>דילוג</span>
-          </button>
-          <button className="act act--got" data-golden={golden} onClick={() => mark('got')} disabled={paused} aria-label={golden ? 'ניחשו, פלוס 2' : 'ניחשו'}>
-            {golden ? <Star size={28} fill="currentColor" /> : <Check size={30} strokeWidth={2.8} />}
-            <span>ניחשו!</span>
-            {golden && <bdi dir="ltr" className="act__bonus">+2</bdi>}
-          </button>
-          <button className="act act--small" onClick={togglePause} aria-label={paused ? 'המשך' : 'השהיה'} title="השהיה (P)">
-            {paused ? <Play size={22} /> : <Pause size={22} />}
-          </button>
-        </div>
-        <p className="hint-line hint-line--stage">
-          <Kbd>→</Kbd> ניחשו · <Kbd>←</Kbd> דילוג · <Kbd>Z</Kbd> ביטול · <Kbd>P</Kbd> השהיה · או החליקו
-        </p>
+        {phoneInControl ? (
+          <p className="phone-in-control">
+            <Smartphone size={18} /> השופט מנהל את התור מהטלפון
+          </p>
+        ) : (
+          <>
+            <ActionBar golden={golden} paused={paused} canUndo={turn.length > 0} onMark={mark} onUndo={undo} onTogglePause={togglePause} />
+            <p className="hint-line hint-line--stage">
+              <Kbd>→</Kbd> ניחשו · <Kbd>←</Kbd> דילוג · <Kbd>Z</Kbd> ביטול · <Kbd>P</Kbd> השהיה · או החליקו
+            </p>
+          </>
+        )}
       </div>
     </section>
   );

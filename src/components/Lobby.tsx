@@ -7,10 +7,13 @@ import { shuffle } from '../game/deck';
 import { ALL_CATEGORIES, MAX_TEAMS } from '../game/reducer';
 import type { CategoryId } from '../game/types';
 import { useHotkeys } from '../hooks/useHotkeys';
+import { useRoom } from '../net/RoomContext';
+import JoinPanel from './JoinPanel';
 import { Field, Kbd, Segmented, Stepper, Switch, vars } from './ui';
 import type { ScreenProps } from './types';
 
 const TURN_LENGTHS = [30, 45, 60, 90, 120] as const;
+const CONTROL_MODES = ['screen', 'phone'] as const;
 const SAMPLE_TEAMS = ['אריות', 'ינשופים', 'כרישים', 'שועלים'];
 
 const formatSeconds = (s: number) =>
@@ -18,6 +21,7 @@ const formatSeconds = (s: number) =>
 
 export default function Lobby({ state, dispatch }: ScreenProps) {
   const { teams, settings } = state;
+  const { room, openRoom, closeRoom } = useRoom();
   const [name, setName] = useState('');
   const [fan] = useState(() => shuffle(PHOTO_IDS).slice(0, 3));
   const { categories } = settings;
@@ -193,6 +197,22 @@ export default function Lobby({ state, dispatch }: ScreenProps) {
               </button>
             </p>
           )}
+        </div>
+
+        <div className="panel">
+          <div className="panel__head">
+            <h2 className="panel__title">מי מנהל את התור?</h2>
+          </div>
+          <Field label="השופט מסמן ניחוש ודילוג" hint={room.open ? 'מהטלפון, בסריקת הקוד' : 'מהמסך: מקלדת, עכבר או החלקה'}>
+            <Segmented
+              label="מי מנהל את התור"
+              value={room.open ? 'phone' : 'screen'}
+              options={CONTROL_MODES}
+              format={(m) => (m === 'phone' ? 'מהטלפון' : 'מהמסך')}
+              onChange={(m) => (m === 'phone' ? openRoom() : closeRoom())}
+            />
+          </Field>
+          {room.open && <JoinPanel />}
         </div>
 
         <div className="panel">

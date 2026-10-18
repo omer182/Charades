@@ -40,14 +40,14 @@ export function buildDeck(
   return deck;
 }
 
-/** Chance a card turns golden (double points): harder cards are likelier. */
-const GOLDEN_ODDS: Record<Difficulty, number> = { easy: 0.03, medium: 0.1, hard: 0.35 };
+/** Share of hard cards that turn golden (double points) each game; easier cards never do. */
+const GOLDEN_ODDS = 0.35;
 
-/** Picks this game's golden cards. */
+/** Picks this game's golden cards, at random from the hard ones. */
 export function pickGolden(
   names: readonly string[],
   difficultyOf: (name: string) => Difficulty | undefined,
   random = Math.random,
 ): string[] {
-  return names.filter((name) => random() < GOLDEN_ODDS[difficultyOf(name) ?? 'medium']);
+  return names.filter((name) => difficultyOf(name) === 'hard' && random() < GOLDEN_ODDS);
 }

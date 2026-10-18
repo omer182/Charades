@@ -142,11 +142,11 @@ describe('golden cards', () => {
     expect(run(s, { type: 'toggleEntry', index: 1 }).teams[0].score).toBe(3);
   });
 
-  it('hard cards turn golden far more often than easy ones', () => {
-    const names = Array.from({ length: 2000 }, (_, i) => `${i % 2 ? 'hard' : 'easy'}${i}`);
-    const golden = pickGolden(names, (n) => (n.startsWith('hard') ? 'hard' : 'easy'));
-    const hard = golden.filter((n) => n.startsWith('hard')).length;
-    expect(hard).toBeGreaterThan(5 * (golden.length - hard));
+  it('only hard cards turn golden', () => {
+    const names = Array.from({ length: 600 }, (_, i) => `${['easy', 'medium', 'hard'][i % 3]}${i}`);
+    const golden = pickGolden(names, (n) => (n.startsWith('hard') ? 'hard' : n.startsWith('easy') ? 'easy' : 'medium'));
+    expect(golden.length).toBeGreaterThan(30);
+    expect(golden.every((n) => n.startsWith('hard'))).toBe(true);
   });
 
   it('restores older saves without a golden list', () => {

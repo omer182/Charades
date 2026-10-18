@@ -29,7 +29,7 @@
   },
   "אוריגמי": {
    "category": "actions",
-   "difficulty": "medium"
+   "difficulty": "hard"
   },
   "איינשטיין": {
    "category": "people",
@@ -130,7 +130,7 @@
   },
   "בת יענה": {
    "category": "animals",
-   "difficulty": "medium"
+   "difficulty": "hard"
   },
   "ג'אגלינג": {
    "category": "actions",
@@ -172,7 +172,7 @@
   },
   "גל": {
    "category": "actions",
-   "difficulty": "medium"
+   "difficulty": "hard"
   },
   "גלגל ענק": {
    "category": "objects",
@@ -211,7 +211,7 @@
   },
   "דוד": {
    "category": "people",
-   "difficulty": "medium"
+   "difficulty": "hard"
   },
   "דוור": {
    "category": "people",
@@ -260,7 +260,7 @@
   },
   "זיקית": {
    "category": "animals",
-   "difficulty": "medium"
+   "difficulty": "hard"
   },
   "חגורת בטיחות": {
    "category": "objects",
@@ -298,7 +298,7 @@
   },
   "חפרפרת": {
    "category": "animals",
-   "difficulty": "medium"
+   "difficulty": "hard"
   },
   "חץ": {
    "category": "objects",
@@ -335,7 +335,7 @@
   },
   "טויסטר": {
    "category": "actions",
-   "difficulty": "medium"
+   "difficulty": "hard"
   },
   "טייס": {
    "category": "people",
@@ -344,7 +344,7 @@
   },
   "טיפוס קירות": {
    "category": "actions",
-   "difficulty": "medium",
+   "difficulty": "hard",
    "wiki": "Climbing_wall"
   },
   "טיפקס": {
@@ -520,11 +520,11 @@
   },
   "מדוזה": {
    "category": "animals",
-   "difficulty": "medium"
+   "difficulty": "hard"
   },
   "מדיטציה": {
    "category": "actions",
-   "difficulty": "medium",
+   "difficulty": "hard",
    "wiki": "Lotus_position"
   },
   "מומיה": {
@@ -600,7 +600,7 @@
   },
   "מלח": {
    "category": "food",
-   "difficulty": "medium"
+   "difficulty": "hard"
   },
   "מנגל": {
    "category": "objects",
@@ -693,7 +693,7 @@
   },
   "נפוליאון": {
    "category": "people",
-   "difficulty": "medium"
+   "difficulty": "hard"
   },
   "נקניקייה": {
    "category": "food",
@@ -748,7 +748,7 @@
   },
   "סלק": {
    "category": "food",
-   "difficulty": "medium"
+   "difficulty": "hard"
   },
   "ספיידרמן": {
    "category": "people",
@@ -817,7 +817,7 @@
   },
   "עצלן": {
    "category": "animals",
-   "difficulty": "medium"
+   "difficulty": "hard"
   },
   "עקרב": {
    "category": "animals",
@@ -833,7 +833,7 @@
   },
   "פולי קפה": {
    "category": "food",
-   "difficulty": "medium"
+   "difficulty": "hard"
   },
   "פטיש": {
    "category": "objects",
@@ -934,7 +934,7 @@
   },
   "צניחה": {
    "category": "actions",
-   "difficulty": "medium",
+   "difficulty": "hard",
    "wiki": "Parachuting"
   },
   "צפרדע": {
@@ -956,7 +956,7 @@
   },
   "קוביות קרח": {
    "category": "food",
-   "difficulty": "medium"
+   "difficulty": "hard"
   },
   "קוסם": {
    "category": "people",
@@ -1076,7 +1076,7 @@
   },
   "שייקספיר": {
    "category": "people",
-   "difficulty": "medium"
+   "difficulty": "hard"
   },
   "שלט": {
    "category": "objects",
@@ -1084,7 +1084,7 @@
   },
   "שמן זית": {
    "category": "food",
-   "difficulty": "medium"
+   "difficulty": "hard"
   },
   "שמפו": {
    "category": "objects",
@@ -1270,7 +1270,6 @@
     "רובינזון קרוזו",
     "ספר הג'ונגל",
     "הקוסם מארץ עוץ",
-    "מסעות גוליבר",
     "רומיאו ויוליה",
     "חסמבה",
     "אמיל והבלשים",
@@ -1282,7 +1281,8 @@
     "המלט",
     "דון קישוט",
     "עשרים אלף מיל מתחת למים",
-    "הנזיר שמכר את הפרארי שלו"
+    "הנזיר שמכר את הפרארי שלו",
+    "מסעות גוליבר"
    ]
   },
   "phrases": {

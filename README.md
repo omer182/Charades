@@ -45,7 +45,7 @@ pictures/
 The interface is Hebrew, right-to-left. Players pick categories in the lobby: five photo categories
 (animals, food, objects & places, people & characters, sports & actions) and four word-only ones
 (movies, TV shows, books, phrases). Decks follow an easy-heavy rhythm so the hard cards arrive as
-occasional spikes, and a few cards each game (mostly hard ones) are golden and worth double.
+occasional spikes, and about a third of the hard cards turn golden each game and are worth double.
 
 **Photo cards**
 

@@ -41,7 +41,7 @@ export default function Header({ state, dispatch }: ScreenProps) {
             <path d="M9.5 19.5c3.6 4 9.4 4 13 0" stroke="var(--ink-0)" strokeWidth="2.6" fill="none" strokeLinecap="round" />
           </svg>
         </span>
-        <span className="brand__name" dir="ltr">speechless</span>
+        <span className="brand__name">בלי מילים</span>
       </div>
 
       {inGame && (

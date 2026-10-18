@@ -1,4 +1,6 @@
-import type { CardResult, GameState, Settings, Team, TurnEntry } from './types';
+import type { CardResult, CategoryId, GameState, Settings, Team, TurnEntry } from './types';
+
+export const ALL_CATEGORIES: CategoryId[] = ['animals', 'food', 'objects', 'people', 'actions', 'movies', 'tv', 'books', 'phrases'];
 
 export const MAX_TEAMS = 8;
 
@@ -18,6 +20,7 @@ export const DEFAULT_SETTINGS: Settings = {
   turnSeconds: 60,
   skipPenalty: true,
   sound: true,
+  categories: ALL_CATEGORIES,
 };
 
 export const initialState = (settings: Settings = DEFAULT_SETTINGS): GameState => ({
@@ -26,6 +29,7 @@ export const initialState = (settings: Settings = DEFAULT_SETTINGS): GameState =
   teams: [],
   settings,
   deck: [],
+  golden: [],
   cursor: 0,
   round: 1,
   teamIndex: 0,
@@ -40,7 +44,7 @@ export type Action =
   | { type: 'cycleColor'; id: string }
   | { type: 'adjustScore'; id: string; delta: number }
   | { type: 'updateSettings'; patch: Partial<Settings> }
-  | { type: 'startGame'; deck: string[] }
+  | { type: 'startGame'; deck: string[]; golden?: string[] }
   | { type: 'beginTurn'; now: number }
   | { type: 'mark'; result: CardResult }
   | { type: 'undo' }
@@ -55,8 +59,11 @@ export type Action =
 
 const uid = () => Math.random().toString(36).slice(2, 10);
 
-const entryDelta = (result: CardResult, settings: Settings) =>
-  result === 'got' ? 1 : settings.skipPenalty ? -1 : 0;
+/** A guessed card is worth 1 (2 if golden); a skip costs 1 when the penalty is on. */
+const entryDelta = (result: CardResult, settings: Settings, golden = false) =>
+  result === 'got' ? (golden ? 2 : 1) : settings.skipPenalty ? -1 : 0;
+
+export const isGolden = (s: GameState, card: string) => s.golden.includes(card);
 
 const withScore = (teams: Team[], index: number, delta: number) =>
   teams.map((t, i) => (i === index ? { ...t, score: t.score + delta } : t));
@@ -135,6 +142,7 @@ export function reducer(state: GameState, action: Action): GameState {
         phase: 'ready',
         teams: state.teams.map((t) => ({ ...t, score: 0 })),
         deck: action.deck,
+        golden: action.golden ?? [],
         cursor: 0,
         round: 1,
         teamIndex: 0,
@@ -155,11 +163,12 @@ export function reducer(state: GameState, action: Action): GameState {
       if (state.phase !== 'playing' || state.timer.endsAt === null) return state;
       const card = currentCard(state);
       if (card === undefined) return state;
-      const delta = entryDelta(action.result, state.settings);
+      const golden = isGolden(state, card);
+      const delta = entryDelta(action.result, state.settings, golden);
       return {
         ...state,
         teams: withScore(state.teams, state.teamIndex, delta),
-        turn: [...state.turn, { card, result: action.result, delta }],
+        turn: [...state.turn, { card, result: action.result, delta, ...(golden && { golden }) }],
         cursor: state.cursor + 1,
       };
     }
@@ -192,7 +201,7 @@ export function reducer(state: GameState, action: Action): GameState {
       const entry = state.turn[action.index];
       if (!entry) return state;
       const result: CardResult = entry.result === 'got' ? 'skip' : 'got';
-      const delta = entryDelta(result, state.settings);
+      const delta = entryDelta(result, state.settings, entry.golden);
       return {
         ...state,
         teams: withScore(state.teams, state.teamIndex, delta - entry.delta),
@@ -229,8 +238,9 @@ export function reducer(state: GameState, action: Action): GameState {
 /** Restores a persisted game. A turn that was running when the page closed comes back paused. */
 export function hydrate(raw: unknown, now: number): GameState | null {
   if (!raw || typeof raw !== 'object' || (raw as GameState).version !== 2) return null;
-  const state = raw as GameState;
-  const settings = { ...DEFAULT_SETTINGS, ...state.settings };
+  const saved = raw as GameState;
+  const settings = { ...DEFAULT_SETTINGS, ...saved.settings };
+  const state = { ...saved, golden: saved.golden ?? [] };
   if (state.phase === 'playing' && state.timer.endsAt !== null) {
     return { ...state, settings, timer: { endsAt: null, remainingMs: Math.max(0, state.timer.endsAt - now) } };
   }

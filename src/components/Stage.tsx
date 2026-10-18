@@ -1,15 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useMotionValue, useTransform, type PanInfo } from 'motion/react';
-import { Check, Pause, Play, Undo2, X } from 'lucide-react';
-import { CARD_URLS, cardLabel } from '../game/cards';
-import { currentCard, turnPoints } from '../game/reducer';
+import { Check, Pause, Play, Star, Undo2, X } from 'lucide-react';
+import { CARDS, CATEGORY, cardLabel } from '../game/cards';
+import { currentCard, isGolden, turnPoints } from '../game/reducer';
 import { sound, vibrate } from '../game/sound';
 import type { CardResult } from '../game/types';
 import { useHotkeys } from '../hooks/useHotkeys';
 import { useRemaining } from '../hooks/useRemaining';
 import Scoreboard from './Scoreboard';
 import TimerRing from './TimerRing';
-import { Kbd } from './ui';
+import CategoryIcon from './CategoryIcon';
+import { Kbd, vars } from './ui';
 import type { ScreenProps } from './types';
 
 /** Which way the outgoing card flies and the incoming one arrives from. */
@@ -29,7 +30,9 @@ const cardVariants = {
     exit ? { x: exit * 620, rotate: exit * 22, opacity: 0 } : { scale: 0.9, opacity: 0 },
 };
 
-function Card({ name, onSwipe, disabled }: { name: string; onSwipe: (r: CardResult) => void; disabled: boolean }) {
+function Card({ name, golden, onSwipe, disabled }: { name: string; golden: boolean; onSwipe: (r: CardResult) => void; disabled: boolean }) {
+  const card = CARDS[name];
+  const category = CATEGORY[card.category];
   const x = useMotionValue(0);
   const rotate = useTransform(x, [-300, 300], [-14, 14]);
   const gotOpacity = useTransform(x, [30, SWIPE_DISTANCE], [0, 1]);
@@ -43,20 +46,40 @@ function Card({ name, onSwipe, disabled }: { name: string; onSwipe: (r: CardResu
   return (
     <motion.div
       className="card"
-      style={{ x, rotate }}
+      data-kind={card.image ? 'photo' : 'word'}
+      data-golden={golden}
+      style={{ x, rotate, ...vars({ '--cat': category.color }) }}
       drag={disabled ? false : 'x'}
       dragSnapToOrigin
       dragElastic={0.9}
       onDragEnd={onDragEnd}
       whileDrag={{ scale: 1.02, cursor: 'grabbing' }}
     >
-      <p className="card__word" lang="he" dir="rtl">{cardLabel(name)}</p>
-      <div className="card__photo">
-        <img src={CARD_URLS[name]} alt="" className="card__blur" draggable={false} aria-hidden />
-        <img src={CARD_URLS[name]} alt={cardLabel(name)} className="card__img" draggable={false} />
-      </div>
-      <motion.span className="stamp stamp--got" style={{ opacity: gotOpacity }}>Got it</motion.span>
-      <motion.span className="stamp stamp--skip" style={{ opacity: skipOpacity }}>Skip</motion.span>
+      {golden && (
+        <span className="card__golden" dir="ltr" title="קלף זהב: שווה פי 2">
+          <Star size={14} fill="currentColor" /> ×2
+        </span>
+      )}
+      {card.image ? (
+        <>
+          <p className="card__word">{cardLabel(name)}</p>
+          <div className="card__photo">
+            <img src={card.image} alt="" className="card__blur" draggable={false} aria-hidden />
+            <img src={card.image} alt={cardLabel(name)} className="card__img" draggable={false} />
+          </div>
+        </>
+      ) : (
+        <>
+          <p className="card__word card__word--cat">
+            <CategoryIcon id={card.category} /> {category.label}
+          </p>
+          <div className="card__text">
+            <p className="card__big">{cardLabel(name)}</p>
+          </div>
+        </>
+      )}
+      <motion.span className="stamp stamp--got" style={{ opacity: gotOpacity }}>ניחשו!</motion.span>
+      <motion.span className="stamp stamp--skip" style={{ opacity: skipOpacity }}>דילוג</motion.span>
     </motion.div>
   );
 }
@@ -65,10 +88,11 @@ export default function Stage({ state, dispatch }: ScreenProps) {
   const { teams, teamIndex, settings, turn, timer, deck, cursor } = state;
   const team = teams[teamIndex];
   const card = currentCard(state);
+  const golden = card !== undefined && isGolden(state, card);
   const paused = timer.endsAt === null;
   const remaining = useRemaining(timer);
   const [dir, setDir] = useState<Motion>({ exit: 0, enter: 0 });
-  const [pops, setPops] = useState<{ id: number; result: CardResult }[]>([]);
+  const [pops, setPops] = useState<{ id: number; result: CardResult; golden: boolean }[]>([]);
   const popId = useRef(0);
 
   // Buzzer when the clock runs out.
@@ -89,8 +113,8 @@ export default function Stage({ state, dispatch }: ScreenProps) {
   // Preload the next couple of cards.
   useEffect(() => {
     for (let i = 1; i <= 2; i++) {
-      const next = deck[(cursor + i) % deck.length];
-      if (next) new Image().src = CARD_URLS[next];
+      const image = CARDS[deck[(cursor + i) % deck.length]]?.image;
+      if (image) new Image().src = image;
     }
   }, [deck, cursor]);
 
@@ -98,10 +122,11 @@ export default function Stage({ state, dispatch }: ScreenProps) {
     if (paused) return;
     setDir({ exit: result === 'got' ? 1 : -1, enter: 0 });
     const id = ++popId.current;
-    setPops((p) => [...p, { id, result }]);
+    setPops((p) => [...p, { id, result, golden }]);
     setTimeout(() => setPops((p) => p.filter((x) => x.id !== id)), 900);
     if (result === 'got') {
-      sound.correct();
+      if (golden) sound.golden();
+      else sound.correct();
       vibrate(30);
     } else {
       sound.skip();
@@ -143,16 +168,16 @@ export default function Stage({ state, dispatch }: ScreenProps) {
       <div className="stage__main">
         <div className="stage__bar">
           <div className="now-playing">
-            <span className="now-playing__label">Now acting</span>
+            <span className="now-playing__label">מציגים עכשיו</span>
             <span className="now-playing__team">{team.name}</span>
           </div>
           <TimerRing remainingMs={remaining} totalMs={settings.turnSeconds * 1000} paused={paused} />
           <div className="turn-score">
-            <span className="turn-score__label">This turn</span>
+            <span className="turn-score__label">בתור הזה</span>
             <motion.span key={points} className="turn-score__value" initial={{ y: -8, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
-              {points > 0 ? `+${points}` : points}
+              <bdi dir="ltr">{points > 0 ? `+${points}` : points}</bdi>
             </motion.span>
-            <span className="turn-score__sub">{got} guessed</span>
+            <span className="turn-score__sub">{got} ניחושים</span>
           </div>
         </div>
 
@@ -169,7 +194,7 @@ export default function Stage({ state, dispatch }: ScreenProps) {
                 exit="exit"
                 transition={{ type: 'spring', stiffness: 260, damping: 26 }}
               >
-                <Card name={card} onSwipe={mark} disabled={paused} />
+                <Card name={card} golden={golden} onSwipe={mark} disabled={paused} />
               </motion.div>
             )}
           </AnimatePresence>
@@ -180,11 +205,12 @@ export default function Stage({ state, dispatch }: ScreenProps) {
                 key={p.id}
                 className="pop"
                 data-result={p.result}
+                data-golden={p.golden}
                 initial={{ opacity: 0, y: 0, scale: 0.6 }}
                 animate={{ opacity: [0, 1, 0], y: -90, scale: 1.1 }}
                 transition={{ duration: 0.85, ease: 'easeOut' }}
               >
-                {p.result === 'got' ? '+1' : settings.skipPenalty ? '−1' : 'skip'}
+                <bdi dir="ltr">{p.result === 'got' ? (p.golden ? '+2' : '+1') : settings.skipPenalty ? '−1' : 'דילוג'}</bdi>
               </motion.span>
             ))}
           </AnimatePresence>
@@ -192,9 +218,9 @@ export default function Stage({ state, dispatch }: ScreenProps) {
           <AnimatePresence>
             {paused && (
               <motion.div className="paused" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                <p className="paused__title">Paused</p>
+                <p className="paused__title">בהשהיה</p>
                 <button className="cta cta--team" onClick={togglePause}>
-                  <Play size={20} fill="currentColor" /> Resume
+                  <Play size={20} fill="currentColor" /> המשך
                 </button>
               </motion.div>
             )}
@@ -202,23 +228,23 @@ export default function Stage({ state, dispatch }: ScreenProps) {
         </div>
 
         <div className="actions">
-          <button className="act act--small" onClick={undo} disabled={turn.length === 0 || paused} aria-label="Undo last card" title="Undo (Z)">
+          <button className="act act--small" onClick={undo} disabled={turn.length === 0 || paused} aria-label="ביטול הקלף האחרון" title="ביטול (Z)">
             <Undo2 size={22} />
           </button>
-          <button className="act act--skip" onClick={() => mark('skip')} disabled={paused} aria-label="Skip card">
+          <button className="act act--skip" onClick={() => mark('skip')} disabled={paused} aria-label="דילוג">
             <X size={30} strokeWidth={2.6} />
-            <span>Skip</span>
+            <span>דילוג</span>
           </button>
-          <button className="act act--got" onClick={() => mark('got')} disabled={paused} aria-label="Got it">
+          <button className="act act--got" onClick={() => mark('got')} disabled={paused} aria-label="ניחשו">
             <Check size={30} strokeWidth={2.8} />
-            <span>Got it</span>
+            <span>ניחשו!</span>
           </button>
-          <button className="act act--small" onClick={togglePause} aria-label={paused ? 'Resume' : 'Pause'} title="Pause (P)">
+          <button className="act act--small" onClick={togglePause} aria-label={paused ? 'המשך' : 'השהיה'} title="השהיה (P)">
             {paused ? <Play size={22} /> : <Pause size={22} />}
           </button>
         </div>
         <p className="hint-line hint-line--stage">
-          <Kbd>←</Kbd> skip · <Kbd>→</Kbd> got it · <Kbd>Z</Kbd> undo · <Kbd>P</Kbd> pause · or swipe
+          <Kbd>→</Kbd> ניחשו · <Kbd>←</Kbd> דילוג · <Kbd>Z</Kbd> ביטול · <Kbd>P</Kbd> השהיה · או החליקו
         </p>
       </div>
     </section>

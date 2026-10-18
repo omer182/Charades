@@ -7,16 +7,16 @@ import { vars } from './ui';
 export default function Scoreboard({ state, dispatch }: ScreenProps) {
   const { teams, teamIndex } = state;
   return (
-    <aside className="scoreboard" aria-label="Scores">
+    <aside className="scoreboard" aria-label="ניקוד">
       {teams.map((team, i) => (
         <div key={team.id} className="score-row" data-active={i === teamIndex} style={vars({ '--c': team.color })}>
           <span className="score-row__dot" />
           <span className="score-row__name">{team.name}</span>
           <span className="score-row__adjust">
-            <button onClick={() => dispatch({ type: 'adjustScore', id: team.id, delta: -1 })} aria-label={`Take a point from ${team.name}`}>
+            <button onClick={() => dispatch({ type: 'adjustScore', id: team.id, delta: -1 })} aria-label={`הורדת נקודה ל${team.name}`}>
               <Minus size={12} />
             </button>
-            <button onClick={() => dispatch({ type: 'adjustScore', id: team.id, delta: 1 })} aria-label={`Give a point to ${team.name}`}>
+            <button onClick={() => dispatch({ type: 'adjustScore', id: team.id, delta: 1 })} aria-label={`נקודה ל${team.name}`}>
               <Plus size={12} />
             </button>
           </span>

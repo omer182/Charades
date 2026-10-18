@@ -1,0 +1,1324 @@
+{
+ "_comment": "Card catalog. photos: one entry per picture in pictures/raw (wiki = English Wikipedia title for scripts/downloadImages.js). words: word-only cards by category and difficulty.",
+ "photos": {
+  "אבטיח": {
+   "category": "food",
+   "difficulty": "medium"
+  },
+  "אגרוף": {
+   "category": "actions",
+   "difficulty": "easy",
+   "wiki": "Boxing"
+  },
+  "אוזני המן": {
+   "category": "food",
+   "difficulty": "medium"
+  },
+  "אוזניות": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "אוטו גלידה": {
+   "category": "food",
+   "difficulty": "medium"
+  },
+  "אופניים": {
+   "category": "objects",
+   "difficulty": "easy",
+   "wiki": "Bicycle"
+  },
+  "אוריגמי": {
+   "category": "actions",
+   "difficulty": "medium"
+  },
+  "איינשטיין": {
+   "category": "people",
+   "difficulty": "hard",
+   "wiki": "Albert_Einstein"
+  },
+  "אילון מאסק": {
+   "category": "people",
+   "difficulty": "hard"
+  },
+  "אננס": {
+   "category": "food",
+   "difficulty": "medium"
+  },
+  "אסטרונאוט": {
+   "category": "people",
+   "difficulty": "easy"
+  },
+  "אסלה": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "ארגז כלים": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "אריה": {
+   "category": "animals",
+   "difficulty": "easy"
+  },
+  "ארנב": {
+   "category": "animals",
+   "difficulty": "easy",
+   "wiki": "Rabbit"
+  },
+  "ארנק": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "את חפירה": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "באולינג": {
+   "category": "actions",
+   "difficulty": "easy",
+   "wiki": "Bowling"
+  },
+  "בובה": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "בושם": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "ביצה": {
+   "category": "food",
+   "difficulty": "easy",
+   "wiki": "Fried_egg"
+  },
+  "בית כלא": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "בלון": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "בלוק": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "בלרינה": {
+   "category": "people",
+   "difficulty": "easy"
+  },
+  "בננה": {
+   "category": "food",
+   "difficulty": "medium"
+  },
+  "בצל": {
+   "category": "food",
+   "difficulty": "easy",
+   "wiki": "Onion"
+  },
+  "בר מים": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "ברווז גומי": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "ברוקולי": {
+   "category": "food",
+   "difficulty": "easy"
+  },
+  "בת יענה": {
+   "category": "animals",
+   "difficulty": "medium"
+  },
+  "ג'אגלינג": {
+   "category": "actions",
+   "difficulty": "easy"
+  },
+  "גבינה": {
+   "category": "food",
+   "difficulty": "medium"
+  },
+  "גודזילה": {
+   "category": "people",
+   "difficulty": "medium"
+  },
+  "גוזם ציפורנים": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "גולף": {
+   "category": "actions",
+   "difficulty": "medium",
+   "wiki": "Golf"
+  },
+  "גורילה": {
+   "category": "animals",
+   "difficulty": "easy",
+   "wiki": "Gorilla"
+  },
+  "גזר": {
+   "category": "food",
+   "difficulty": "easy"
+  },
+  "גיטרה": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "גירפה": {
+   "category": "animals",
+   "difficulty": "medium"
+  },
+  "גל": {
+   "category": "actions",
+   "difficulty": "medium"
+  },
+  "גלגל ענק": {
+   "category": "objects",
+   "difficulty": "medium",
+   "wiki": "Ferris_wheel"
+  },
+  "גלידה": {
+   "category": "food",
+   "difficulty": "medium"
+  },
+  "גלשן": {
+   "category": "actions",
+   "difficulty": "easy"
+  },
+  "גמל": {
+   "category": "animals",
+   "difficulty": "easy",
+   "wiki": "Dromedary"
+  },
+  "דב קוטב": {
+   "category": "animals",
+   "difficulty": "easy"
+  },
+  "דבורה": {
+   "category": "animals",
+   "difficulty": "easy",
+   "wiki": "Western_honey_bee"
+  },
+  "דג": {
+   "category": "animals",
+   "difficulty": "medium"
+  },
+  "דגל ישראל": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "דוד": {
+   "category": "people",
+   "difficulty": "medium"
+  },
+  "דוור": {
+   "category": "people",
+   "difficulty": "medium"
+  },
+  "דולפין": {
+   "category": "animals",
+   "difficulty": "medium"
+  },
+  "דונאט": {
+   "category": "food",
+   "difficulty": "medium"
+  },
+  "דיסק און קי": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "דרכון": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "הולה הופ": {
+   "category": "actions",
+   "difficulty": "easy",
+   "wiki": "Hula_hoop"
+  },
+  "המבורגר": {
+   "category": "food",
+   "difficulty": "easy"
+  },
+  "וודקה": {
+   "category": "food",
+   "difficulty": "medium"
+  },
+  "זברה": {
+   "category": "animals",
+   "difficulty": "medium"
+  },
+  "זומבי": {
+   "category": "people",
+   "difficulty": "easy"
+  },
+  "זיפר": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "זיקית": {
+   "category": "animals",
+   "difficulty": "medium"
+  },
+  "חגורת בטיחות": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "חוט": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "חומוס": {
+   "category": "food",
+   "difficulty": "easy"
+  },
+  "חזיר": {
+   "category": "animals",
+   "difficulty": "easy",
+   "wiki": "Pig"
+  },
+  "חילזון": {
+   "category": "animals",
+   "difficulty": "medium",
+   "wiki": "Snail"
+  },
+  "חיתול": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "חללית": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "חמור": {
+   "category": "animals",
+   "difficulty": "easy"
+  },
+  "חפרפרת": {
+   "category": "animals",
+   "difficulty": "medium"
+  },
+  "חץ": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "חצוצרה": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "חרב אור": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "חתול": {
+   "category": "animals",
+   "difficulty": "easy"
+  },
+  "טבח": {
+   "category": "people",
+   "difficulty": "easy",
+   "wiki": "Chef"
+  },
+  "טבעות בצל": {
+   "category": "food",
+   "difficulty": "medium"
+  },
+  "טבעת": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "טווס": {
+   "category": "animals",
+   "difficulty": "easy"
+  },
+  "טויסטר": {
+   "category": "actions",
+   "difficulty": "medium"
+  },
+  "טייס": {
+   "category": "people",
+   "difficulty": "medium",
+   "wiki": "Aircraft_pilot"
+  },
+  "טיפוס קירות": {
+   "category": "actions",
+   "difficulty": "medium",
+   "wiki": "Climbing_wall"
+  },
+  "טיפקס": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "טלסקופ": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "טלפון": {
+   "category": "objects",
+   "difficulty": "easy",
+   "wiki": "Smartphone"
+  },
+  "טניס": {
+   "category": "actions",
+   "difficulty": "easy",
+   "wiki": "Tennis"
+  },
+  "טנק": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "טרמפולינה": {
+   "category": "objects",
+   "difficulty": "medium",
+   "wiki": "Trampoline"
+  },
+  "יו-יו": {
+   "category": "objects",
+   "difficulty": "medium",
+   "wiki": "Yo-yo"
+  },
+  "ינשוף": {
+   "category": "animals",
+   "difficulty": "medium"
+  },
+  "כבאי": {
+   "category": "people",
+   "difficulty": "easy",
+   "wiki": "Firefighter"
+  },
+  "כבשה": {
+   "category": "animals",
+   "difficulty": "easy"
+  },
+  "כדור ביליארד": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "כדור הארץ": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "כדור פורח": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "כדורגל": {
+   "category": "actions",
+   "difficulty": "medium"
+  },
+  "כדורסל": {
+   "category": "actions",
+   "difficulty": "easy",
+   "wiki": "Basketball"
+  },
+  "כוס בירה": {
+   "category": "food",
+   "difficulty": "easy"
+  },
+  "כוס יין": {
+   "category": "food",
+   "difficulty": "easy"
+  },
+  "כותנת משוגעים": {
+   "category": "objects",
+   "difficulty": "hard"
+  },
+  "כינור": {
+   "category": "objects",
+   "difficulty": "medium",
+   "wiki": "Violin"
+  },
+  "כלב": {
+   "category": "animals",
+   "difficulty": "medium"
+  },
+  "כלב ים": {
+   "category": "animals",
+   "difficulty": "medium",
+   "wiki": "Harbor_seal"
+  },
+  "כרטיס אשראי": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "כריש": {
+   "category": "animals",
+   "difficulty": "easy"
+  },
+  "כתר": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "לגו": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "לובלו": {
+   "category": "objects",
+   "difficulty": "hard"
+  },
+  "לוויתן": {
+   "category": "animals",
+   "difficulty": "medium",
+   "wiki": "Humpback_whale"
+  },
+  "לחם": {
+   "category": "food",
+   "difficulty": "easy"
+  },
+  "לימון": {
+   "category": "food",
+   "difficulty": "easy",
+   "wiki": "Lemon"
+  },
+  "ליצן": {
+   "category": "people",
+   "difficulty": "easy"
+  },
+  "מאורר": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "מאזניים": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "מברשת": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "מברשת שיניים": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "מגבת": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "מגדלור": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "מגהץ": {
+   "category": "objects",
+   "difficulty": "medium",
+   "wiki": "Clothes_iron"
+  },
+  "מגנט": {
+   "category": "objects",
+   "difficulty": "hard"
+  },
+  "מגף": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "מד חום": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "מדוזה": {
+   "category": "animals",
+   "difficulty": "medium"
+  },
+  "מדיטציה": {
+   "category": "actions",
+   "difficulty": "medium",
+   "wiki": "Lotus_position"
+  },
+  "מומיה": {
+   "category": "people",
+   "difficulty": "easy"
+  },
+  "מונה ליזה": {
+   "category": "people",
+   "difficulty": "hard"
+  },
+  "מוצץ": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "מוצרט": {
+   "category": "people",
+   "difficulty": "hard"
+  },
+  "מזגן": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "מחבט פינג פונג": {
+   "category": "actions",
+   "difficulty": "medium"
+  },
+  "מחט": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "מטוס קרב": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "מטרייה": {
+   "category": "objects",
+   "difficulty": "easy",
+   "wiki": "Umbrella"
+  },
+  "מיטה": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "מייבש שיער": {
+   "category": "objects",
+   "difficulty": "easy",
+   "wiki": "Hair_dryer"
+  },
+  "מייקל ג'ורדן": {
+   "category": "people",
+   "difficulty": "medium"
+  },
+  "מייקל ג'קסון": {
+   "category": "people",
+   "difficulty": "medium"
+  },
+  "מיקרו": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "מיקרופון": {
+   "category": "objects",
+   "difficulty": "easy",
+   "wiki": "Microphone"
+  },
+  "מכונת כביסה": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "מכונת תפירה": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "מלח": {
+   "category": "food",
+   "difficulty": "medium"
+  },
+  "מנגל": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "מסוק": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "מסמר": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "מספריים": {
+   "category": "objects",
+   "difficulty": "easy",
+   "wiki": "Scissors"
+  },
+  "מפרט": {
+   "category": "objects",
+   "difficulty": "hard"
+  },
+  "מצלמה": {
+   "category": "objects",
+   "difficulty": "easy",
+   "wiki": "Camera"
+  },
+  "מקל אוזניים": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "מקלדת": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "מקרן": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "מקרר": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "מריצה": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "מרק": {
+   "category": "food",
+   "difficulty": "medium"
+  },
+  "משאית": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "משחת שיניים": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "משקולת": {
+   "category": "actions",
+   "difficulty": "easy"
+  },
+  "משקפיים": {
+   "category": "objects",
+   "difficulty": "easy",
+   "wiki": "Glasses"
+  },
+  "משקפת": {
+   "category": "objects",
+   "difficulty": "medium",
+   "wiki": "Binoculars"
+  },
+  "נבל": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "נדנדה": {
+   "category": "objects",
+   "difficulty": "easy",
+   "wiki": "Swing_(seat)"
+  },
+  "נחש": {
+   "category": "animals",
+   "difficulty": "easy"
+  },
+  "נעלי בית": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "נפוליאון": {
+   "category": "people",
+   "difficulty": "medium"
+  },
+  "נקניקייה": {
+   "category": "food",
+   "difficulty": "easy",
+   "wiki": "Hot_dog"
+  },
+  "נר": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "סוכרייה על מקל": {
+   "category": "food",
+   "difficulty": "easy",
+   "wiki": "Lollipop"
+  },
+  "סומו": {
+   "category": "actions",
+   "difficulty": "medium",
+   "wiki": "Sumo"
+  },
+  "סוני פלייסטיישן": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "סוס": {
+   "category": "animals",
+   "difficulty": "medium"
+  },
+  "סושי": {
+   "category": "food",
+   "difficulty": "easy"
+  },
+  "סטיקלייט": {
+   "category": "objects",
+   "difficulty": "hard"
+  },
+  "סיגר": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "סירה": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "סלוטייפ": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "סלט": {
+   "category": "food",
+   "difficulty": "medium"
+  },
+  "סלק": {
+   "category": "food",
+   "difficulty": "medium"
+  },
+  "ספיידרמן": {
+   "category": "people",
+   "difficulty": "easy"
+  },
+  "ספר": {
+   "category": "people",
+   "difficulty": "medium",
+   "wiki": "Barber"
+  },
+  "סקי": {
+   "category": "actions",
+   "difficulty": "easy",
+   "wiki": "Telemark_skiing"
+  },
+  "סקייטרבורד": {
+   "category": "actions",
+   "difficulty": "easy"
+  },
+  "סרטן": {
+   "category": "animals",
+   "difficulty": "easy"
+  },
+  "עגבנייה": {
+   "category": "food",
+   "difficulty": "medium"
+  },
+  "עוגה": {
+   "category": "food",
+   "difficulty": "medium"
+  },
+  "עוף": {
+   "category": "food",
+   "difficulty": "easy"
+  },
+  "עטלף": {
+   "category": "animals",
+   "difficulty": "medium",
+   "wiki": "Bat"
+  },
+  "עיתון": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "עכביש": {
+   "category": "animals",
+   "difficulty": "medium",
+   "wiki": "Spider"
+  },
+  "עכבר": {
+   "category": "animals",
+   "difficulty": "medium"
+  },
+  "עפיפון": {
+   "category": "objects",
+   "difficulty": "easy",
+   "wiki": "Kite"
+  },
+  "עפרון": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "עץ ריח": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "עצלן": {
+   "category": "animals",
+   "difficulty": "medium"
+  },
+  "עקרב": {
+   "category": "animals",
+   "difficulty": "easy"
+  },
+  "ערסל": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "פאי": {
+   "category": "food",
+   "difficulty": "medium"
+  },
+  "פולי קפה": {
+   "category": "food",
+   "difficulty": "medium"
+  },
+  "פטיש": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "פיל": {
+   "category": "animals",
+   "difficulty": "easy"
+  },
+  "פינגווין": {
+   "category": "animals",
+   "difficulty": "medium"
+  },
+  "פינצטה": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "פיצה": {
+   "category": "food",
+   "difficulty": "easy"
+  },
+  "פיקאצ'ו": {
+   "category": "people",
+   "difficulty": "easy"
+  },
+  "פלאפל": {
+   "category": "food",
+   "difficulty": "medium",
+   "wiki": "Falafel"
+  },
+  "פלמינגו": {
+   "category": "animals",
+   "difficulty": "medium",
+   "wiki": "Flamingo"
+  },
+  "פמטים": {
+   "category": "objects",
+   "difficulty": "hard"
+  },
+  "פנדה": {
+   "category": "animals",
+   "difficulty": "medium"
+  },
+  "פנס רחוב": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "פסנתר": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "פפיון": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "פצצת אטום": {
+   "category": "objects",
+   "difficulty": "hard"
+  },
+  "פקק": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "פרה": {
+   "category": "animals",
+   "difficulty": "medium"
+  },
+  "פרפר": {
+   "category": "animals",
+   "difficulty": "medium"
+  },
+  "צ'יטה": {
+   "category": "animals",
+   "difficulty": "easy"
+  },
+  "צ'יפס": {
+   "category": "food",
+   "difficulty": "easy",
+   "wiki": "French_fries"
+  },
+  "צב": {
+   "category": "animals",
+   "difficulty": "easy"
+  },
+  "צוללת": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "צלילה": {
+   "category": "actions",
+   "difficulty": "medium",
+   "wiki": "Scuba_diving"
+  },
+  "צמר גפן מתוק": {
+   "category": "food",
+   "difficulty": "medium",
+   "wiki": "Cotton_candy"
+  },
+  "צניחה": {
+   "category": "actions",
+   "difficulty": "medium",
+   "wiki": "Parachuting"
+  },
+  "צפרדע": {
+   "category": "animals",
+   "difficulty": "easy"
+  },
+  "קואלה": {
+   "category": "animals",
+   "difficulty": "medium",
+   "wiki": "Koala"
+  },
+  "קוביה הונגרית": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "קוביות": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "קוביות קרח": {
+   "category": "food",
+   "difficulty": "medium"
+  },
+  "קוסם": {
+   "category": "people",
+   "difficulty": "easy"
+  },
+  "קוף": {
+   "category": "animals",
+   "difficulty": "easy"
+  },
+  "קטורת": {
+   "category": "objects",
+   "difficulty": "hard"
+  },
+  "קטשופ": {
+   "category": "food",
+   "difficulty": "easy"
+  },
+  "קיסמים": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "קיפוד ים": {
+   "category": "animals",
+   "difficulty": "hard"
+  },
+  "קלמר": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "קנגורו": {
+   "category": "animals",
+   "difficulty": "medium"
+  },
+  "קניידלך": {
+   "category": "food",
+   "difficulty": "hard"
+  },
+  "קסדת אופנוע": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "קפיצה בחבל": {
+   "category": "actions",
+   "difficulty": "easy",
+   "wiki": "Skipping_rope"
+  },
+  "קקטוס": {
+   "category": "objects",
+   "difficulty": "medium",
+   "wiki": "Cactus"
+  },
+  "קרואסון": {
+   "category": "food",
+   "difficulty": "medium",
+   "wiki": "Croissant"
+  },
+  "קרם הגנה": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "קרנף": {
+   "category": "animals",
+   "difficulty": "easy"
+  },
+  "רופא שיניים": {
+   "category": "people",
+   "difficulty": "medium",
+   "wiki": "Dentist"
+  },
+  "רכבת הרים": {
+   "category": "objects",
+   "difficulty": "easy",
+   "wiki": "Roller_coaster"
+  },
+  "רמקולים": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "שאוורמה": {
+   "category": "food",
+   "difficulty": "easy"
+  },
+  "שדחן": {
+   "category": "objects",
+   "difficulty": "hard"
+  },
+  "שואב אבק": {
+   "category": "objects",
+   "difficulty": "medium",
+   "wiki": "Vacuum_cleaner"
+  },
+  "שוטר": {
+   "category": "people",
+   "difficulty": "easy",
+   "wiki": "Police_officer"
+  },
+  "שועל": {
+   "category": "animals",
+   "difficulty": "easy"
+  },
+  "שוקולד": {
+   "category": "food",
+   "difficulty": "easy"
+  },
+  "שחייה": {
+   "category": "actions",
+   "difficulty": "easy",
+   "wiki": "Swimming"
+  },
+  "שטיח": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "שטרות כסף": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "שייקספיר": {
+   "category": "people",
+   "difficulty": "medium"
+  },
+  "שלט": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "שמן זית": {
+   "category": "food",
+   "difficulty": "medium"
+  },
+  "שמפו": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "שן זהב": {
+   "category": "objects",
+   "difficulty": "hard"
+  },
+  "שניצל": {
+   "category": "food",
+   "difficulty": "easy"
+  },
+  "שעון יד": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "שעון מעורר": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "שערות סבתא": {
+   "category": "food",
+   "difficulty": "hard"
+  },
+  "שק שינה": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "שקע חשמל": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "תוכי": {
+   "category": "animals",
+   "difficulty": "easy",
+   "wiki": "Parrot"
+  },
+  "תופים": {
+   "category": "objects",
+   "difficulty": "easy"
+  },
+  "תות": {
+   "category": "food",
+   "difficulty": "medium"
+  },
+  "תירס": {
+   "category": "food",
+   "difficulty": "easy"
+  },
+  "תמנון": {
+   "category": "animals",
+   "difficulty": "easy"
+  },
+  "תנין": {
+   "category": "animals",
+   "difficulty": "easy",
+   "wiki": "Crocodile"
+  },
+  "תפוח": {
+   "category": "food",
+   "difficulty": "easy"
+  },
+  "תקליט": {
+   "category": "objects",
+   "difficulty": "medium"
+  },
+  "תרנגול": {
+   "category": "animals",
+   "difficulty": "easy"
+  }
+ },
+ "words": {
+  "movies": {
+   "easy": [
+    "מלך האריות",
+    "טיטאניק",
+    "צעצוע של סיפור",
+    "מלחמת הכוכבים",
+    "שרק",
+    "פרוזן",
+    "באטמן",
+    "מוצאים את נמו",
+    "אלאדין",
+    "שלגיה",
+    "סינדרלה",
+    "היפה והחיה",
+    "פארק היורה",
+    "מיניונים",
+    "סופרמן",
+    "בת הים הקטנה",
+    "מכוניות"
+   ],
+   "medium": [
+    "המטריקס",
+    "שודדי הקאריביים",
+    "בחזרה לעתיד",
+    "אינדיאנה ג'ונס",
+    "מאמא מיה",
+    "גריז",
+    "הנוקמים",
+    "אווטאר",
+    "שליחות קטלנית",
+    "פורסט גאמפ",
+    "לבד בבית",
+    "ברבי",
+    "מלתעות",
+    "רוקי",
+    "מכסחי השדים",
+    "ג'יימס בונד",
+    "שר הטבעות",
+    "מיסטר בין"
+   ],
+   "hard": [
+    "הסנדק",
+    "מועדון קרב",
+    "שתיקת הכבשים",
+    "ספרות זולה",
+    "לה לה לנד",
+    "התחלה",
+    "בין כוכבים",
+    "הנוסע השמיני",
+    "גבעת חלפון אינה עונה",
+    "אסקימו לימון",
+    "סאלח שבתי",
+    "הלהקה",
+    "הניצוץ",
+    "וול-E"
+   ]
+  },
+  "tv": {
+   "easy": [
+    "הסימפסונים",
+    "האח הגדול",
+    "ספוג בובספוג",
+    "פפה החזירה",
+    "הדרדסים",
+    "פוקימון",
+    "הכוכב הבא",
+    "ארץ נהדרת",
+    "רמזור",
+    "הפיג'מות"
+   ],
+   "medium": [
+    "חברים",
+    "פאודה",
+    "שטיסל",
+    "משחקי הכס",
+    "קופה ראשית",
+    "שובר שורות",
+    "בית הנייר",
+    "המשרד",
+    "דברים מוזרים",
+    "משחקי הדיונון",
+    "סיינפלד",
+    "זגורי אימפריה"
+   ],
+   "hard": [
+    "הבורר",
+    "הכתר",
+    "חמישייה קאמרית",
+    "מסודרים",
+    "עספור",
+    "הישרדות",
+    "טהרן"
+   ]
+  },
+  "books": {
+   "easy": [
+    "הארי פוטר",
+    "פינוקיו",
+    "כיפה אדומה",
+    "שלושת החזירונים",
+    "פיטר פן",
+    "אליס בארץ הפלאות",
+    "הזחל הרעב",
+    "איה פלוטו",
+    "מעשה בחמישה בלונים",
+    "דירה להשכיר"
+   ],
+   "medium": [
+    "הנסיך הקטן",
+    "רובינזון קרוזו",
+    "ספר הג'ונגל",
+    "הקוסם מארץ עוץ",
+    "מסעות גוליבר",
+    "רומיאו ויוליה",
+    "חסמבה",
+    "אמיל והבלשים",
+    "מסביב לעולם בשמונים יום",
+    "אוליבר טוויסט"
+   ],
+   "hard": [
+    "מובי דיק",
+    "המלט",
+    "דון קישוט",
+    "1984",
+    "עשרים אלף מיל מתחת למים",
+    "תעלת בלאומילך"
+   ]
+  },
+  "phrases": {
+   "easy": [
+    "חתול בשק",
+    "לשבור את הקרח",
+    "עם הראש בעננים",
+    "יש לו פרפרים בבטן",
+    "שתי ציפורים במכה אחת",
+    "כמו פיל בחנות חרסינה",
+    "ללכת על ביצים",
+    "מתחת לאף",
+    "עושה עיניים",
+    "יצא מהכלים"
+   ],
+   "medium": [
+    "נפל לו האסימון",
+    "על קצה המזלג",
+    "אין עשן בלי אש",
+    "לא לבכות על חלב שנשפך",
+    "ציפור קטנה לחשה לי",
+    "להוריד את הכובע",
+    "כל התחלה קשה",
+    "לקחת ללב",
+    "מכה מתחת לחגורה",
+    "לשים כף"
+   ],
+   "hard": [
+    "מים שקטים חודרים עמוק",
+    "לא ראיתי את היער מרוב העצים",
+    "בור ששתית ממנו מים אל תזרוק בו אבן",
+    "לא דובים ולא יער",
+    "אל תסתכל בקנקן אלא במה שיש בו",
+    "עם האוכל בא התיאבון"
+   ]
+  }
+ }
+}

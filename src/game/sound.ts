@@ -48,6 +48,12 @@ export const sound = {
     tone(660, { duration: 0.1, type: 'triangle' });
     tone(990, { at: 0.08, duration: 0.18, type: 'triangle' });
   },
+  /** A golden card: a brighter three-note run. */
+  golden() {
+    tone(784, { duration: 0.1, type: 'triangle' });
+    tone(1046, { at: 0.08, duration: 0.1, type: 'triangle' });
+    tone(1568, { at: 0.16, duration: 0.28, type: 'triangle' });
+  },
   skip() {
     tone(220, { duration: 0.22, type: 'sawtooth', gain: 0.08, slideTo: 110 });
   },

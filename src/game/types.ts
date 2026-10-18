@@ -1,5 +1,7 @@
 export type Difficulty = 'easy' | 'medium' | 'hard';
 
+export type CategoryId = 'animals' | 'food' | 'objects' | 'people' | 'actions' | 'movies' | 'tv' | 'books' | 'phrases';
+
 export interface Team {
   id: string;
   name: string;
@@ -14,6 +16,8 @@ export interface TurnEntry {
   result: CardResult;
   /** Points this entry added to the team, so undo/toggle can revert exactly. */
   delta: number;
+  /** Golden cards score double. */
+  golden?: boolean;
 }
 
 export interface Settings {
@@ -21,6 +25,8 @@ export interface Settings {
   turnSeconds: number;
   skipPenalty: boolean;
   sound: boolean;
+  /** Categories the deck is dealt from. */
+  categories: CategoryId[];
 }
 
 /**
@@ -46,6 +52,8 @@ export interface GameState {
   settings: Settings;
   /** Card names in play order; a cursor walks it so cards don't repeat within a game. */
   deck: string[];
+  /** Cards in this deck worth double points. */
+  golden: string[];
   cursor: number;
   round: number;
   teamIndex: number;

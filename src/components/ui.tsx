@@ -6,11 +6,11 @@ export function Stepper({ value, min, max, onChange, label }: {
 }) {
   return (
     <div className="stepper" role="group" aria-label={label}>
-      <button type="button" className="stepper__btn" onClick={() => onChange(value - 1)} disabled={value <= min} aria-label={`Fewer ${label}`}>
+      <button type="button" className="stepper__btn" onClick={() => onChange(value - 1)} disabled={value <= min} aria-label={`פחות ${label}`}>
         <Minus size={16} />
       </button>
       <output className="stepper__value" aria-live="polite">{value}</output>
-      <button type="button" className="stepper__btn" onClick={() => onChange(value + 1)} disabled={value >= max} aria-label={`More ${label}`}>
+      <button type="button" className="stepper__btn" onClick={() => onChange(value + 1)} disabled={value >= max} aria-label={`יותר ${label}`}>
         <Plus size={16} />
       </button>
     </div>

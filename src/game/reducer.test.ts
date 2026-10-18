@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildDeck } from './deck';
+import { buildDeck, pickGolden } from './deck';
 import { hydrate, initialState, reducer, standings, type Action } from './reducer';
 import type { GameState } from './types';
 
@@ -114,5 +114,36 @@ describe('buildDeck', () => {
     const deck = buildDeck(names, level);
     expect([...deck].sort()).toEqual([...names].sort());
     expect(deck.slice(0, 3).every((n) => n.startsWith('e'))).toBe(true);
+  });
+});
+
+describe('golden cards', () => {
+  const goldenGame = () =>
+    run(twoTeams(), { type: 'startGame', deck: ['a', 'b', 'c'], golden: ['b'] }, { type: 'beginTurn', now: 0 });
+
+  it('scores a guessed golden card double, and undo takes both points back', () => {
+    const s = run(goldenGame(), { type: 'mark', result: 'got' }, { type: 'mark', result: 'got' });
+    expect(s.teams[0].score).toBe(3);
+    expect(s.turn[1]).toMatchObject({ card: 'b', delta: 2, golden: true });
+    expect(run(s, { type: 'undo' }).teams[0].score).toBe(1);
+  });
+
+  it('a skipped golden card costs the normal penalty, and fixing the call gives 2', () => {
+    const s = run(goldenGame(), { type: 'mark', result: 'got' }, { type: 'mark', result: 'skip' }, { type: 'timeUp' });
+    expect(s.teams[0].score).toBe(0);
+    expect(run(s, { type: 'toggleEntry', index: 1 }).teams[0].score).toBe(3);
+  });
+
+  it('hard cards turn golden far more often than easy ones', () => {
+    const names = Array.from({ length: 2000 }, (_, i) => `${i % 2 ? 'hard' : 'easy'}${i}`);
+    const golden = pickGolden(names, (n) => (n.startsWith('hard') ? 'hard' : 'easy'));
+    const hard = golden.filter((n) => n.startsWith('hard')).length;
+    expect(hard).toBeGreaterThan(5 * (golden.length - hard));
+  });
+
+  it('restores older saves without a golden list', () => {
+    const old: Partial<GameState> = goldenGame();
+    delete old.golden;
+    expect(hydrate(old, 0)?.golden).toEqual([]);
   });
 });

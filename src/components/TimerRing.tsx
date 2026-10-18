@@ -8,7 +8,7 @@ export default function TimerRing({ remainingMs, totalMs, paused }: { remainingM
   const label = seconds >= 60 ? `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}` : String(seconds);
 
   return (
-    <div className="timer" data-level={level} data-paused={paused} role="timer" aria-label={`${seconds} seconds left`}>
+    <div className="timer" data-level={level} data-paused={paused} role="timer" aria-label={`נותרו ${seconds} שניות`}>
       <svg viewBox="0 0 100 100" className="timer__svg" aria-hidden>
         <circle cx="50" cy="50" r={R} className="timer__track" />
         <circle

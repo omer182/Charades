@@ -34,21 +34,31 @@ src/
   game/          pure logic — reducer (state machine), deck builder, cards, sound
   hooks/         persistence, rAF timer, wake lock, hotkeys
   components/    one component per screen: Lobby → GetReady → Stage → TurnEnd → GameOver
-  data/difficulty.json   easy / medium / hard per card (unlisted cards count as medium)
+  data/cards.json   card catalog: category + difficulty per photo, plus word-only cards
 pictures/
   raw/           original photos; the file name is the word to act out
   cards/         generated, web-sized WebP — what the app ships
 ```
 
-## Adding cards
+## Cards
 
-1. Drop a photo into `pictures/raw/`, named after the word (Hebrew is fine): `pictures/raw/אריה.jpg`.
-2. Run `npm run cards` — converts new/changed photos to `pictures/cards/*.webp` (and removes cards
+The interface is Hebrew, right-to-left. Players pick categories in the lobby: five photo categories
+(animals, food, objects & places, people & characters, sports & actions) and four word-only ones
+(movies, TV shows, books, phrases). Decks follow an easy-heavy rhythm so the hard cards arrive as
+occasional spikes, and a few cards each game (mostly hard ones) are golden and worth double.
+
+**Photo cards**
+
+1. Add the word to `photos` in `src/data/cards.json` with a `category` and `difficulty`.
+2. Drop a photo into `pictures/raw/`, named after the word: `pictures/raw/אריה.jpg`. Or give the
+   entry a `wiki` (English Wikipedia title) and run `node scripts/downloadImages.js` to fetch the
+   article's lead image.
+3. Run `npm run cards` — converts new/changed photos to `pictures/cards/*.webp` (and removes cards
    whose photo was deleted).
-3. Optionally list the word under `easy`, `medium` or `hard` in `src/data/difficulty.json`.
-   Decks follow an easy-heavy rhythm so the hard ones arrive as occasional spikes.
 
 The word is shown by the app above the photo, so nothing is drawn on the image itself.
+
+**Word cards**: add the word to `words.<category>.<difficulty>` in `src/data/cards.json`.
 
 ## Deploying
 

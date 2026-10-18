@@ -1,4 +1,4 @@
-// Downloads charades images from Wikipedia.
+// Downloads charades images from Wikipedia for photo cards in src/data/cards.json.
 // 1) Batched action-API call to resolve title -> image URL for all titles.
 // 2) Per-item download from upload.wikimedia.org.
 // Skips names that already exist in pictures/raw/.
@@ -10,65 +10,11 @@ const https = require("https");
 const RAW_DIR = path.resolve(__dirname, "..", "pictures", "raw");
 const UA = "charades-game (personal project; omer.sher@ludeo.com)";
 
-const items = {
-  // Food & drinks
-  "בננה":        "Banana",
-  "אבטיח":       "Watermelon",
-  "תות":         "Strawberry",
-  "אננס":        "Pineapple",
-  "עגבנייה":     "Tomato",
-  "גלידה":       "Ice_cream",
-  "עוגה":        "Cake",
-  "דונאט":       "Doughnut",
-  "גבינה":       "Cheese",
-  "ביצה":        "Egg_(food)",
-  "מרק":         "Soup",
-  "סלט":         "Salad",
-
-  // Animals
-  "כלב":         "Dog",
-  "סוס":         "Horse",
-  "פרה":         "Cattle",
-  "דג":          "Fish",
-  "עכבר":        "Mouse",
-  "גירפה":       "Giraffe",
-  "זברה":        "Zebra",
-  "קנגורו":      "Kangaroo",
-  "פנדה":        "Giant_panda",
-  "פינגווין":    "Penguin",
-  "דולפין":      "Dolphin",
-  "ינשוף":       "Owl",
-  "פרפר":        "Butterfly",
-  "דבורה":       "Bee",
-
-  // Professions / people
-  "רופא":        "Doctor_(title)",
-  "כבאי":        "Firefighter",
-  "שוטר":        "Police_officer",
-  "טבח":         "Chef",
-  "טייס":        "Aircraft_pilot",
-  "שופט":        "Judge",
-  "נינגה":       "Ninja",
-  "איינשטיין":   "Albert_Einstein",
-  "נפוליאון":    "Napoleon",
-  "שייקספיר":    "William_Shakespeare",
-
-  // Everyday objects
-  "מטרייה":      "Umbrella",
-  "משקפיים":     "Glasses",
-  "אופניים":     "Bicycle",
-  "אוטובוס":     "Bus",
-  "רכבת":        "Train",
-  "צוללת":       "Submarine",
-  "מספריים":     "Scissors",
-  "שעון יד":     "Watch",
-  "כיסא":        "Chair",
-  "ספה":         "Couch",
-  "מנורה":       "Light_fixture",
-  "מצלמה":       "Camera",
-  "גיטרה":       "Guitar",
-  "כדורגל":      "Ball_(association_football)",
-};
+// Hebrew word -> English Wikipedia title, for every photo card in the catalog that has one.
+const catalog = JSON.parse(fs.readFileSync(path.resolve(__dirname, "..", "src", "data", "cards.json"), "utf8"));
+const items = Object.fromEntries(
+  Object.entries(catalog.photos).filter(([, c]) => c.wiki).map(([he, c]) => [he, c.wiki])
+);
 
 const IMAGE_EXTS = [".jpg", ".jpeg", ".png", ".webp", ".svg", ".gif"];
 

@@ -1,23 +1,33 @@
 import { useState, type FormEvent } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import { ArrowRight, Plus, Sparkles, Trash2 } from 'lucide-react';
-import { CARD_NAMES, CARD_URLS, newDeck } from '../game/cards';
+import { ArrowLeft, Plus, Sparkles, Trash2 } from 'lucide-react';
+import { CARDS, CATEGORIES, countIn, newDeck, PHOTO_IDS } from '../game/cards';
 import { shuffle } from '../game/deck';
-import { MAX_TEAMS } from '../game/reducer';
+import { ALL_CATEGORIES, MAX_TEAMS } from '../game/reducer';
+import type { CategoryId } from '../game/types';
 import { useHotkeys } from '../hooks/useHotkeys';
 import { Field, Kbd, Segmented, Stepper, Switch, vars } from './ui';
 import type { ScreenProps } from './types';
 
 const TURN_LENGTHS = [30, 45, 60, 90, 120] as const;
-const SAMPLE_TEAMS = ['Lions', 'Owls', 'Sharks', 'Foxes'];
+const SAMPLE_TEAMS = ['אריות', 'ינשופים', 'כרישים', 'שועלים'];
 
-const formatSeconds = (s: number) => (s < 60 ? `${s}s` : s % 60 ? `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}` : `${s / 60} min`);
+const formatSeconds = (s: number) =>
+  s < 60 ? `${s} שנ׳` : s % 60 ? `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}` : s === 60 ? 'דקה' : `${s / 60} דק׳`;
 
 export default function Lobby({ state, dispatch }: ScreenProps) {
   const { teams, settings } = state;
   const [name, setName] = useState('');
-  const [fan] = useState(() => shuffle(CARD_NAMES).slice(0, 3));
-  const canStart = teams.length > 0 && CARD_NAMES.length > 0;
+  const [fan] = useState(() => shuffle(PHOTO_IDS).slice(0, 3));
+  const { categories } = settings;
+  const cardCount = categories.reduce((n, c) => n + countIn(c), 0);
+  const canStart = teams.length > 0 && cardCount > 0;
+
+  const toggleCategory = (id: CategoryId) => {
+    const next = categories.includes(id) ? categories.filter((c) => c !== id) : ALL_CATEGORIES.filter((c) => c === id || categories.includes(c));
+    dispatch({ type: 'updateSettings', patch: { categories: next } });
+  };
+  const allOn = categories.length === ALL_CATEGORIES.length;
 
   const add = (e: FormEvent) => {
     e.preventDefault();
@@ -25,7 +35,7 @@ export default function Lobby({ state, dispatch }: ScreenProps) {
     setName('');
   };
 
-  const start = () => canStart && dispatch({ type: 'startGame', deck: newDeck() });
+  const start = () => canStart && dispatch({ type: 'startGame', ...newDeck(categories) });
   useHotkeys({ Enter: start }, canStart);
 
   return (
@@ -35,7 +45,7 @@ export default function Lobby({ state, dispatch }: ScreenProps) {
           {fan.map((card, i) => (
             <motion.img
               key={card}
-              src={CARD_URLS[card]}
+              src={CARDS[card].image}
               alt=""
               className="fan__card"
               style={vars({ '--i': i - 1 })}
@@ -46,21 +56,21 @@ export default function Lobby({ state, dispatch }: ScreenProps) {
           ))}
         </div>
         <p className="eyebrow">
-          <Sparkles size={14} /> Game night · {CARD_NAMES.length} picture cards
+          <Sparkles size={14} /> ערב משחקים · {Object.keys(CARDS).length} קלפים
         </p>
         <h1 className="hero-title">
-          Act it <span className="hero-title__pop">out.</span>
+          בלי <span className="hero-title__pop">מילים.</span>
         </h1>
         <p className="lede">
-          One player mimes the card, their team shouts guesses. Score as many as you can before the
-          buzzer — then pass the phone to the next team.
+          שחקן אחד מציג את הקלף בלי לדבר, והקבוצה שלו צועקת ניחושים. נחשו כמה שיותר לפני הצלצול, ואז
+          העבירו את הטלפון לקבוצה הבאה.
         </p>
       </div>
 
       <div className="lobby__panel">
         <div className="panel">
           <div className="panel__head">
-            <h2 className="panel__title">Teams</h2>
+            <h2 className="panel__title">קבוצות</h2>
             <span className="panel__count">
               {teams.length}/{MAX_TEAMS}
             </span>
@@ -83,13 +93,13 @@ export default function Lobby({ state, dispatch }: ScreenProps) {
                     type="button"
                     className="team-row__swatch"
                     onClick={() => dispatch({ type: 'cycleColor', id: team.id })}
-                    aria-label={`Change ${team.name}'s color`}
-                    title="Change color"
+                    aria-label={`החלפת הצבע של ${team.name}`}
+                    title="החלפת צבע"
                   />
                   <input
                     className="team-row__name"
                     defaultValue={team.name}
-                    aria-label="Team name"
+                    aria-label="שם הקבוצה"
                     maxLength={24}
                     onBlur={(e) => dispatch({ type: 'renameTeam', id: team.id, name: e.target.value })}
                     onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.blur()}
@@ -98,7 +108,7 @@ export default function Lobby({ state, dispatch }: ScreenProps) {
                     type="button"
                     className="team-row__remove"
                     onClick={() => dispatch({ type: 'removeTeam', id: team.id })}
-                    aria-label={`Remove ${team.name}`}
+                    aria-label={`הסרת ${team.name}`}
                   >
                     <Trash2 size={16} />
                   </button>
@@ -113,12 +123,12 @@ export default function Lobby({ state, dispatch }: ScreenProps) {
                 className="add-team__input"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder={teams.length === 0 ? 'Name your first team…' : 'Add another team…'}
-                aria-label="New team name"
+                placeholder={teams.length === 0 ? 'שם הקבוצה הראשונה…' : 'עוד קבוצה…'}
+                aria-label="שם קבוצה חדשה"
                 maxLength={24}
                 autoFocus
               />
-              <button className="add-team__btn" type="submit" disabled={!name.trim()} aria-label="Add team">
+              <button className="add-team__btn" type="submit" disabled={!name.trim()} aria-label="הוספת קבוצה">
                 <Plus size={18} />
               </button>
             </form>
@@ -130,38 +140,69 @@ export default function Lobby({ state, dispatch }: ScreenProps) {
               className="link-btn"
               onClick={() => SAMPLE_TEAMS.slice(0, 2).forEach((n) => dispatch({ type: 'addTeam', name: n }))}
             >
-              or just give me two teams
+              או פשוט תנו לי שתי קבוצות
             </button>
           )}
         </div>
 
         <div className="panel">
           <div className="panel__head">
-            <h2 className="panel__title">Rules</h2>
+            <h2 className="panel__title">קטגוריות</h2>
+            <button
+              type="button"
+              className="panel__action"
+              onClick={() => dispatch({ type: 'updateSettings', patch: { categories: allOn ? [] : ALL_CATEGORIES } })}
+            >
+              {allOn ? 'נקה הכול' : 'בחר הכול'}
+            </button>
           </div>
-          <Field label="Rounds" hint="Every team plays once per round">
-            <Stepper label="rounds" value={settings.rounds} min={1} max={10} onChange={(rounds) => dispatch({ type: 'updateSettings', patch: { rounds } })} />
+          <div className="chips" role="group" aria-label="קטגוריות">
+            {CATEGORIES.map((c) => (
+              <button
+                key={c.id}
+                type="button"
+                className="chip"
+                aria-pressed={categories.includes(c.id)}
+                style={vars({ '--c': c.color })}
+                onClick={() => toggleCategory(c.id)}
+              >
+                {c.label}
+                <span className="chip__count">{countIn(c.id)}</span>
+              </button>
+            ))}
+          </div>
+          <p className="panel__note">
+            {cardCount} קלפים במשחק · <span className="gold-text">קלפי זהב</span> שווים פי 2
+          </p>
+        </div>
+
+        <div className="panel">
+          <div className="panel__head">
+            <h2 className="panel__title">חוקים</h2>
+          </div>
+          <Field label="סבבים" hint="כל קבוצה משחקת פעם אחת בכל סבב">
+            <Stepper label="סבבים" value={settings.rounds} min={1} max={10} onChange={(rounds) => dispatch({ type: 'updateSettings', patch: { rounds } })} />
           </Field>
-          <Field label="Turn length">
+          <Field label="אורך תור">
             <Segmented
-              label="Turn length"
+              label="אורך תור"
               value={settings.turnSeconds}
               options={TURN_LENGTHS}
               format={formatSeconds}
               onChange={(turnSeconds) => dispatch({ type: 'updateSettings', patch: { turnSeconds } })}
             />
           </Field>
-          <Field label="Skipping costs a point" hint={settings.skipPenalty ? 'Skip = −1' : 'Skip freely'}>
-            <Switch label="Skip penalty" checked={settings.skipPenalty} onChange={(skipPenalty) => dispatch({ type: 'updateSettings', patch: { skipPenalty } })} />
+          <Field label="דילוג עולה נקודה" hint={settings.skipPenalty ? 'דילוג = ‎−1' : 'מדלגים בחינם'}>
+            <Switch label="קנס על דילוג" checked={settings.skipPenalty} onChange={(skipPenalty) => dispatch({ type: 'updateSettings', patch: { skipPenalty } })} />
           </Field>
         </div>
 
         <button className="cta" onClick={start} disabled={!canStart}>
-          {teams.length === 0 ? 'Add a team to start' : 'Start the game'}
-          <ArrowRight size={20} />
+          {teams.length === 0 ? 'הוסיפו קבוצה כדי להתחיל' : cardCount === 0 ? 'בחרו לפחות קטגוריה אחת' : 'מתחילים!'}
+          <ArrowLeft size={20} />
         </button>
         <p className="hint-line">
-          During a turn: <Kbd>→</Kbd> got it · <Kbd>←</Kbd> skip · <Kbd>Z</Kbd> undo · <Kbd>P</Kbd> pause — or swipe the card.
+          בזמן תור: <Kbd>→</Kbd> ניחשו · <Kbd>←</Kbd> דילוג · <Kbd>Z</Kbd> ביטול · <Kbd>P</Kbd> השהיה — או החליקו את הקלף.
         </p>
       </div>
     </section>

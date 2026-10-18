@@ -1,5 +1,5 @@
 import { useEffect, useReducer } from 'react';
-import { CARD_URLS } from '../game/cards';
+import { CARDS } from '../game/cards';
 import { hydrate, initialState, reducer } from '../game/reducer';
 import type { GameState } from '../game/types';
 
@@ -10,8 +10,8 @@ function load(): GameState {
     localStorage.removeItem('charadesGameState'); // v1 state, incompatible
     const state = hydrate(JSON.parse(localStorage.getItem(KEY) ?? 'null'), Date.now());
     if (!state) return initialState();
-    // Images can be removed between deploys; drop cards that no longer exist.
-    const deck = state.deck.filter((name) => name in CARD_URLS);
+    // Cards can be removed between deploys; drop cards that no longer exist.
+    const deck = state.deck.filter((name) => name in CARDS);
     return deck.length === state.deck.length ? state : { ...state, deck, cursor: 0 };
   } catch {
     return initialState();

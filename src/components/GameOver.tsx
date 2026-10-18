@@ -6,7 +6,7 @@ import Confetti from './Confetti';
 import { vars } from './ui';
 import type { ScreenProps } from './types';
 
-const PODIUM_ORDER = [1, 0, 2]; // silver, gold, bronze — left to right
+const PODIUM_ORDER = [1, 0, 2]; // silver, gold, bronze — in reading order, so RTL puts silver on the right
 
 export default function GameOver({ state, dispatch }: ScreenProps) {
   const rows = standings(state.teams);
@@ -28,7 +28,7 @@ export default function GameOver({ state, dispatch }: ScreenProps) {
       >
         <Crown size={44} strokeWidth={2.2} />
       </motion.div>
-      <p className="eyebrow">{tie ? "It's a tie!" : 'And the winner is'}</p>
+      <p className="eyebrow">{tie ? 'תיקו!' : 'והמנצחים הם'}</p>
       <motion.h1
         className="finale__winner"
         initial={{ scale: 0.7, opacity: 0 }}
@@ -37,7 +37,7 @@ export default function GameOver({ state, dispatch }: ScreenProps) {
       >
         {leaders.map((l, i) => (
           <span key={l.team.id} style={{ color: l.team.color }}>
-            {i > 0 && <span className="finale__amp"> & </span>}
+            {i > 0 && <span className="finale__amp"> ו־</span>}
             {l.team.name}
           </span>
         ))}
@@ -47,7 +47,7 @@ export default function GameOver({ state, dispatch }: ScreenProps) {
         {podium.map(({ team, rank }, i) => (
           <div key={team.id} className="podium__col" style={vars({ '--c': team.color })} data-rank={rank}>
             <span className="podium__name">{team.name}</span>
-            <span className="podium__score">{team.score} pts</span>
+            <span className="podium__score">{team.score} נק׳</span>
             <motion.div
               className="podium__block"
               initial={{ scaleY: 0 }}
@@ -74,10 +74,10 @@ export default function GameOver({ state, dispatch }: ScreenProps) {
 
       <div className="finale__actions">
         <button className="cta" onClick={() => dispatch({ type: 'playAgain' })}>
-          <RotateCcw size={20} /> Rematch
+          <RotateCcw size={20} /> משחק חוזר
         </button>
         <button className="ghost-btn" onClick={() => dispatch({ type: 'reset' })}>
-          <Users size={18} /> New teams
+          <Users size={18} /> קבוצות חדשות
         </button>
       </div>
     </section>

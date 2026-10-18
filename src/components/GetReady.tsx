@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { Play } from 'lucide-react';
 import { currentCard, standings } from '../game/reducer';
-import { CARD_URLS } from '../game/cards';
+import { CARDS } from '../game/cards';
 import { sound, vibrate } from '../game/sound';
 import { useHotkeys } from '../hooks/useHotkeys';
 import { Kbd, vars } from './ui';
 import type { ScreenProps } from './types';
 
-const STEPS = ['3', '2', '1', 'Go!'];
+const STEPS = ['3', '2', '1', 'יאללה!'];
 
 export default function GetReady({ state, dispatch }: ScreenProps) {
   const { teams, teamIndex, round, settings } = state;
@@ -16,10 +16,10 @@ export default function GetReady({ state, dispatch }: ScreenProps) {
   const [step, setStep] = useState<number | null>(null);
 
   // Warm the cache so the first card is on screen the instant the clock starts.
-  const firstCard = currentCard(state);
+  const firstImage = CARDS[currentCard(state) ?? '']?.image;
   useEffect(() => {
-    if (firstCard) new Image().src = CARD_URLS[firstCard];
-  }, [firstCard]);
+    if (firstImage) new Image().src = firstImage;
+  }, [firstImage]);
 
   useEffect(() => {
     if (step === null) return;
@@ -40,22 +40,22 @@ export default function GetReady({ state, dispatch }: ScreenProps) {
   return (
     <section className="ready" style={vars({ '--c': team.color })}>
       <p className="eyebrow">
-        Round {round} of {settings.rounds}
-        {round === settings.rounds && <span className="tag tag--hot">Final round</span>}
+        סבב {round} מתוך {settings.rounds}
+        {round === settings.rounds && <span className="tag tag--hot">סבב אחרון</span>}
       </p>
-      <p className="ready__label">Up next</p>
+      <p className="ready__label">הבאים בתור</p>
       <h1 className="ready__team">{team.name}</h1>
-      <p className="lede">Actor, take the device. Everyone else — eyes off the screen.</p>
+      <p className="lede">המציג/ה לוקח/ת את המכשיר. כל השאר — עיניים מהמסך!</p>
 
       <button className="cta cta--team" onClick={go} disabled={step !== null}>
-        <Play size={20} fill="currentColor" /> I'm ready
+        <Play size={20} fill="currentColor" /> מוכנים
       </button>
       <p className="hint-line">
-        or press <Kbd>Space</Kbd>
+        או לחצו <Kbd>Space</Kbd>
       </p>
 
       {teams.length > 1 && (
-        <ol className="mini-standings" aria-label="Standings">
+        <ol className="mini-standings" aria-label="טבלה">
           {standings(teams).map(({ team: t, rank }) => (
             <li key={t.id} className="mini-standings__item" data-active={t.id === team.id} style={vars({ '--c': t.color })}>
               <span className="mini-standings__rank">{rank}</span>

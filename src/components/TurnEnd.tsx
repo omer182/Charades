@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
-import { ArrowRight, Check, Trophy, X } from 'lucide-react';
-import { CARD_URLS, cardLabel } from '../game/cards';
+import { ArrowLeft, Check, Star, Trophy, X } from 'lucide-react';
+import { CARDS, CATEGORY, cardLabel } from '../game/cards';
+import CategoryIcon from './CategoryIcon';
 import { isFinalTurn, standings, turnPoints } from '../game/reducer';
 import { useHotkeys } from '../hooks/useHotkeys';
 import { Kbd, vars } from './ui';
@@ -29,25 +30,27 @@ export default function TurnEnd({ state, dispatch }: ScreenProps) {
           animate={{ scale: 1, opacity: 1, rotate: -3 }}
           transition={{ type: 'spring', stiffness: 260, damping: 14 }}
         >
-          Time's up!
+          נגמר הזמן!
         </motion.p>
         <h1 className="summary__title">
-          <span className="summary__team">{team.name}</span> scored{' '}
-          <span className="summary__points">{points > 0 ? `+${points}` : points}</span>
+          <span className="summary__team">{team.name}</span> צברו{' '}
+          <bdi dir="ltr" className="summary__points">{points > 0 ? `+${points}` : points}</bdi>
         </h1>
       </header>
 
       <div className="summary__body">
         <div className="panel summary__cards">
           <div className="panel__head">
-            <h2 className="panel__title">This turn</h2>
-            {turn.length > 0 && <span className="panel__hint">Tap a card to fix a call</span>}
+            <h2 className="panel__title">בתור הזה</h2>
+            {turn.length > 0 && <span className="panel__hint">טעיתם? הקישו על קלף כדי לתקן</span>}
           </div>
           {turn.length === 0 ? (
-            <p className="empty">No cards this turn. Tough crowd.</p>
+            <p className="empty">אף קלף בתור הזה. קהל קשוח.</p>
           ) : (
             <ul className="thumbs">
-              {turn.map((entry, i) => (
+              {turn.map((entry, i) => {
+                const card = CARDS[entry.card];
+                return (
                 <motion.li
                   key={`${entry.card}-${i}`}
                   initial={{ opacity: 0, y: 12 }}
@@ -57,22 +60,34 @@ export default function TurnEnd({ state, dispatch }: ScreenProps) {
                   <button
                     className="thumb"
                     data-result={entry.result}
+                    data-golden={Boolean(entry.golden)}
+                    style={vars({ '--cat': card ? CATEGORY[card.category].color : undefined })}
                     onClick={() => dispatch({ type: 'toggleEntry', index: i })}
-                    aria-label={`${cardLabel(entry.card)}: ${entry.result === 'got' ? 'guessed' : 'skipped'}. Tap to change.`}
+                    aria-label={`${cardLabel(entry.card)}: ${entry.result === 'got' ? 'ניחשו' : 'דילגו'}. הקישו כדי לשנות.`}
                   >
-                    <img src={CARD_URLS[entry.card]} alt="" loading="lazy" />
-                    <span className="thumb__word" lang="he" dir="rtl">{cardLabel(entry.card)}</span>
+                    {card?.image ? (
+                      <img src={card.image} alt="" loading="lazy" />
+                    ) : (
+                      <span className="thumb__text">{card && <CategoryIcon id={card.category} size={26} />}</span>
+                    )}
+                    <span className="thumb__word">{cardLabel(entry.card)}</span>
+                    {entry.golden && (
+                      <span className="thumb__golden" aria-label="קלף זהב">
+                        <Star size={12} fill="currentColor" />
+                      </span>
+                    )}
                     <span className="thumb__badge">{entry.result === 'got' ? <Check size={14} strokeWidth={3} /> : <X size={14} strokeWidth={3} />}</span>
                   </button>
                 </motion.li>
-              ))}
+                );
+              })}
             </ul>
           )}
         </div>
 
         <div className="panel summary__standings">
           <div className="panel__head">
-            <h2 className="panel__title">Standings</h2>
+            <h2 className="panel__title">טבלה</h2>
           </div>
           <ol className="bars">
             {rows.map(({ team: t, rank }) => (
@@ -97,15 +112,15 @@ export default function TurnEnd({ state, dispatch }: ScreenProps) {
       <div className="summary__foot">
         {final ? (
           <button className="cta" onClick={proceed}>
-            <Trophy size={20} /> See final results
+            <Trophy size={20} /> לתוצאות הסופיות
           </button>
         ) : (
           <button className="cta cta--next" style={vars({ '--c': next?.color })} onClick={proceed}>
-            Next up: {next?.name} <ArrowRight size={20} />
+            הבאים בתור: {next?.name} <ArrowLeft size={20} />
           </button>
         )}
         <p className="hint-line">
-          or press <Kbd>Enter</Kbd>
+          או לחצו <Kbd>Enter</Kbd>
         </p>
       </div>
     </section>

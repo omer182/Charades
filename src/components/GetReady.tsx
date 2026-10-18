@@ -8,7 +8,7 @@ import { useHotkeys } from '../hooks/useHotkeys';
 import { Kbd, vars } from './ui';
 import type { ScreenProps } from './types';
 
-const STEPS = ['3', '2', '1', 'יאללה!'];
+const STEPS = ['3', '2', '1', 'בהצלחה!'];
 
 export default function GetReady({ state, dispatch }: ScreenProps) {
   const { teams, teamIndex, round, settings } = state;

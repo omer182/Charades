@@ -149,6 +149,14 @@ describe('golden cards', () => {
     expect(golden.every((n) => n.startsWith('hard'))).toBe(true);
   });
 
+  it('spreads golden cards through the deck even when the dice say no', () => {
+    // 3 easy then 1 hard, repeated: with no lucky rolls, the gap rule alone makes some golden.
+    const deck = Array.from({ length: 40 }, (_, i) => (i % 4 === 3 ? `hard${i}` : `easy${i}`));
+    const golden = pickGolden(deck, (n) => (n.startsWith('hard') ? 'hard' : 'easy'), () => 0.99);
+    expect(golden.length).toBeGreaterThanOrEqual(3);
+    expect(golden[0]).toBe('hard3');
+  });
+
   it('restores older saves without a golden list', () => {
     const old: Partial<GameState> = goldenGame();
     delete old.golden;

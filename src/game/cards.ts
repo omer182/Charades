@@ -76,5 +76,6 @@ export function newDeck(categories: readonly CategoryId[]) {
   const wanted = new Set(categories);
   const pool = cards.filter((c) => wanted.has(c.category));
   const difficultyOf = (id: string) => CARDS[id]?.difficulty;
-  return { deck: buildDeck(pool.map((c) => c.id), difficultyOf), golden: pickGolden(pool.map((c) => c.id), difficultyOf) };
+  const deck = buildDeck(pool.map((c) => c.id), difficultyOf);
+  return { deck, golden: pickGolden(deck, difficultyOf) };
 }

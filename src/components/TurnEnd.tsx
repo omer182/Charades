@@ -13,6 +13,7 @@ export default function TurnEnd({ state, dispatch }: ScreenProps) {
   const final = isFinalTurn(state);
   const next = teams[(teamIndex + 1) % teams.length];
   const points = turnPoints(turn);
+  const goldenCount = turn.filter((e) => e.golden).length;
   const rows = standings(teams);
   const top = Math.max(1, ...teams.map((t) => t.score));
 
@@ -42,6 +43,11 @@ export default function TurnEnd({ state, dispatch }: ScreenProps) {
         <div className="panel summary__cards">
           <div className="panel__head">
             <h2 className="panel__title">בתור הזה</h2>
+            {goldenCount > 0 && (
+              <span className="gold-tag">
+                <Star size={13} fill="currentColor" /> {goldenCount === 1 ? 'קלף זהב אחד' : `${goldenCount} קלפי זהב`}
+              </span>
+            )}
             {turn.length > 0 && <span className="panel__hint">טעיתם? הקישו על קלף כדי לתקן</span>}
           </div>
           {turn.length === 0 ? (
@@ -72,8 +78,9 @@ export default function TurnEnd({ state, dispatch }: ScreenProps) {
                     )}
                     <span className="thumb__word">{cardLabel(entry.card)}</span>
                     {entry.golden && (
-                      <span className="thumb__golden" aria-label="קלף זהב">
+                      <span className="thumb__golden">
                         <Star size={12} fill="currentColor" />
+                        {entry.result === 'got' ? <bdi dir="ltr">+2</bdi> : 'זהב'}
                       </span>
                     )}
                     <span className="thumb__badge">{entry.result === 'got' ? <Check size={14} strokeWidth={3} /> : <X size={14} strokeWidth={3} />}</span>

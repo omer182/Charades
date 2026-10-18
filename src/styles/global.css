@@ -1618,11 +1618,35 @@ ul {
   position: absolute;
   top: 6px;
   inset-inline-start: 6px;
-  width: 22px;
-  height: 22px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #4a3200;
+  background: linear-gradient(180deg, #ffe58f, var(--gold));
+  box-shadow: 0 2px 8px -2px rgb(0 0 0 / 0.5);
+}
+
+.thumb[data-golden='true'] {
+  border-color: var(--gold);
+}
+
+/* Keep the gold visible on a skipped golden card, which is otherwise greyed out. */
+.thumb[data-golden='true'][data-result='skip'] {
+  filter: grayscale(0.5) brightness(0.8);
+}
+
+.gold-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
   color: #4a3200;
   background: var(--gold);
 }

@@ -40,14 +40,29 @@ export function buildDeck(
   return deck;
 }
 
-/** Share of hard cards that turn golden (double points) each game; easier cards never do. */
+/** Chance any hard card turns golden (double points); easier cards never do. */
 const GOLDEN_ODDS = 0.35;
+/** A hard card is always golden once this many cards have gone by without one. */
+const GOLDEN_GAP = 10;
 
-/** Picks this game's golden cards, at random from the hard ones. */
+/**
+ * Picks this game's golden cards from the hard ones, walking the deck in play order so they
+ * are spread out: roughly one every ten cards, however few hard cards the chosen categories have.
+ */
 export function pickGolden(
-  names: readonly string[],
+  deck: readonly string[],
   difficultyOf: (name: string) => Difficulty | undefined,
   random = Math.random,
 ): string[] {
-  return names.filter((name) => difficultyOf(name) === 'hard' && random() < GOLDEN_ODDS);
+  const golden: string[] = [];
+  let sinceLast = Math.floor(random() * GOLDEN_GAP); // so the first one isn't always at the same spot
+  for (const name of deck) {
+    sinceLast++;
+    if (difficultyOf(name) !== 'hard') continue;
+    if (sinceLast >= GOLDEN_GAP || random() < GOLDEN_ODDS) {
+      golden.push(name);
+      sinceLast = 0;
+    }
+  }
+  return golden;
 }

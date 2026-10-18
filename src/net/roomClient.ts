@@ -47,7 +47,9 @@ export class RoomClient {
     private readonly onCue?: (cue: Cue) => void,
   ) {
     this.snapshot = { status: 'connecting', code, state: null, remotes: 0 };
-    this.socket = io({ transports: ['websocket', 'polling'], reconnectionDelayMax: 4000 });
+    // Socket.IO's default: start on plain HTTP long-polling, which passes any reverse proxy as is,
+    // and upgrade to a WebSocket when the proxy allows it (e.g. "Websockets Support" in Nginx Proxy Manager).
+    this.socket = io({ reconnectionDelayMax: 4000 });
     this.socket.on('connect', () => this.join());
     const lost = () => {
       if (this.snapshot.status !== 'not-found') this.update({ status: 'offline' });

@@ -119,16 +119,7 @@ docker build -t speechless .
 docker run -p 3000:3000 speechless
 ```
 
-Behind a reverse proxy, phone control needs WebSockets passed through. For nginx:
-
-```nginx
-location / {
-  proxy_pass http://speechless:3000;
-  proxy_http_version 1.1;
-  proxy_set_header Upgrade $http_upgrade;
-  proxy_set_header Connection "upgrade";
-  proxy_set_header Host $host;
-}
-```
-
-Rooms live in memory, so run a single instance.
+Phone control needs nothing special from a reverse proxy.
+- **Connection:** Socket.IO starts on plain HTTP long-polling and upgrades to a WebSocket only when the proxy passes upgrades through.
+- **Nginx Proxy Manager:** the "Websockets Support" switch makes that upgrade possible. It's optional.
+- **Instances:** rooms live in memory, so run a single instance.

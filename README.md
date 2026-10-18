@@ -1,185 +1,97 @@
-# Charades Game 🎭
+# Speechless · בלי מילים 🎭
 
-A modern, interactive **Charades Game** built with React 19 and Material-UI. Features team management, customizable timers, theme switching, and a beautiful glassmorphism UI design.
+A Hebrew party charades game for teams, built for a TV. One player stands facing the screen and acts
+out the card without a word, their team (backs to the screen) shouts guesses, and the clock decides.
 
-## ✨ Features
+**Live:** https://speechless.omersher.com
 
-### 🎮 Game Features
-- **Multi-Team Support**: Up to 6 teams with unique colors and names
-- **Smart Scoring**: Real-time score tracking with manual adjustment
-- **Dynamic Timer**: Configurable timer (30-180 seconds) with visual progress indicators
-- **Round System**: Configurable rounds (2-10) with automatic progression
-- **Image Navigation**: Previous/next image controls with undo functionality
-- **Victory Detection**: Automatic game-over detection with winner announcement
-- **Sound Effects**: Dramatic buzzer sound when rounds end
-- **Game Persistence**: localStorage saves game state across browser refreshes
+## Playing
 
-### 🎨 Modern UI Design
-- **Light/Dark Theme**: Complete theme switching functionality
-- **Glassmorphism**: Translucent cards with backdrop blur effects
-- **Gradient Design**: Beautiful linear gradients throughout the interface
-- **Responsive Layout**: Adapts to different screen sizes
-- **Smooth Animations**: CSS transitions and Material-UI animations
-- **Fixed Top Bar**: Gradient bar with game name and settings button
+- Add 1–8 teams, choose card categories, the number of rounds and the turn length, and whether skipping costs a point.
+- Each turn opens with a get-ready screen and a 3-2-1 countdown.
+- During a turn: **swipe right / → / Space** = got it, **swipe left / ←** = skip, **Z** = undo, **P** = pause.
+- **Golden cards** score +2 instead of +1. They have a gold frame and ribbon, a shimmer and a chime,
+  and the got-it button turns gold.
+- When time's up you review the turn's cards (tap one to fix a wrong call; golden ones are tagged),
+  then see the standings. The card left on screen at the buzzer isn't dealt again.
+- Cards already played on this device are remembered, so the next game (a rematch, or another
+  night) deals unplayed cards first. Once every card in the chosen categories has been played they
+  start over; the lobby shows how many are still fresh and has a reset link.
+- Scores can be nudged with ± on the scoreboard at any time.
+- The game survives a page reload (a running turn comes back paused), keeps the screen awake,
+  and supports fullscreen.
 
-### 🛠️ Technical Features
-- **React 19**: Modern React with concurrent rendering
-- **Material-UI 6.4.2**: Component library for modern UI design
-- **Theme Context**: Custom React Context for theme management
-- **localStorage Integration**: Automatic game state persistence
-- **Docker Support**: Production-ready containerization
-- **Image Processing**: Automated image processing with text overlays
+## Cards
 
-## 🚀 Quick Start
+400 cards in 9 categories, picked in the lobby:
 
-### Local Development
+| Kind | Categories |
+|---|---|
+| Photo (273) | חיות animals, אוכל food, חפצים ומקומות objects & places, דמויות ומקצועות people & characters, ספורט ופעולות sports & actions |
+| Word only (127) | סרטים movies, סדרות TV, ספרים books, ביטויים phrases |
+
+Every card is easy, medium or hard. Decks follow an easy-heavy rhythm, so hard cards arrive as
+occasional spikes. Golden cards come only from hard cards: the deck is walked in play order, any hard
+card may turn golden, and one always does after ten cards without one, so they're spread out (about
+one every ten cards) even when a single small category is picked.
+
+Everything lives in [`src/data/cards.json`](src/data/cards.json):
+
+```jsonc
+{
+  "photos": { "אריה": { "category": "animals", "difficulty": "easy", "wiki": "Lion" } },
+  "words": { "phrases": { "easy": ["חתול בשק"], "medium": [], "hard": [] } }
+}
+```
+
+**Adding a word card:** add it to `words.<category>.<difficulty>`.
+
+**Adding a photo card:**
+
+1. Add the word to `photos` with a `category` and `difficulty`.
+2. Put a photo in `pictures/raw/`, named after the word (`pictures/raw/אריה.jpg`). Or give the entry a
+   `wiki` (English Wikipedia title) and run `node scripts/downloadImages.js` to fetch the article's
+   lead image. Check it by eye; Wikipedia's lead image isn't always the obvious picture.
+3. Run `npm run cards` to convert new or changed photos to web-sized WebP in `pictures/cards/` (it
+   also removes cards whose photo was deleted).
+
+The app shows the word above the photo, so nothing is drawn on the image itself.
+
+## Development
+
 ```bash
 npm install
-npm run dev
+npm run dev        # http://localhost:3000
+npm test           # game logic tests (vitest)
+npm run typecheck
+npm run lint
+npm run build      # → dist/
 ```
-- Runs on `http://localhost:3000`
-- Uses nodemon for hot reloading
-- Features live theme switching and responsive design
 
-### Production Build
+Stack: Vite, React 19, TypeScript, [motion](https://motion.dev) for animation, plain CSS with design
+tokens (`src/styles/global.css`), Rubik for the Hebrew type. The page is right-to-left; the got-it /
+skip buttons deliberately stay in physical order so "got it" is on the right, matching swipe-right.
+
+```
+src/
+  game/             pure logic: reducer (state machine), deck + golden picker, card catalog, sound
+  hooks/            persistence, rAF timer, wake lock, hotkeys
+  components/       one component per screen: Lobby → GetReady → Stage → TurnEnd → GameOver
+  data/cards.json   card catalog
+pictures/
+  raw/              original photos; the file name is the word to act out
+  cards/            generated WebP, which is what the app ships
+scripts/
+  buildCards.mjs    npm run cards
+  downloadImages.js Wikipedia lead images for catalog entries with a wiki title
+```
+
+## Deploying
+
+Pushing to `main` builds the Docker image `ghcr.io/omer182/charades:latest` (the image keeps its old
+name so existing deployments keep pulling it): a static build served by nginx on port 3000.
+
 ```bash
-npm run build
-npm install -g serve
-serve -s build
+docker build -t speechless .
+docker run -p 3000:3000 speechless
 ```
-
-### Docker Deployment
-```bash
-docker build -t charades-game .
-docker run -p 3000:3000 charades-game
-```
-
-## 🖼️ Adding Custom Images
-
-### 1. Add Raw Images
-Place your images in the `pictures/raw/` directory. Hebrew filenames are supported.
-
-### 2. Process Images
-Run the image processing script:
-```bash
-cd scripts
-node addTextToImage.js
-```
-
-### 3. What the Script Does
-- Enlarges images by 50%
-- Adds a semi-transparent black overlay at the bottom
-- Overlays the filename as white text
-- Outputs processed images to `pictures/result/`
-
-## 🎯 How to Play
-
-### 1. Team Setup
-- Add 1-6 teams with auto-assigned unique colors
-- Teams are automatically managed with color coding
-
-### 2. Configuration
-- Open settings modal to configure:
-  - Number of rounds (2-10)
-  - Timer duration (30-180 seconds in 30s steps)
-  - Theme preference (light/dark)
-
-### 3. Gameplay
-- Teams take turns guessing based on displayed images
-- Use ✓ for correct guesses, ✗ for skips/incorrect
-- Timer automatically advances to next team/round
-- Visual feedback with progress bars and status indicators
-- Dramatic sound plays when round ends
-
-### 4. Scoring & Victory
-- Real-time score tracking with manual adjustment
-- Automatic winner detection with celebration modal
-- Game state persists across browser refreshes
-
-## 🏗️ Technical Architecture
-
-### Tech Stack
-- **React 19.0.0** - Modern React with concurrent rendering
-- **Material-UI 6.4.2** - Component library and theming
-- **Sharp 0.34.2** - High-performance image processing
-- **Create React App 5.0.1** - Build toolchain
-- **Node.js 20** - Runtime environment
-
-### Key Components
-- **ModernCard**: Custom wrapper with glassmorphism effects
-- **TeamsManager**: Team management with animations
-- **Timer**: Decoupled timer with progress indicators
-- **Modal**: Dual-modal system for transitions and standings
-- **Theme Provider**: Context-based theme management
-
-### Data Management
-- **No Database**: Client-side only application
-- **localStorage**: Persistent game state across sessions
-- **React State**: Component-based state management
-- **Dynamic Imports**: Automatic image discovery
-
-## 📁 Project Structure
-
-```
-charades-game/
-├── public/                    # Static assets
-│   ├── round-end-dramatic.mp3 # Sound effects
-│   └── eye-face.png          # Game logo
-├── src/
-│   ├── index.js              # App entry point
-│   ├── index.css             # Global styles
-│   ├── UI/
-│   │   ├── Charade.jsx       # Main game component
-│   │   └── Components/       # Reusable components
-│   │       ├── Modal/        # Game modals
-│   │       ├── TeamsManager/ # Team management
-│   │       └── Timer/        # Timer component
-│   └── assets/               # App assets
-├── pictures/
-│   ├── raw/                  # Original images
-│   └── result/               # Processed images
-├── scripts/
-│   └── addTextToImage.js     # Image processing
-├── docs/
-│   └── overview.md           # Detailed documentation
-├── Dockerfile                # Production deployment
-└── package.json              # Project configuration
-```
-
-## 🔧 Available Scripts
-
-- `npm run dev` - Development server with nodemon
-- `npm start` - Development server (CRA default)
-- `npm run build` - Production build
-- `npm test` - Run tests
-
-## 🌟 Recent Improvements
-
-- **localStorage Integration**: Game state persists across browser refreshes
-- **Sound System**: Dramatic round-end sound effects
-- **Enhanced Timer Settings**: 30-180 second range with 30-second steps
-- **Improved Team Visibility**: Better contrast for team names
-- **Dual-Modal Layout**: Separate team standings and transition modals
-- **Timer Decoupling**: Fixed timer freezing issues
-- **Responsive Design**: Better mobile and desktop layouts
-
-## 🤝 Contributing
-
-Feel free to contribute by:
-- Adding new features and components
-- Improving the UI/UX design
-- Optimizing performance
-- Adding tests
-- Enhancing documentation
-
-Pull requests are always welcome! 🎉
-
-## 📄 License
-
-This project is open source and available under the MIT License.
-
----
-
-**Enjoy the game, and may the best team win!** 🏆
-
-*Created by Omer S.*

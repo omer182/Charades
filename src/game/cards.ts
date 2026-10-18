@@ -1,6 +1,7 @@
 import catalog from '../data/cards.json';
 import type { CategoryId, Difficulty } from './types';
-import { buildDeck, pickGolden } from './deck';
+import { buildFreshDeck, pickGolden } from './deck';
+import { forgetPlayed, loadPlayed } from './played';
 
 export interface Category {
   id: CategoryId;
@@ -72,10 +73,20 @@ export const countIn = (category: CategoryId) => cards.filter((c) => c.category 
 /** What players read: stray whitespace from file names collapsed. */
 export const cardLabel = (id: string) => id.replace(/\s+/g, ' ').trim();
 
-export function newDeck(categories: readonly CategoryId[]) {
+export const idsIn = (categories: readonly CategoryId[]) => {
   const wanted = new Set(categories);
-  const pool = cards.filter((c) => wanted.has(c.category));
+  return cards.filter((c) => wanted.has(c.category)).map((c) => c.id);
+};
+
+/** Deals a game: unplayed cards first. Once every card in these categories was played, they all start over. */
+export function newDeck(categories: readonly CategoryId[]) {
+  const ids = idsIn(categories);
+  let played = loadPlayed();
+  if (ids.every((id) => played.has(id))) {
+    forgetPlayed(ids);
+    played = new Set();
+  }
   const difficultyOf = (id: string) => CARDS[id]?.difficulty;
-  const deck = buildDeck(pool.map((c) => c.id), difficultyOf);
+  const deck = buildFreshDeck(ids, difficultyOf, played);
   return { deck, golden: pickGolden(deck, difficultyOf) };
 }

@@ -14,6 +14,9 @@ out the card without a word, their team (backs to the screen) shouts guesses, an
   and the got-it button turns gold.
 - When time's up you review the turn's cards (tap one to fix a wrong call; golden ones are tagged),
   then see the standings. The card left on screen at the buzzer isn't dealt again.
+- Cards already played on this device are remembered, so the next game (a rematch, or another
+  night) deals unplayed cards first. Once every card in the chosen categories has been played they
+  start over; the lobby shows how many are still fresh and has a reset link.
 - Scores can be nudged with ± on the scoreboard at any time.
 - The game survives a page reload (a running turn comes back paused), keeps the screen awake,
   and supports fullscreen.

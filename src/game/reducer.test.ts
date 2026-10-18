@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildDeck, pickGolden } from './deck';
+import { buildDeck, buildFreshDeck, pickGolden } from './deck';
 import { currentCard, hydrate, initialState, reducer, standings, type Action } from './reducer';
 import type { GameState } from './types';
 
@@ -122,6 +122,15 @@ describe('end of turn', () => {
     const s = run(playing(), { type: 'mark', result: 'got' }, { type: 'timeUp' }, { type: 'nextTurn' }, { type: 'beginTurn', now: 0 });
     expect(currentCard(s)).toBe('c');
     expect(s.turn).toEqual([]);
+  });
+});
+
+describe('fresh cards first', () => {
+  it('deals cards not played before ahead of played ones', () => {
+    const names = ['a', 'b', 'c', 'd', 'e', 'f'];
+    const deck = buildFreshDeck(names, () => 'easy', new Set(['a', 'c', 'e']));
+    expect(deck.slice(0, 3).sort()).toEqual(['b', 'd', 'f']);
+    expect(deck.slice(3).sort()).toEqual(['a', 'c', 'e']);
   });
 });
 

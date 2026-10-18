@@ -1,5 +1,6 @@
 import { useEffect, useReducer } from 'react';
 import { CARDS } from '../game/cards';
+import { markPlayed } from '../game/played';
 import { hydrate, initialState, reducer } from '../game/reducer';
 import type { GameState } from '../game/types';
 
@@ -28,6 +29,10 @@ export function useGame() {
       // storage full or blocked: the game still works, it just won't survive a reload
     }
   }, [state]);
+
+  // Every card dealt so far this game (including one left on screen at the buzzer) counts as played.
+  const { deck, cursor } = state;
+  useEffect(() => markPlayed(deck.slice(0, cursor)), [deck, cursor]);
 
   return [state, dispatch] as const;
 }

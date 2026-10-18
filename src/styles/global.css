@@ -410,6 +410,17 @@ ul {
   color: var(--faint);
 }
 
+.inline-link {
+  font: inherit;
+  color: var(--muted);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.inline-link:hover {
+  color: var(--sun);
+}
+
 .gold-text {
   color: var(--gold);
   font-weight: 700;

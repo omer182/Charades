@@ -1,7 +1,8 @@
 import { useState, type FormEvent } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { ArrowLeft, Plus, Sparkles, Trash2 } from 'lucide-react';
-import { CARDS, CATEGORIES, countIn, newDeck, PHOTO_IDS } from '../game/cards';
+import { CARDS, CATEGORIES, countIn, idsIn, newDeck, PHOTO_IDS } from '../game/cards';
+import { forgetPlayed, loadPlayed } from '../game/played';
 import { shuffle } from '../game/deck';
 import { ALL_CATEGORIES, MAX_TEAMS } from '../game/reducer';
 import type { CategoryId } from '../game/types';
@@ -22,6 +23,12 @@ export default function Lobby({ state, dispatch }: ScreenProps) {
   const { categories } = settings;
   const cardCount = categories.reduce((n, c) => n + countIn(c), 0);
   const canStart = teams.length > 0 && cardCount > 0;
+  const [played, setPlayed] = useState(loadPlayed);
+  const freshCount = idsIn(categories).filter((id) => !played.has(id)).length;
+  const resetPlayed = () => {
+    forgetPlayed();
+    setPlayed(new Set());
+  };
 
   const toggleCategory = (id: CategoryId) => {
     const next = categories.includes(id) ? categories.filter((c) => c !== id) : ALL_CATEGORIES.filter((c) => c === id || categories.includes(c));
@@ -174,6 +181,18 @@ export default function Lobby({ state, dispatch }: ScreenProps) {
           <p className="panel__note">
             {cardCount} קלפים במשחק · <span className="gold-text">קלפי זהב</span> שווים פי 2
           </p>
+          {played.size > 0 && cardCount > 0 && (
+            <p className="panel__note">
+              {freshCount === 0
+                ? 'שיחקתם כבר בכל הקלפים האלה — המשחק הבא יתחיל אותם מחדש.'
+                : freshCount === cardCount
+                  ? 'כל הקלפים האלה עוד לא הופיעו.'
+                  : `${freshCount} מהם עוד לא הופיעו, והם יגיעו ראשונים.`}{' '}
+              <button type="button" className="inline-link" onClick={resetPlayed}>
+                איפוס
+              </button>
+            </p>
+          )}
         </div>
 
         <div className="panel">

@@ -1182,7 +1182,8 @@ ul {
   --pad: clamp(8px, 1.4cqw, 14px);
   --word-h: clamp(56px, 15cqh, 120px);
   position: relative;
-  width: min(100cqw, (100cqh - var(--word-h) - var(--pad) * 2) * 4 / 3 + var(--pad) * 2);
+  --ribbon-h: 0px;
+  width: min(100cqw, (100cqh - var(--word-h) - var(--ribbon-h) - var(--pad) * 2) * 4 / 3 + var(--pad) * 2);
   display: flex;
   flex-direction: column;
   padding: var(--pad);
@@ -1252,43 +1253,57 @@ ul {
   text-shadow: 0 3px 18px rgb(0 0 0 / 0.35);
 }
 
-/* Golden cards score double. */
+/* Golden cards score double: gold card, a ribbon saying so, a shimmer, and a flash as it arrives. */
 .card[data-golden='true'] {
-  background: linear-gradient(160deg, #fff6d6, #ffe08a);
+  --ribbon-h: clamp(36px, 9cqh, 68px);
+  background: linear-gradient(160deg, #fff3c4, #ffd45e);
   box-shadow:
-    0 0 0 4px var(--gold),
+    0 0 0 5px var(--gold),
     0 40px 80px -24px rgb(0 0 0 / 0.8),
-    0 0 80px -6px color-mix(in oklab, var(--gold) 70%, transparent);
+    0 0 90px 0 color-mix(in oklab, var(--gold) 75%, transparent);
+  animation: golden-in 0.9s var(--ease-out);
 }
 
-/* Sits in the word row's start corner; the word keeps clear of it. */
-.card__golden {
+.card[data-golden='true']::after {
+  content: '';
   position: absolute;
-  top: calc(var(--word-h) / 2);
-  inset-inline-start: calc(var(--pad) + 4px);
-  z-index: 2;
-  translate: 0 -50%;
-  display: inline-flex;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(105deg, transparent 35%, rgb(255 255 255 / 0.55) 50%, transparent 65%) no-repeat;
+  background-size: 250% 100%;
+  animation: golden-sweep 2.6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.card__ribbon {
+  height: var(--ribbon-h);
+  margin: 0 calc(var(--pad) * -1);
+  display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 4px 10px;
-  border-radius: 999px;
+  justify-content: center;
+  gap: 0.4em;
+  border-radius: inherit;
+  border-end-start-radius: 0;
+  border-end-end-radius: 0;
   font-weight: 800;
-  font-size: clamp(0.8rem, 2.4cqw, 1.05rem);
+  font-size: calc(var(--ribbon-h) * 0.5);
   white-space: nowrap;
   color: #4a3200;
   background: linear-gradient(180deg, #ffe58f, var(--gold));
-  box-shadow: 0 4px 12px -4px rgb(0 0 0 / 0.5);
-  animation: golden-shine 1.6s ease-in-out infinite;
+  box-shadow: 0 2px 0 rgb(0 0 0 / 0.08);
 }
 
-.card[data-golden='true'] .card__word {
-  padding-inline: clamp(64px, 14cqw, 96px);
+@keyframes golden-in {
+  0% { filter: brightness(1.8) saturate(1.4); scale: 0.9; }
+  40% { scale: 1.04; }
+  100% { filter: none; scale: 1; }
 }
 
-@keyframes golden-shine {
-  50% { filter: brightness(1.15); scale: 1.05; }
+@keyframes golden-sweep {
+  0% { background-position: 150% 0; }
+  60%, 100% { background-position: -50% 0; }
 }
+
 
 .card__photo {
   position: relative;
@@ -1457,6 +1472,19 @@ ul {
 .act--skip {
   --glow: var(--coral);
   background: var(--coral);
+}
+
+.act--got[data-golden='true'] {
+  --glow: var(--gold);
+  background: linear-gradient(180deg, #ffe58f, var(--gold));
+}
+
+.act__bonus {
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 1.05rem;
+  color: var(--gold);
+  background: var(--ink-0);
 }
 
 .act--got:hover:not(:disabled),

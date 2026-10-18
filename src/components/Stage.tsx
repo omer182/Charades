@@ -56,9 +56,10 @@ function Card({ name, golden, onSwipe, disabled }: { name: string; golden: boole
       whileDrag={{ scale: 1.02, cursor: 'grabbing' }}
     >
       {golden && (
-        <span className="card__golden" dir="ltr" title="קלף זהב: שווה פי 2">
-          <Star size={14} fill="currentColor" /> ×2
-        </span>
+        <p className="card__ribbon">
+          <Star size="1em" fill="currentColor" /> קלף זהב · ניחוש נכון = <bdi dir="ltr">+2</bdi>{' '}
+          <Star size="1em" fill="currentColor" />
+        </p>
       )}
       {card.image ? (
         <>
@@ -103,6 +104,11 @@ export default function Stage({ state, dispatch }: ScreenProps) {
       dispatch({ type: 'timeUp' });
     }
   }, [paused, remaining, dispatch]);
+
+  // Announce a golden card the moment it comes up (and again on resume).
+  useEffect(() => {
+    if (golden && !paused) sound.goldenReveal();
+  }, [golden, paused, cursor]);
 
   // Tick each of the last ten seconds.
   const seconds = Math.ceil(remaining / 1000);
@@ -235,9 +241,10 @@ export default function Stage({ state, dispatch }: ScreenProps) {
             <X size={30} strokeWidth={2.6} />
             <span>דילוג</span>
           </button>
-          <button className="act act--got" onClick={() => mark('got')} disabled={paused} aria-label="ניחשו">
-            <Check size={30} strokeWidth={2.8} />
+          <button className="act act--got" data-golden={golden} onClick={() => mark('got')} disabled={paused} aria-label={golden ? 'ניחשו, פלוס 2' : 'ניחשו'}>
+            {golden ? <Star size={28} fill="currentColor" /> : <Check size={30} strokeWidth={2.8} />}
             <span>ניחשו!</span>
+            {golden && <bdi dir="ltr" className="act__bonus">+2</bdi>}
           </button>
           <button className="act act--small" onClick={togglePause} aria-label={paused ? 'המשך' : 'השהיה'} title="השהיה (P)">
             {paused ? <Play size={22} /> : <Pause size={22} />}

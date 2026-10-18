@@ -54,6 +54,10 @@ export const sound = {
     tone(1046, { at: 0.08, duration: 0.1, type: 'triangle' });
     tone(1568, { at: 0.16, duration: 0.28, type: 'triangle' });
   },
+  /** A golden card comes up: a quick sparkle. */
+  goldenReveal() {
+    [1318, 1568, 2093, 2637].forEach((f, i) => tone(f, { at: i * 0.06, duration: 0.22, type: 'sine', gain: 0.1 }));
+  },
   skip() {
     tone(220, { duration: 0.22, type: 'sawtooth', gain: 0.08, slideTo: 110 });
   },

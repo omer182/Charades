@@ -1,9 +1,9 @@
-# Charades 🎭
+# Speechless · בלי מילים 🎭
 
 A party charades game for teams. One player acts out the picture card, their team shouts guesses,
 and the clock decides. Built for a laptop on the TV or a phone passed around the room.
 
-**Live:** https://charades.omersher.com
+**Live:** https://speechless.omersher.com
 
 ## Playing
 

@@ -1,0 +1,41 @@
+import type { Difficulty } from './types';
+
+/** Repeating difficulty rhythm: mostly easy, a breather of medium, the odd hard one. */
+const PATTERN: Difficulty[] = ['easy', 'easy', 'easy', 'medium', 'medium', 'hard', 'easy', 'easy'];
+
+export function shuffle<T>(items: readonly T[], random = Math.random): T[] {
+  const out = [...items];
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(random() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
+
+/**
+ * Builds a deck containing every card exactly once, ordered so difficulty follows PATTERN
+ * for as long as each pool lasts. Unclassified cards count as medium.
+ */
+export function buildDeck(
+  names: readonly string[],
+  difficultyOf: (name: string) => Difficulty | undefined,
+  random = Math.random,
+): string[] {
+  const pools: Record<Difficulty, string[]> = { easy: [], medium: [], hard: [] };
+  for (const name of names) pools[difficultyOf(name) ?? 'medium'].push(name);
+  for (const level of Object.keys(pools) as Difficulty[]) pools[level] = shuffle(pools[level], random);
+
+  const fallback: Record<Difficulty, Difficulty[]> = {
+    easy: ['medium', 'hard'],
+    medium: ['easy', 'hard'],
+    hard: ['medium', 'easy'],
+  };
+
+  const deck: string[] = [];
+  for (let i = 0; deck.length < names.length; i++) {
+    const want = PATTERN[i % PATTERN.length];
+    const level = [want, ...fallback[want]].find((l) => pools[l].length > 0)!;
+    deck.push(pools[level].pop()!);
+  }
+  return deck;
+}

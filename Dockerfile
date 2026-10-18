@@ -1,22 +1,13 @@
-# Use a lightweight Node.js image to build the app
+# ── Build ───────────────────────────────────────────────────────────────
 FROM node:22-alpine AS build
-
-# Set working directory
 WORKDIR /app
-
-# Copy package.json and install dependencies
 COPY package.json package-lock.json ./
-RUN npm ci
-
-# Copy the rest of the app and build it
+RUN npm ci --no-audit --no-fund
 COPY . .
 RUN npm run build
 
-RUN npm install -g serve
-
-# Uses port which is used by the actual application
+# ── Serve ───────────────────────────────────────────────────────────────
+FROM nginx:1.27-alpine
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/dist /usr/share/nginx/html
 EXPOSE 3000
-
-# Run application
-#CMD [ "npm", "start" ]
-CMD serve -s build

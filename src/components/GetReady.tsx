@@ -45,7 +45,7 @@ export default function GetReady({ state, dispatch }: ScreenProps) {
       </p>
       <p className="ready__label">הבאים בתור</p>
       <h1 className="ready__team">{team.name}</h1>
-      <p className="lede">המציג/ה לוקח/ת את המכשיר. כל השאר — עיניים מהמסך!</p>
+      <p className="lede">מי שמציג — מול המסך. כל השאר — עם הגב למסך!</p>
 
       <button className="cta cta--team" onClick={go} disabled={step !== null}>
         <Play size={20} fill="currentColor" /> מוכנים

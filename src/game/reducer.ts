@@ -194,7 +194,8 @@ export function reducer(state: GameState, action: Action): GameState {
 
     case 'timeUp':
       if (state.phase !== 'playing') return state;
-      return { ...state, phase: 'turnEnd', timer: { endsAt: null, remainingMs: 0 } };
+      // The card on screen at the buzzer was seen by everyone, so the next team starts on a fresh one.
+      return { ...state, phase: 'turnEnd', cursor: state.cursor + 1, timer: { endsAt: null, remainingMs: 0 } };
 
     case 'toggleEntry': {
       if (state.phase !== 'turnEnd') return state;

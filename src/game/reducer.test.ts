@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { buildDeck, pickGolden } from './deck';
-import { hydrate, initialState, reducer, standings, type Action } from './reducer';
+import { currentCard, hydrate, initialState, reducer, standings, type Action } from './reducer';
 import type { GameState } from './types';
 
 const run = (state: GameState, ...actions: Action[]) => actions.reduce(reducer, state);
@@ -114,6 +114,14 @@ describe('buildDeck', () => {
     const deck = buildDeck(names, level);
     expect([...deck].sort()).toEqual([...names].sort());
     expect(deck.slice(0, 3).every((n) => n.startsWith('e'))).toBe(true);
+  });
+});
+
+describe('end of turn', () => {
+  it('the card showing at the buzzer is not dealt to the next team', () => {
+    const s = run(playing(), { type: 'mark', result: 'got' }, { type: 'timeUp' }, { type: 'nextTurn' }, { type: 'beginTurn', now: 0 });
+    expect(currentCard(s)).toBe('c');
+    expect(s.turn).toEqual([]);
   });
 });
 

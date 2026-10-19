@@ -26,6 +26,13 @@ export default function Header({ state, dispatch }: ScreenProps) {
   const [showJoin, setShowJoin] = useState(false);
   const phoneLive = room.open && room.status === 'live' && room.remotes > 0;
 
+  // The QR has done its job once a phone joins: close it so the game is visible again.
+  const [seenRemotes, setSeenRemotes] = useState(room.remotes);
+  if (room.remotes !== seenRemotes) {
+    setSeenRemotes(room.remotes);
+    if (room.remotes > seenRemotes && showJoin) setShowJoin(false);
+  }
+
   useEffect(() => {
     if (!confirmEnd) return;
     const id = setTimeout(() => setConfirmEnd(false), 3000);

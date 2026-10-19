@@ -1913,6 +1913,346 @@ ul {
   z-index: 41;
 }
 
+/* ─── One screen, no scrolling (TV, projector, laptop) ───────────────────────
+   Everything below sizes off the screen's height so each phase fits without a scrollbar.
+   Narrow screens (phones) keep the stacked, scrolling layout from the responsive section. */
+
+@media (min-width: 901px) {
+  .main {
+    overflow: hidden;
+  }
+
+  /* Let each screen take the full height, so its content can center in it. */
+  .screen {
+    height: 100%;
+  }
+
+  /* Lobby: hero on one side, a 2×2 grid of setup panels on the other, start button below them. */
+  .lobby {
+    height: 100%;
+    max-width: 1560px;
+    padding: clamp(10px, 2.4vh, 32px) clamp(16px, 3vw, 44px);
+    grid-template-columns: minmax(0, 0.62fr) minmax(0, 1.65fr);
+    gap: clamp(16px, 2.4vw, 48px);
+    align-items: center;
+  }
+
+  .lobby__hero {
+    gap: clamp(8px, 1.6vh, 18px);
+    container-type: inline-size;
+  }
+
+  .fan {
+    height: clamp(80px, 21vh, 230px);
+    margin-bottom: 0;
+  }
+
+  /* The fan stays inside the hero column: card size follows the column width and the screen height. */
+  .fan__card {
+    --w: min(clamp(110px, 28vh, 300px), 50cqi);
+    width: var(--w);
+    left: calc(50% - var(--w) / 2 + var(--i) * var(--w) * 0.36);
+  }
+
+  .hero-title {
+    font-size: clamp(2.4rem, min(7.5vw, 12vh), 8.5rem);
+  }
+
+  .lede {
+    font-size: clamp(0.9rem, min(1.3vw, 2.2vh), 1.15rem);
+  }
+
+  .lobby__panel {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(8px, 1.4vh, 16px);
+    align-content: center;
+    max-height: 100%;
+  }
+
+  .lobby__panel > .cta,
+  .lobby__panel > .hint-line {
+    grid-column: 1 / -1;
+  }
+
+  .lobby__panel > .hint-line {
+    margin: 0;
+  }
+
+  .lobby .panel {
+    padding: clamp(10px, 1.8vh, 18px) clamp(12px, 1.4vw, 18px);
+  }
+
+  .lobby .panel__head {
+    margin-bottom: clamp(6px, 1.2vh, 12px);
+  }
+
+  .lobby .panel__title {
+    font-size: clamp(1rem, 2.2vh, 1.25rem);
+  }
+
+  .lobby .field {
+    padding: clamp(6px, 1.1vh, 12px) 0;
+  }
+
+  .lobby .field__hint {
+    font-size: 0.75rem;
+  }
+
+  /* Label and control stay on one line, so each setting is one row. */
+  .lobby .field {
+    flex-wrap: nowrap;
+    gap: 10px;
+  }
+
+  .lobby .field__text {
+    min-width: 0;
+  }
+
+  .lobby .field__label {
+    white-space: nowrap;
+  }
+
+  .lobby .segmented__opt {
+    padding: clamp(4px, 0.8vh, 7px) clamp(6px, 0.7vw, 10px);
+    font-size: clamp(0.76rem, 1.7vh, 0.88rem);
+  }
+
+  .lobby .cta {
+    min-height: 0;
+    padding-block: clamp(10px, 1.8vh, 18px);
+  }
+
+  /* Up to eight teams in two columns of compact rows. */
+  .team-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 8px;
+  }
+
+  .team-row > * {
+    margin-block: 2px;
+  }
+
+  .team-row__swatch {
+    width: 24px;
+    height: 24px;
+    border-radius: 8px;
+  }
+
+  .team-row__name {
+    padding: clamp(4px, 0.8vh, 8px) 8px;
+    font-size: 0.95rem;
+  }
+
+  .team-row__remove {
+    width: 30px;
+    height: 30px;
+  }
+
+  .add-team__input {
+    height: clamp(36px, 5.5vh, 48px);
+  }
+
+  .add-team__btn {
+    width: clamp(36px, 5.5vh, 48px);
+    height: clamp(36px, 5.5vh, 48px);
+  }
+
+  .link-btn {
+    margin-top: 6px;
+  }
+
+  .chips {
+    gap: 6px;
+  }
+
+  .chips {
+    gap: 5px;
+  }
+
+  .chip {
+    gap: 6px;
+    padding: clamp(3px, 0.6vh, 7px) 9px;
+    font-size: clamp(0.78rem, 1.75vh, 0.9rem);
+    border-width: 1px;
+  }
+
+  .chip__count {
+    padding: 0 5px;
+    font-size: 0.68rem;
+  }
+
+  .panel__note {
+    margin-top: clamp(6px, 1vh, 12px);
+    font-size: 0.78rem;
+  }
+
+  .lobby .join {
+    margin-top: clamp(6px, 1vh, 14px);
+    gap: 14px;
+  }
+
+  .lobby .qr {
+    width: clamp(84px, 15vh, 132px);
+    height: clamp(84px, 15vh, 132px);
+  }
+
+  .lobby .join__code {
+    font-size: clamp(1.4rem, 3.6vh, 2.2rem);
+    margin: 2px 0;
+  }
+
+  /* Turn summary: everything scales with height so a long turn and eight teams still fit. */
+  .summary {
+    height: 100%;
+    padding: clamp(10px, 2.4vh, 40px) clamp(16px, 3vw, 40px);
+    gap: clamp(8px, 1.8vh, 24px);
+  }
+
+  .summary__head {
+    gap: 4px;
+  }
+
+  .times-up {
+    font-size: clamp(1rem, 2.6vh, 1.6rem);
+    padding: 4px 16px;
+  }
+
+  .summary__title {
+    font-size: clamp(1.6rem, min(5vw, 6.5vh), 3.8rem);
+  }
+
+  .summary__body {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .summary .panel {
+    padding: clamp(10px, 1.8vh, 18px) 16px;
+    max-height: 100%;
+    overflow: hidden;
+  }
+
+  .thumbs {
+    grid-template-columns: repeat(auto-fill, minmax(clamp(80px, 13vh, 118px), 1fr));
+    gap: 8px;
+  }
+
+  .thumb__word {
+    font-size: clamp(0.72rem, 1.7vh, 0.9rem);
+    padding: 10px 4px 4px;
+  }
+
+  .bars {
+    gap: clamp(4px, 1.1vh, 12px);
+  }
+
+  .bar__score {
+    font-size: clamp(1rem, 2.4vh, 1.25rem);
+  }
+
+  .summary__foot {
+    gap: 6px;
+  }
+
+  .summary__foot .cta {
+    padding-block: clamp(10px, 1.8vh, 18px);
+  }
+
+  /* Finale: podium heights and the winner's name follow the screen height; the rest go in a row. */
+  .finale {
+    height: 100%;
+    justify-content: center;
+    gap: clamp(4px, 1vh, 10px);
+    padding: clamp(10px, 2.4vh, 48px) 16px;
+  }
+
+  .finale__crown svg {
+    width: clamp(28px, 5.5vh, 44px);
+    height: clamp(28px, 5.5vh, 44px);
+  }
+
+  .finale__winner {
+    font-size: clamp(2.4rem, min(9vw, 13vh), 8rem);
+  }
+
+  .podium {
+    margin-top: clamp(8px, 2.4vh, 40px);
+  }
+
+  .podium__block {
+    height: clamp(44px, 9vh, 90px);
+    padding-top: clamp(4px, 1vh, 12px);
+  }
+
+  .podium__col[data-rank='1'] .podium__block {
+    height: clamp(70px, 16vh, 160px);
+  }
+
+  .podium__col[data-rank='2'] .podium__block {
+    height: clamp(56px, 12vh, 120px);
+  }
+
+  .podium__rank {
+    font-size: clamp(1.6rem, 4.4vh, 2.4rem);
+  }
+
+  .rest {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 900px;
+    margin-top: clamp(6px, 1.4vh, 16px);
+  }
+
+  .rest li {
+    padding: clamp(4px, 0.9vh, 10px) 12px;
+  }
+
+  .finale__actions {
+    margin-top: clamp(10px, 2.4vh, 40px);
+  }
+}
+
+/* Short screens (laptops at 600–700px tall): drop the extras so the setup still fits. */
+@media (min-width: 901px) and (max-height: 700px) {
+  .fan,
+  .lobby .field__hint,
+  .lobby__panel > .hint-line {
+    display: none;
+  }
+
+  .lobby .panel__note {
+    margin-top: 6px;
+  }
+
+  .lobby {
+    padding-block: 8px;
+  }
+
+  .lobby .qr {
+    width: 72px;
+    height: 72px;
+  }
+
+  .lobby .join__label {
+    display: none;
+  }
+
+  .team-row > * {
+    margin-block: 0;
+  }
+
+  .team-row__name {
+    padding-block: 3px;
+  }
+
+  .team-row__remove {
+    height: 26px;
+  }
+}
+
 /* ─── Responsive ─────────────────────────────────────────────────────────── */
 
 @media (max-width: 900px) {
